@@ -1,0 +1,60 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# JavaScript
+*.js text eol=lf
+*.mjs text eol=lf
+*.cjs text eol=lf
+
+# TypeScript
+*.ts text eol=lf
+*.tsx text eol=lf
+
+# React
+*.jsx text eol=lf
+
+# CSS
+*.css text eol=lf
+
+# HTML
+*.html text eol=lf
+
+# Markdown
+*.md text eol=lf
+
+# JSON
+*.json text eol=lf
+
+# YAML
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# GraphQL
+*.graphql text eol=lf
+
+# Shell scripts
+*.sh text eol=lf
+
+# Environment
+.env* text eol=lf
+
+# Next.js
+next.config.* text eol=lf
+postcss.config.* text eol=lf
+
+# Binary files (do not modify)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg text eol=lf
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+
+# Office documents
+*.docx binary
+*.pptx binary
+*.pdf binary
