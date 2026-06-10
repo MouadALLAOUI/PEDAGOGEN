@@ -28,7 +28,16 @@ export function buildMarkdown(
     if (typeof value === 'string') {
       lines.push(value);
     } else if (Array.isArray(value)) {
-      lines.push(value.map(item => `- ${item}`).join('\n'));
+      const rendered = value.map(item => {
+        if (typeof item === 'object' && item !== null) {
+          const fields = Object.entries(item)
+            .map(([k, v]) => `  - **${k.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}:** ${Array.isArray(v) ? v.join(', ') : String(v)}`)
+            .join('\n');
+          return `- Item:\n${fields}`;
+        }
+        return `- ${item}`;
+      }).join('\n');
+      lines.push(rendered);
     } else if (value && typeof value === 'object') {
       for (const [subKey, subVal] of Object.entries(value)) {
         lines.push(`### ${subKey.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}`);

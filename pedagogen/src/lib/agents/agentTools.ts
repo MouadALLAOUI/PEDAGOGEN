@@ -148,51 +148,51 @@ function generateMockDebugResponse(systemPrompt: string, userMessage: string, to
   if (requestedToolName === 'generate_fiche_pedagogique') {
     mockArgs = {
       titre_seance: `DEBUG MODE: Fiche Pédagogique`,
-      objectifs: [`System Prompt:\n${systemPrompt}`, `User Message:\n${userMessage}`],
-      competences_visees: ['Debug Mode'],
-      prerequis: ['Debug Mode'],
+      objectifs: ['Comprendre les concepts de base de la leçon', 'Identifier les composants principaux'],
+      competences_visees: ['Maîtriser les bases du sujet'],
+      prerequis: ['Connaissances de base préalables'],
       deroulement: {
-        introduction: `System Prompt:\n${systemPrompt}`,
-        activite_principale: `User Message:\n${userMessage}`,
-        synthese: 'Debug Mode'
+        introduction: 'Présentation du sujet et objectifs de la séance.',
+        activite_principale: 'Explications détaillées avec exemples pratiques et manipulation.',
+        synthese: 'Synthèse des points clés et questions-réponses.'
       },
       evaluation_type: 'formative',
-      materiel: ['Debug Mode']
+      materiel: ['Tableau', 'Ordinateur', 'Projecteur']
     };
   } else if (requestedToolName === 'generate_planification') {
     mockArgs = {
       semestre: 1,
       sequence: [
-        { seance: 1, titre: 'System Prompt', duree: '55 min', competences: [systemPrompt] },
-        { seance: 2, titre: 'User Message', duree: '55 min', competences: [userMessage] }
+        { seance: 1, titre: 'Introduction et concepts de base', duree: '50 min', competences: ['Introduction'] },
+        { seance: 2, titre: 'Activités pratiques', duree: '50 min', competences: ['Pratique'] }
       ]
     };
   } else if (requestedToolName === 'generate_cours_complet') {
     mockArgs = {
-      script_enseignant: `SYSTEM PROMPT:\n${systemPrompt}\n\nUSER MESSAGE:\n${userMessage}`,
-      activites_eleves: ['Debug Mode'],
-      plan_tableau: 'Debug Mode',
-      annotations: 'Debug Mode'
+      script_enseignant: 'Introduction: Commencer par présenter le sujet.\nDéveloppement: Expliquer les notions fondamentales.\nConclusion: Résumer et évaluer.',
+      activites_eleves: ['Prendre des notes', 'Faire les exercices d\'application'],
+      plan_tableau: 'Titre\n1. Définitions\n2. Exemples',
+      annotations: 'Veiller à ce que tous les élèves participent.'
     };
   } else if (requestedToolName === 'generate_gestion_classe') {
     mockArgs = {
-      strategie_entree: `System Prompt:\n${systemPrompt}`,
-      organisation_espace: `User Message:\n${userMessage}`,
-      gestion_temps: 'Debug Mode',
-      differenciation: 'Debug Mode',
-      remédiation: 'Debug Mode'
+      strategie_entree: 'Accueillir les élèves et faire l\'appel rapidement.',
+      organisation_espace: 'Disposer les tables en U pour favoriser les échanges.',
+      gestion_temps: '10 min introduction, 30 min activité principale, 10 min conclusion.',
+      differenciation: 'Proposer des fiches d\'exercices de différents niveaux de complexité.',
+      remédiation: 'Aider individuellement les élèves en difficulté.'
     };
   } else if (requestedToolName === 'generate_resume_eleve') {
     mockArgs = {
-      resume: `System Prompt:\n${systemPrompt}`,
-      points_cles: [`User Message:\n${userMessage}`],
-      exercices: ['Debug Mode']
+      resume: 'Ce cours présente les notions fondamentales de la leçon.',
+      points_cles: ['Notion clé 1', 'Notion clé 2'],
+      exercices: ['Exercice d\'application 1', 'Exercice d\'application 2']
     };
   } else if (requestedToolName === 'generate_pptx_outline') {
     mockArgs = {
       slides: [
-        { title: 'System Prompt', bullets: [systemPrompt.substring(0, 300) + '...'], speaker_notes: systemPrompt },
-        { title: 'User Message', bullets: [userMessage], speaker_notes: userMessage }
+        { title: 'Introduction au sujet', bullets: ['Définitions de base', 'Objectifs du module'], speaker_notes: 'Présenter le plan général' },
+        { title: 'Concepts clés', bullets: ['Premier point important', 'Deuxième point important'], speaker_notes: 'Expliquer en détail' }
       ]
     };
   } else {
