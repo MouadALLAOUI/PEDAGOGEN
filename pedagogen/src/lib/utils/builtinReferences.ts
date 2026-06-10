@@ -1,5 +1,6 @@
 import { readFile } from 'fs/promises';
 import { join } from 'path';
+import { getDb } from '@/lib/db';
 
 interface BuiltinRef {
   name: string;
@@ -134,9 +135,16 @@ export function filterCurriculumContent(content: string, niveau?: string): strin
 }
 
 export async function getBuiltinReferences(matiere: string, niveau?: string): Promise<string[]> {
-  const refs = BUILTIN_REFS.filter(
-    (r) => r.matiere.toLowerCase() === matiere.toLowerCase()
-  );
+  const db = getDb();
+  const refs = BUILTIN_REFS.filter((r) => {
+    if (r.matiere.toLowerCase() !== matiere.toLowerCase()) return false;
+    try {
+      const row = db.prepare('SELECT enabled FROM reference_files WHERE name = ? AND builtin = 1').get(r.name) as { enabled: number } | undefined;
+      return row ? row.enabled === 1 : true;
+    } catch {
+      return true;
+    }
+  });
 
   const contents: string[] = [];
   const dir = join(process.cwd(), 'src', 'lib', 'references');
