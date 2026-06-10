@@ -4,9 +4,18 @@ import type { CourseMetadata } from '@/types/generation';
 export async function runLightAgent(
   metadata: CourseMetadata,
   useReferences: boolean,
-  referenceContents?: string
+  referenceContents?: string,
+  includePrompt?: string,
+  excludePrompt?: string,
+  useLocalModel?: boolean,
+  localModelName?: string,
+  localModelUrl?: string,
+  localApiType?: 'openai' | 'custom',
+  signal?: AbortSignal,
+  customPrompts?: Record<string, string>,
+  debugMode?: boolean
 ) {
-  const systemPrompt = buildSystemPrompt(metadata, metadata.langue, useReferences, referenceContents);
+  const systemPrompt = buildSystemPrompt(metadata, metadata.langue, useReferences, referenceContents, includePrompt, excludePrompt, customPrompts);
 
   const result = await callHuggingFace(
     systemPrompt,
@@ -19,7 +28,9 @@ export async function runLightAgent(
 
 Use clear Markdown formatting with headers, bullet points, and bold text. Return ONLY the Markdown content, no JSON wrapper.`,
     undefined,
-    2000
+    2000,
+    undefined,
+    { useLocalModel, localModelName, localModelUrl, localApiType, signal, debugMode }
   );
 
   // Extract markdown from text content

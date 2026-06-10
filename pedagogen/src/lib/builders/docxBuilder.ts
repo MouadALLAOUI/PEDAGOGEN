@@ -9,6 +9,37 @@ import {
 } from 'docx';
 import type { CourseMetadata } from '@/types/generation';
 
+function flattenContent(content: Record<string, unknown>, prefix = ''): { label: string; text: string }[] {
+  const result: { label: string; text: string }[] = [];
+
+  for (const [key, value] of Object.entries(content)) {
+    const label = prefix ? `${prefix} > ${key.replace(/_/g, ' ')}` : key.replace(/_/g, ' ');
+
+    if (typeof value === 'string' && value.trim()) {
+      result.push({ label: label.toUpperCase(), text: value });
+    } else if (Array.isArray(value)) {
+      const items = value
+        .map((item) => {
+          if (typeof item === 'string') return `• ${item}`;
+          if (typeof item === 'object' && item !== null) {
+            const sub = flattenContent(item as Record<string, unknown>, label);
+            return sub.map((s) => `  ${s.text}`).join('\n');
+          }
+          return '';
+        })
+        .filter(Boolean);
+      if (items.length > 0) {
+        result.push({ label: label.toUpperCase(), text: items.join('\n') });
+      }
+    } else if (typeof value === 'object' && value !== null) {
+      const sub = flattenContent(value as Record<string, unknown>, label);
+      result.push(...sub);
+    }
+  }
+
+  return result;
+}
+
 export async function buildDocx(
   metadata: CourseMetadata,
   content: Record<string, unknown>,
@@ -68,34 +99,39 @@ export async function buildDocx(
     })
   );
 
-  // Content sections
-  for (const [key, value] of Object.entries(content)) {
-    if (typeof value === 'string') {
-      sections.push(
-        new Paragraph({
-          children: [
-            new TextRun({
-              text: key.replace(/_/g, ' ').toUpperCase(),
-              bold: true,
-              size: 24,
-              font: 'Calibri',
-            }),
-          ],
-          heading: HeadingLevel.HEADING_2,
-          spacing: { before: 300, after: 150 },
-        })
-      );
+  // Flatten and render all content
+  const flatSections = flattenContent(content);
 
+  for (const section of flatSections) {
+    // Section label
+    sections.push(
+      new Paragraph({
+        children: [
+          new TextRun({
+            text: section.label,
+            bold: true,
+            size: 24,
+            font: 'Calibri',
+          }),
+        ],
+        heading: HeadingLevel.HEADING_2,
+        spacing: { before: 300, after: 150 },
+      })
+    );
+
+    // Section text — split by newlines for proper paragraphs
+    const paragraphs = section.text.split('\n').filter((l) => l.trim());
+    for (const para of paragraphs) {
       sections.push(
         new Paragraph({
           children: [
             new TextRun({
-              text: value,
+              text: para,
               size: 22,
               font: 'Calibri',
             }),
           ],
-          spacing: { after: 200 },
+          spacing: { after: 120 },
         })
       );
     }

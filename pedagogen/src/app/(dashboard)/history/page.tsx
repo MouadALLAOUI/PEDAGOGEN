@@ -6,14 +6,28 @@ import { Card, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { PageTransition } from '@/components/layout/PageTransition';
 import { MODE_DESCRIPTIONS, type GenerationMode } from '@/types/generation';
-import { getHistory, type HistoryEntry } from '@/lib/utils/historyStore';
+
+interface HistoryEntry {
+  id: string;
+  mode: string;
+  matiere: string;
+  niveau: string;
+  lecon: string;
+  createdAt: string;
+  filesCount: number;
+  tokensUsed: number;
+  files: { name: string; url: string; format: string }[];
+}
 
 export default function HistoryPage() {
   const [filter, setFilter] = useState<GenerationMode | 'all'>('all');
   const [history, setHistory] = useState<HistoryEntry[]>([]);
 
   useEffect(() => {
-    setHistory(getHistory());
+    fetch('/api/history')
+      .then((res) => res.json())
+      .then((data) => setHistory(data.entries || []))
+      .catch(() => setHistory([]));
   }, []);
 
   const filtered = filter === 'all' ? history : history.filter((h) => h.mode === filter);

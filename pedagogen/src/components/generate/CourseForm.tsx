@@ -17,6 +17,7 @@ const schema = z.object({
   competences: z.string().min(1, 'Au moins une compétence requise'),
   langue: z.enum(['fr', 'ar', 'fr+ar']),
   semestre: z.union([z.literal(1), z.literal(2)]),
+  profilEleves: z.string().optional(),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -36,9 +37,11 @@ export function CourseForm({ onSubmit }: CourseFormProps) {
     resolver: zodResolver(schema),
     defaultValues: {
       niveau: '1AC',
+      matiere: 'Informatique',
       langue: 'fr',
       semestre: 1,
       duree: 50,
+      profilEleves: '',
     },
   });
 
@@ -49,7 +52,7 @@ export function CourseForm({ onSubmit }: CourseFormProps) {
     });
   };
 
-  const filteredMatieres = MATIERES.filter((m) => m.niveaux.includes(niveau as '1AC' | '2AC' | '3AC'));
+  const filteredMatieres = MATIERES.filter((m) => m.id === 'info' && m.niveaux.includes(niveau as '1AC' | '2AC' | '3AC'));
 
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-5">
@@ -154,6 +157,20 @@ export function CourseForm({ onSubmit }: CourseFormProps) {
           />
           <p className="text-xs text-muted mt-1">Séparez par des virgules</p>
           {errors.competences && <p className="text-red text-xs mt-1">{errors.competences.message}</p>}
+        </div>
+
+        {/* Profil & Niveau réel des élèves */}
+        <div className="md:col-span-2">
+          <label className="block text-sm font-medium text-navy mb-1.5">
+            Profil & niveau réel des élèves (comportement en classe, culture sociale, niveau scolaire...)
+          </label>
+          <textarea
+            {...register('profilEleves')}
+            placeholder="ex: Élèves très dynamiques mais en difficulté avec la langue française. Ils viennent d'un milieu périurbain, et s'intéressent beaucoup aux applications pratiques."
+            rows={3}
+            className="w-full rounded-lg border border-border bg-white px-3 py-2.5 text-sm text-navy placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-teal focus:border-transparent"
+          />
+          {errors.profilEleves && <p className="text-red text-xs mt-1">{errors.profilEleves.message}</p>}
         </div>
       </div>
 

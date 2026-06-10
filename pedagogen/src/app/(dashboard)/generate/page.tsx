@@ -54,7 +54,7 @@ export default function GeneratePage() {
                 >
                   <CardContent className="flex items-center gap-6 py-6">
                     <div
-                      className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110"
+                      className="w-14 h-14 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110"
                       style={{ backgroundColor: `${info.color}15` }}
                     >
                       <Icon size={28} style={{ color: info.color }} />

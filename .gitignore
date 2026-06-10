@@ -34,7 +34,14 @@ yarn-error.log*
 
 # generated files (regenerated on each run)
 public/generated/
-public/references/.metadata.json
+public/references/
+.heavy-rate.json
+*.pptx
+~$*
+data/
+pedagogen/data/
+pedagogen/*.pptx
+pedagogen/~$*
 
 # vercel
 .vercel

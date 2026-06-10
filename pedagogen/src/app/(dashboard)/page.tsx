@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
+import { animate, stagger } from 'animejs';
 import {
   Wand2,
   FileText,
@@ -20,9 +21,53 @@ import { MODE_DESCRIPTIONS } from '@/types/generation';
 export default function Dashboard() {
   const [animated, setAnimated] = useState(false);
   const cardsRef = useRef<HTMLDivElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
+  const [stats, setStats] = useState({ docs: 0, tokens: 0, lastGen: 'Aucune', refs: 0 });
 
   useEffect(() => {
     setAnimated(true);
+
+    // Anime.js: stagger mode cards
+    if (cardsRef.current) {
+      const cards = cardsRef.current.querySelectorAll('[data-mode-card]');
+      animate(cards, {
+        translateY: [40, 0],
+        opacity: [0, 1],
+        delay: stagger(120),
+        ease: 'outExpo',
+        duration: 600,
+      });
+    }
+
+    // Anime.js: stagger stat cards
+    if (statsRef.current) {
+      const statCards = statsRef.current.querySelectorAll('[data-stat-card]');
+      animate(statCards, {
+        scale: [0.9, 1],
+        opacity: [0, 1],
+        delay: stagger(80),
+        ease: 'outQuad',
+        duration: 400,
+      });
+    }
+
+    fetch('/api/history')
+      .then((r) => r.json())
+      .then((data) => {
+        const history = data.entries || [];
+        const docs = history.reduce((sum: number, h: any) => sum + h.filesCount, 0);
+        const tokens = history.reduce((sum: number, h: any) => sum + h.tokensUsed, 0);
+        const lastGen = history.length > 0
+          ? new Date(history[0].createdAt).toLocaleDateString('fr-FR')
+          : 'Aucune';
+        setStats((s) => ({ ...s, docs, tokens, lastGen }));
+      })
+      .catch(() => {});
+
+    fetch('/api/references')
+      .then((r) => r.json())
+      .then((d) => setStats((s) => ({ ...s, refs: d.files?.length || 0 })))
+      .catch(() => {});
   }, []);
 
   const modes = [
@@ -70,14 +115,14 @@ export default function Dashboard() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div ref={statsRef} className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: 'Documents générés', value: '0', icon: FileCheck, color: 'text-teal' },
-            { label: 'Tokens utilisés', value: '0', icon: TrendingUp, color: 'text-gold' },
-            { label: 'Dernière génération', value: 'Aucune', icon: Clock, color: 'text-muted' },
-            { label: 'Références uploadées', value: '0', icon: FileText, color: 'text-green' },
+            { label: 'Documents générés', value: stats.docs.toString(), icon: FileCheck, color: 'text-teal' },
+            { label: 'Tokens utilisés', value: stats.tokens.toLocaleString(), icon: TrendingUp, color: 'text-gold' },
+            { label: 'Dernière génération', value: stats.lastGen, icon: Clock, color: 'text-muted' },
+            { label: 'Références uploadées', value: stats.refs.toString(), icon: FileText, color: 'text-green' },
           ].map((stat) => (
-            <Card key={stat.label}>
+            <Card key={stat.label} data-stat-card style={{ opacity: 0 }}>
               <CardContent className="flex items-center gap-4 py-4">
                 <div className={`w-10 h-10 rounded-lg bg-navy-light/5 flex items-center justify-center ${stat.color}`}>
                   <stat.icon size={20} />
@@ -97,16 +142,13 @@ export default function Dashboard() {
             Choisir un Mode de Génération
           </h2>
           <div ref={cardsRef} className="grid md:grid-cols-3 gap-6">
-            {modes.map((mode, i) => (
+            {modes.map((mode) => (
               <Link key={mode.mode} href={`/generate/${mode.mode}`}>
                 <Card
                   variant="elevated"
+                  data-mode-card
                   className="group cursor-pointer hover:shadow-xl hover:shadow-navy/5 hover:-translate-y-1 transition-all duration-300 h-full"
-                  style={{
-                    opacity: animated ? 1 : 0,
-                    transform: animated ? 'translateY(0)' : 'translateY(24px)',
-                    transition: `opacity 0.5s ease-out ${i * 0.12}s, transform 0.5s ease-out ${i * 0.12}s`,
-                  }}
+                  style={{ opacity: 0 }}
                 >
                   <CardContent className="pt-6">
                     <div

@@ -10,20 +10,27 @@ import {
   Wand2,
   FolderOpen,
   History,
+  Globe,
+  User,
+  LogOut,
 } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils/cn';
+import { useLanguage } from '@/components/layout/LanguageProvider';
+import { useAuth } from '@/components/auth/AuthProvider';
 
 const MOBILE_NAV_ITEMS = [
-  { href: '/', label: 'Accueil', icon: LayoutDashboard },
-  { href: '/generate', label: 'Générer', icon: Wand2 },
-  { href: '/references', label: 'Références', icon: FolderOpen },
-  { href: '/history', label: 'Historique', icon: History },
+  { href: '/', label: 'Accueil', labelAr: 'الرئيسية', icon: LayoutDashboard },
+  { href: '/generate', label: 'Générer', labelAr: 'إنشاء', icon: Wand2 },
+  { href: '/references', label: 'Références', labelAr: 'المراجع', icon: FolderOpen },
+  { href: '/history', label: 'Historique', labelAr: 'السجل', icon: History },
 ];
 
 export function TopBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { lang, toggle } = useLanguage();
+  const { user, profile, signOut } = useAuth();
 
   return (
     <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-border">
@@ -37,16 +44,58 @@ export function TopBar() {
 
         <div className="hidden lg:block">
           <h2 className="text-sm font-medium text-muted">
-            Assistant Pédagogique IA pour Enseignants du Collège
+            {lang === 'fr'
+              ? 'Assistant Pédagogique IA pour Enseignants du Collège'
+              : 'مساعد تعلمي ذكي لمدرسي الإعدادية'}
           </h2>
         </div>
 
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="lg:hidden p-2 rounded-lg hover:bg-navy-light/5 text-navy"
-        >
-          {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={toggle}
+            className="p-2 rounded-lg hover:bg-navy-light/5 text-muted hover:text-navy transition-colors"
+            title={lang === 'fr' ? 'Passer en arabe' : 'Switch to French'}
+          >
+            <Globe size={18} />
+            <span className="sr-only">
+              {lang === 'fr' ? 'العربية' : 'Français'}
+            </span>
+          </button>
+
+          {user ? (
+            <div className="hidden sm:flex items-center gap-2">
+              <Link
+                href="/profile"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm text-muted hover:bg-navy-light/5 hover:text-navy transition-colors"
+              >
+                <User size={16} />
+                <span className="max-w-[100px] truncate">{profile?.full_name || user.email}</span>
+              </Link>
+              <button
+                onClick={() => signOut()}
+                className="p-2 rounded-lg hover:bg-navy-light/5 text-muted hover:text-navy transition-colors"
+                title="Déconnexion"
+              >
+                <LogOut size={16} />
+              </button>
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm text-teal font-medium hover:bg-teal/5 transition-colors"
+            >
+              <User size={16} />
+              Connexion
+            </Link>
+          )}
+
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden p-2 rounded-lg hover:bg-navy-light/5 text-navy"
+          >
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
       </div>
 
       {mobileMenuOpen && (
@@ -67,7 +116,7 @@ export function TopBar() {
                   )}
                 >
                   <item.icon size={18} />
-                  {item.label}
+                  {lang === 'ar' ? item.labelAr : item.label}
                 </Link>
               );
             })}

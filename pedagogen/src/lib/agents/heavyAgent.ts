@@ -4,9 +4,11 @@ import type { CourseMetadata } from '@/types/generation';
 export async function runHeavyAgent(
   metadata: CourseMetadata,
   useReferences: boolean,
-  referenceContents?: string
+  referenceContents?: string,
+  includePrompt?: string,
+  excludePrompt?: string
 ) {
-  const systemPrompt = buildSystemPrompt(metadata, metadata.langue, useReferences, referenceContents);
+  const systemPrompt = buildSystemPrompt(metadata, metadata.langue, useReferences, referenceContents, includePrompt, excludePrompt);
 
   const result = await callHuggingFace(
     systemPrompt,
@@ -20,7 +22,8 @@ export async function runHeavyAgent(
 
 Start with the fiche pédagogique.`,
     pedagogicalTools,
-    16000
+    16000,
+    'deepseek-ai/DeepSeek-R1'
   );
 
   return result;

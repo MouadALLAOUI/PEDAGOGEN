@@ -400,47 +400,47 @@ anime({
 
 ### Phase 1 — Foundation
 
-- [ ] Next.js project scaffold with Tailwind + Lucide + Anime.js
-- [ ] Design system: colors, fonts, component primitives (Button, Card, Badge, Modal)
-- [ ] Layout: Sidebar + TopBar + PageTransition
-- [ ] Dashboard page (static, no AI yet)
+- [x] Next.js project scaffold with Tailwind + Lucide + Anime.js
+- [x] Design system: colors, fonts, component primitives (Button, Card, Badge, Modal)
+- [x] Layout: Sidebar + TopBar + PageTransition
+- [x] Dashboard page (static, no AI yet)
 
 ### Phase 2 — Reference System
 
-- [ ] References page UI
-- [ ] File upload API route
-- [ ] ReferenceCard component
-- [ ] File retrieval utility for agent context injection
+- [x] References page UI
+- [x] File upload API route
+- [x] ReferenceCard component
+- [x] File retrieval utility for agent context injection
 
 ### Phase 3 — Light Mode Agent
 
-- [ ] CourseForm component
-- [ ] Light mode API route (single-turn Anthropic call)
-- [ ] Markdown builder + download
-- [ ] Generation page for light mode
+- [x] CourseForm component
+- [x] Light mode API route (single-turn Anthropic call)
+- [x] Markdown builder + download
+- [x] Generation page for light mode
 
 ### Phase 4 — Medium Mode Agent
 
-- [ ] DocumentPicker component
-- [ ] Medium mode API route (parallel tool calls)
-- [ ] DOCX + PDF builders
-- [ ] SSE streaming + GenerationProgress component
+- [x] DocumentPicker component
+- [x] Medium mode API route (parallel tool calls)
+- [x] DOCX + PDF builders
+- [x] SSE streaming + GenerationProgress component
 
 ### Phase 5 — Heavy Mode Agent
 
-- [ ] Multi-step orchestration agent
-- [ ] PPTX builder
-- [ ] ZIP bundler
-- [ ] Daily rate limit enforcement
-- [ ] OutputPreview with per-file download
+- [x] Multi-step orchestration agent
+- [x] PPTX builder
+- [x] ZIP bundler
+- [x] Daily rate limit enforcement
+- [x] OutputPreview with per-file download
 
 ### Phase 6 — Polish
 
-- [ ] History page
-- [ ] Token usage tracking
-- [ ] Anime.js signature animations
-- [ ] Arabic language output support
-- [ ] Mobile responsiveness
+- [x] History page
+- [x] Token usage tracking
+- [x] Anime.js signature animations
+- [x] Arabic language output support
+- [x] Mobile responsiveness
 
 ---
 

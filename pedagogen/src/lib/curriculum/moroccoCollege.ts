@@ -27,6 +27,7 @@ export const MATIERES: Matiere[] = [
   { id: 'tech', nom: 'Technologies', nomArabe: 'التكنولوجيا', niveaux: ['1AC', '2AC', '3AC'] },
   { id: 'arts', nom: 'Arts Plastiques', nomArabe: 'التربية التشكيلية', niveaux: ['1AC', '2AC', '3AC'] },
   { id: 'musique', nom: 'Musique', nomArabe: 'التربية Musikique', niveaux: ['1AC', '2AC', '3AC'] },
+  { id: 'info', nom: 'Informatique', nomArabe: 'المعلوماتية', niveaux: ['1AC', '2AC', '3AC'] },
 ];
 
 export const NIVEAUX = ['1AC', '2AC', '3AC'] as const;

@@ -1,125 +1,113 @@
-import { promises as fs } from 'fs';
-import path from 'path';
+import { readFile, unlink, writeFile, mkdirSync, existsSync } from 'fs';
+import { join } from 'path';
+import { promisify } from 'util';
+import { getDb } from '@/lib/db';
 import type { ReferenceFile, ReferenceCategory } from '@/types/references';
 
-const REFERENCES_DIR = path.join(process.cwd(), 'public', 'references');
-const META_FILE = path.join(REFERENCES_DIR, '.metadata.json');
+const readFileAsync = promisify(readFile);
+const unlinkAsync = promisify(unlink);
+const writeFileAsync = promisify(writeFile);
 
-interface MetadataStore {
-  [id: string]: { name: string; category: ReferenceCategory; uploadedAt: string };
-}
-
-async function readMetadata(): Promise<MetadataStore> {
-  try {
-    const raw = await fs.readFile(META_FILE, 'utf-8');
-    return JSON.parse(raw);
-  } catch {
-    return {};
-  }
-}
-
-async function writeMetadata(store: MetadataStore): Promise<void> {
-  await fs.writeFile(META_FILE, JSON.stringify(store, null, 2));
-}
-
-export async function ensureReferencesDir(): Promise<void> {
-  try {
-    await fs.access(REFERENCES_DIR);
-  } catch {
-    await fs.mkdir(REFERENCES_DIR, { recursive: true });
-  }
-}
-
-export async function saveUploadedFile(
-  buffer: Buffer,
-  filename: string,
-  category: ReferenceCategory
-): Promise<ReferenceFile> {
-  await ensureReferencesDir();
-
-  const id = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
-  const ext = path.extname(filename);
-  const storedName = `${id}${ext}`;
-  const filePath = path.join(REFERENCES_DIR, storedName);
-
-  await fs.writeFile(filePath, buffer);
-
-  const meta = await readMetadata();
-  meta[id] = { name: filename, category, uploadedAt: new Date().toISOString() };
-  await writeMetadata(meta);
-
-  return {
-    id,
-    name: filename,
-    category,
-    size: buffer.length,
-    uploadedAt: new Date(),
-    url: `/references/${storedName}`,
-  };
-}
+const REFERENCES_DIR = join(process.cwd(), 'data', 'references');
+if (!existsSync(REFERENCES_DIR)) mkdirSync(REFERENCES_DIR, { recursive: true });
 
 export async function listReferenceFiles(): Promise<ReferenceFile[]> {
-  await ensureReferencesDir();
+  const db = getDb();
+  const files = db.prepare(
+    'SELECT * FROM reference_files ORDER BY uploaded_at DESC'
+  ).all() as any[];
 
-  const meta = await readMetadata();
-
-  try {
-    const entries = await fs.readdir(REFERENCES_DIR);
-    const files: ReferenceFile[] = [];
-
-    for (const entry of entries) {
-      if (entry === '.gitkeep' || entry.endsWith('.json')) continue;
-      const filePath = path.join(REFERENCES_DIR, entry);
-      const stat = await fs.stat(filePath);
-      if (!stat.isFile()) continue;
-
-      const id = path.basename(entry, path.extname(entry));
-      const stored = meta[id];
-
-      files.push({
-        id,
-        name: stored?.name || entry,
-        category: stored?.category || 'custom',
-        size: stat.size,
-        uploadedAt: stored ? new Date(stored.uploadedAt) : stat.mtime,
-        url: `/references/${entry}`,
-      });
-    }
-
-    return files.sort((a, b) => b.uploadedAt.getTime() - a.uploadedAt.getTime());
-  } catch {
-    return [];
-  }
+  return files.map((f) => ({
+    id: f.id,
+    name: f.name,
+    category: f.category as ReferenceCategory,
+    size: f.size,
+    uploadedAt: new Date(f.uploaded_at),
+    url: `/api/references/download/${f.id}`,
+    enabled: !!f.enabled,
+    builtin: !!f.builtin,
+  }));
 }
 
-export async function deleteReferenceFile(id: string): Promise<boolean> {
-  await ensureReferencesDir();
-
+export async function readReferenceContent(id: string): Promise<string | null> {
   try {
-    const entries = await fs.readdir(REFERENCES_DIR);
-    for (const entry of entries) {
-      if (entry.startsWith(id)) {
-        await fs.unlink(path.join(REFERENCES_DIR, entry));
+    const db = getDb();
+    const record = db.prepare(
+      'SELECT storage_path FROM reference_files WHERE id = ?'
+    ).get(id) as any;
 
-        const meta = await readMetadata();
-        delete meta[id];
-        await writeMetadata(meta);
+    if (!record) return null;
 
-        return true;
-      }
-    }
-    return false;
-  } catch {
-    return false;
-  }
-}
-
-export async function readReferenceContent(filename: string): Promise<string | null> {
-  try {
-    const filePath = path.join(REFERENCES_DIR, filename);
-    const buffer = await fs.readFile(filePath);
-    return buffer.toString('utf-8');
+    const filePath = join(REFERENCES_DIR, record.storage_path);
+    return await readFileAsync(filePath, 'utf-8');
   } catch {
     return null;
   }
+}
+
+export async function saveReferenceFile(
+  name: string,
+  category: string,
+  buffer: Buffer
+): Promise<{ id: string; name: string; category: string; size: number; url: string }> {
+  const db = getDb();
+  const id = crypto.randomUUID();
+  const ext = name.split('.').pop() || 'bin';
+  const storagePath = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}.${ext}`;
+
+  const filePath = join(REFERENCES_DIR, storagePath);
+  await writeFileAsync(filePath, buffer);
+
+  db.prepare(`
+    INSERT INTO reference_files (id, name, category, size, storage_path)
+    VALUES (?, ?, ?, ?, ?)
+  `).run(id, name, category, buffer.length, storagePath);
+
+  return {
+    id,
+    name,
+    category,
+    size: buffer.length,
+    url: `/api/references/download/${id}`,
+  };
+}
+
+export async function deleteReferenceFile(id: string): Promise<boolean> {
+  try {
+    const db = getDb();
+    const record = db.prepare(
+      'SELECT storage_path FROM reference_files WHERE id = ?'
+    ).get(id) as any;
+
+    if (!record) return false;
+
+    const filePath = join(REFERENCES_DIR, record.storage_path);
+    try { await unlinkAsync(filePath); } catch {}
+
+    db.prepare('DELETE FROM reference_files WHERE id = ?').run(id);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function getReferenceRecord(id: string): Promise<{ storage_path: string; name: string } | null> {
+  const db = getDb();
+  const record = db.prepare(
+    'SELECT storage_path, name FROM reference_files WHERE id = ?'
+  ).get(id) as any;
+  return record || null;
+}
+
+export async function getReferenceFilePath(id: string): Promise<string | null> {
+  const record = await getReferenceRecord(id);
+  if (!record) return null;
+  return join(REFERENCES_DIR, record.storage_path);
+}
+
+export async function getGeneratedFilePath(filename: string): Promise<string | null> {
+  const GENERATED_DIR = join(process.cwd(), 'data', 'generated');
+  const filePath = join(GENERATED_DIR, filename);
+  if (existsSync(filePath)) return filePath;
+  return null;
 }
