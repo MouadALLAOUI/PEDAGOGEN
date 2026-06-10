@@ -97,3 +97,205 @@ body {
 .animate-pulse-teal {
   animation: pulse-teal 2s infinite;
 }
+
+/* RTL support */
+[dir="rtl"] body {
+  font-family: 'Noto Sans Arabic', 'Inter', sans-serif;
+}
+
+[dir="rtl"] .font-display {
+  font-family: 'Noto Sans Arabic', 'Playfair Display', serif;
+}
+
+[dir="rtl"] .space-y-1 > :not([hidden]) ~ :not([hidden]),
+[dir="rtl"] .space-y-2 > :not([hidden]) ~ :not([hidden]),
+[dir="rtl"] .space-y-3 > :not([hidden]) ~ :not([hidden]),
+[dir="rtl"] .space-y-4 > :not([hidden]) ~ :not([hidden]),
+[dir="rtl"] .space-y-5 > :not([hidden]) ~ :not([hidden]),
+[dir="rtl"] .space-y-6 > :not([hidden]) ~ :not([hidden]),
+[dir="rtl"] .space-y-8 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 1;
+}
+
+[dir="rtl"] .flex-row {
+  direction: rtl;
+}
+
+/* docx-preview overrides */
+.docx-wrapper {
+  padding: 3rem 1.5rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  background: #f1f5f9 !important; /* Elegant slate background */
+  gap: 2.5rem !important;
+  min-height: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.docx-wrapper > section {
+  background: white !important;
+  box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 10px 10px -5px rgba(15, 23, 42, 0.04) !important;
+  border-radius: 12px !important;
+  border: 1px solid var(--border) !important;
+  padding: 4.5rem 5.5rem !important; /* Professional margins */
+  margin: 0 auto !important;
+  width: 820px !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.docx-wrapper canvas {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* Premium docx typography overrides */
+.docx-wrapper section p,
+.docx-wrapper section span,
+.docx-wrapper section td,
+.docx-wrapper section li {
+  font-family: 'Inter', sans-serif !important;
+  color: var(--navy-light) !important;
+  line-height: 1.65 !important;
+}
+
+.docx-wrapper section h1,
+.docx-wrapper section h2,
+.docx-wrapper section h3,
+.docx-wrapper section h4,
+.docx-wrapper section h5,
+.docx-wrapper section h6 {
+  font-family: 'Playfair Display', serif !important;
+  color: var(--navy) !important;
+  font-weight: 700 !important;
+  margin-top: 1.8rem !important;
+  margin-bottom: 0.8rem !important;
+}
+
+.docx-wrapper section h1 {
+  font-size: 1.8rem !important;
+  color: var(--navy) !important;
+  border-bottom: 2px solid var(--teal) !important;
+  padding-bottom: 0.5rem !important;
+  margin-top: 1.25rem !important;
+}
+
+.docx-wrapper section h2 {
+  font-size: 1.45rem !important;
+  color: var(--teal) !important;
+}
+
+.docx-wrapper section h3 {
+  font-size: 1.25rem !important;
+}
+
+/* Styled lists inside docx */
+.docx-wrapper section ul {
+  list-style-type: disc !important;
+  padding-left: 1.5rem !important;
+  margin: 1rem 0 !important;
+}
+
+.docx-wrapper section ol {
+  list-style-type: decimal !important;
+  padding-left: 1.5rem !important;
+  margin: 1rem 0 !important;
+}
+
+.docx-wrapper section li {
+  margin-bottom: 0.5rem !important;
+}
+
+/* Tables styled premium */
+.docx-wrapper section table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+  margin: 2rem 0 !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}
+
+.docx-wrapper section td,
+.docx-wrapper section th {
+  padding: 12px 16px !important;
+  border: 1px solid var(--border) !important;
+}
+
+.docx-wrapper section tr:first-child,
+.docx-wrapper section th {
+  background-color: rgba(13, 148, 136, 0.06) !important; /* soft teal */
+  font-weight: 600 !important;
+  color: var(--navy) !important;
+}
+
+/* Custom Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Glassmorphism card header */
+.glass-header {
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+/* Custom premium card design */
+.premium-card {
+  background: white;
+  border: 1px solid rgba(15, 23, 42, 0.06) !important;
+  box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.02), 0 10px 15px -3px rgba(15, 23, 42, 0.03), 0 0 0 1px rgba(15, 23, 42, 0.01) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.premium-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.06), 0 10px 10px -5px rgba(15, 23, 42, 0.03) !important;
+  border-color: rgba(13, 148, 136, 0.25) !important;
+}
+
+/* Modern inputs & selects */
+input, select, textarea {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--teal) !important;
+  box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.12) !important;
+}
+
+/* Premium gradient buttons */
+.btn-gradient {
+  background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%) !important;
+  box-shadow: 0 4px 14px 0 rgba(13, 148, 136, 0.25) !important;
+  color: white !important;
+  border: none !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.btn-gradient:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--teal-light) 0%, var(--teal) 100%) !important;
+  box-shadow: 0 6px 20px 0 rgba(13, 148, 136, 0.35) !important;
+  transform: translateY(-1px);
+}
+
+.btn-gradient:active:not(:disabled) {
+  transform: translateY(0);
+}
+

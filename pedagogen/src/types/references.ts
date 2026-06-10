@@ -20,4 +20,6 @@ export interface ReferenceFile {
   size: number;
   uploadedAt: Date;
   url: string;
+  enabled: boolean;
+  builtin: boolean;
 }

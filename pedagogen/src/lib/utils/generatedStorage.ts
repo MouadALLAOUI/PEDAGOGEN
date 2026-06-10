@@ -1,46 +1,70 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-import type { OutputFormat, GeneratedFile, DocumentType } from '@/types/generation';
+import { writeFile, mkdirSync, existsSync } from 'fs';
+import { join } from 'path';
+import { promisify } from 'util';
+import { getDb } from '@/lib/db';
+import type { OutputFormat, GeneratedFile, DocumentType, CourseMetadata } from '@/types/generation';
 
-const GENERATED_DIR = path.join(process.cwd(), 'public', 'generated');
 
-export async function ensureGeneratedDir(): Promise<void> {
-  try {
-    await fs.access(GENERATED_DIR);
-  } catch {
-    await fs.mkdir(GENERATED_DIR, { recursive: true });
-  }
-}
+const writeFileAsync = promisify(writeFile);
+
+const GENERATED_DIR = join(process.cwd(), 'data', 'generated');
+if (!existsSync(GENERATED_DIR)) mkdirSync(GENERATED_DIR, { recursive: true });
 
 export async function saveGeneratedFile(
   buffer: Buffer,
   name: string,
   format: OutputFormat,
-  docType: DocumentType
+  docType: DocumentType,
+  generationId?: string
 ): Promise<GeneratedFile> {
-  await ensureGeneratedDir();
-
   const id = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
-  const filename = `${id}.${format}`;
-  const filePath = path.join(GENERATED_DIR, filename);
+  const storagePath = `${id}.${format}`;
+  const filePath = join(GENERATED_DIR, storagePath);
 
-  await fs.writeFile(filePath, buffer);
+  await writeFileAsync(filePath, buffer);
+
+  const url = `/api/downloads/${storagePath}`;
+
+  const db = getDb();
+  const dbId = crypto.randomUUID();
+  db.prepare(`
+    INSERT INTO generated_files (id, generation_id, name, doc_type, format, storage_path, url, size_kb)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(
+    dbId,
+    generationId || null,
+    name,
+    docType,
+    format,
+    storagePath,
+    url,
+    Math.round(buffer.length / 1024)
+  );
 
   return {
+    id: dbId,
     name,
     type: docType,
     format,
-    url: `/api/downloads/${filename}`,
+    url,
     sizeKb: Math.round(buffer.length / 1024),
   };
 }
 
-export async function getGeneratedFilePath(filename: string): Promise<string | null> {
-  try {
-    const filePath = path.join(GENERATED_DIR, filename);
-    await fs.access(filePath);
-    return filePath;
-  } catch {
-    return null;
-  }
+export function getDynamicFilename(label: string, metadata: CourseMetadata, fmt: string): string {
+  const sanitize = (str: string) =>
+    str
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-zA-Z0-9\s-_]/g, '')
+      .trim()
+      .replace(/\s+/g, '_');
+
+  const labelClean = sanitize(label);
+  const niveauClean = sanitize(metadata.niveau);
+  const matiereClean = sanitize(metadata.matiere);
+  const leconClean = sanitize(metadata.lecon);
+
+  return `${labelClean}_${niveauClean}_${matiereClean}_${leconClean}.${fmt}`;
 }
+

@@ -10,7 +10,7 @@ export type DocumentType =
   | 'presentation_pptx'
   | 'images_illustratives';
 
-export type OutputFormat = 'docx' | 'pptx' | 'pdf' | 'md';
+export type OutputFormat = 'docx' | 'pptx' | 'pdf' | 'md' | 'zip' | 'png';
 
 export interface CourseMetadata {
   niveau: '1AC' | '2AC' | '3AC';
@@ -21,6 +21,7 @@ export interface CourseMetadata {
   competences: string[];
   langue: 'fr' | 'ar' | 'fr+ar';
   semestre: 1 | 2;
+  profilEleves?: string;
 }
 
 export interface GenerationRequest {
@@ -29,6 +30,14 @@ export interface GenerationRequest {
   documentsToGenerate?: DocumentType[];
   outputFormat: OutputFormat | OutputFormat[];
   useReferences: boolean;
+  includePrompt?: string;
+  excludePrompt?: string;
+  useLocalModel?: boolean;
+  localModelName?: string;
+  localModelUrl?: string;
+  localApiType?: 'openai' | 'custom';
+  customPrompts?: Record<string, string>;
+  debugMode?: boolean;
 }
 
 export interface GenerationResult {
@@ -37,11 +46,14 @@ export interface GenerationResult {
   mode: GenerationMode;
   metadata: CourseMetadata;
   files: GeneratedFile[];
+  zipUrl?: string;
   tokensUsed: number;
   durationMs: number;
+  markdown?: string;
 }
 
 export interface GeneratedFile {
+  id?: string;
   name: string;
   type: DocumentType;
   format: OutputFormat;
@@ -95,3 +107,15 @@ export const MODE_DESCRIPTIONS: Record<GenerationMode, {
     color: '#16A34A',
   },
 };
+
+export const BEST_FORMATS: Record<DocumentType, OutputFormat> = {
+  fiche_pedagogique: 'docx',
+  planification: 'pdf',
+  plan_gestion_classe: 'pdf',
+  evaluation: 'docx',
+  cours_complet: 'pdf',
+  resume_eleve: 'pdf',
+  presentation_pptx: 'pptx',
+  images_illustratives: 'md',
+};
+

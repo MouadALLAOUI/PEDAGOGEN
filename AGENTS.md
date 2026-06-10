@@ -47,7 +47,8 @@ PEDAGOGEN/                    # Workspace root (NOT the Next.js project)
 - **Language:** TypeScript (strict mode)
 - **Styling:** Tailwind CSS v4 (`@tailwindcss/postcss`) — no `tailwind.config` file, uses `@theme inline` in `globals.css`
 - **AI:** HuggingFace Inference API via `fetch()` — model `openai/gpt-oss-120b:fastest`
-- **State:** Zustand
+- **DB/Storage:** Supabase (Docker self-hosted)
+- **State:** React Context
 - **Forms:** React Hook Form + Zod v4
 - **Animations:** Anime.js v4
 - **Icons:** Lucide React
@@ -59,9 +60,43 @@ Create `pedagogen/.env.local`:
 
 ```
 HF_TOKEN=hf_your_token_here
+NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
 ⚠️ **Naming mismatch:** The root `.env` file uses `hugging_face_api` but the code reads `process.env.HF_TOKEN`. Always use `HF_TOKEN`.
+
+## Supabase Setup (Docker)
+
+```bash
+# Start Supabase
+docker compose up -d
+
+# Check status
+docker compose ps
+
+# View logs
+docker compose logs -f
+
+# Stop
+docker compose down
+```
+
+**Services:**
+| Service | Port | URL |
+|---------|------|-----|
+| Kong (API Gateway) | 54321 | http://localhost:54321 |
+| Studio (Dashboard) | 3001 | http://localhost:3001 |
+| Database (PostgreSQL) | 5432 | localhost:5432 |
+
+**Default credentials:**
+- Postgres: `postgres` / `postgres`
+- Anon key: in `.env` (root)
+- Service role key: in `.env` (root)
+
+**Migration:** The SQL migration at `supabase/migrations/001_initial.sql` runs automatically on first `docker compose up`. It creates:
+- Tables: `generations`, `reference_files`, `generated_files`
+- Storage buckets: `references`, `generated`
 
 ## Key Conventions
 

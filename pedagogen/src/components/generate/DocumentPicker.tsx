@@ -14,6 +14,7 @@ import {
   Presentation,
   Image,
 } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const DOC_ICONS: Record<DocumentType, typeof FileText> = {
   fiche_pedagogique: FileText,
@@ -29,13 +30,18 @@ const DOC_ICONS: Record<DocumentType, typeof FileText> = {
 interface DocumentPickerProps {
   selected: DocumentType[];
   onChange: (docs: DocumentType[]) => void;
+  maxSelected?: number;
 }
 
-export function DocumentPicker({ selected, onChange }: DocumentPickerProps) {
+export function DocumentPicker({ selected, onChange, maxSelected }: DocumentPickerProps) {
   const toggle = (doc: DocumentType) => {
     if (selected.includes(doc)) {
       onChange(selected.filter((d) => d !== doc));
     } else {
+      if (maxSelected && selected.length >= maxSelected) {
+        toast.error(`Le mode sélectif est limité à ${maxSelected} documents maximum. Pour générer plus de documents, veuillez utiliser le Mode Complet (Heavy).`);
+        return;
+      }
       onChange([...selected, doc]);
     }
   };
@@ -51,14 +57,18 @@ export function DocumentPicker({ selected, onChange }: DocumentPickerProps) {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-3 mb-2">
-        <button
-          type="button"
-          onClick={selectAll}
-          className="text-xs text-teal hover:underline font-medium"
-        >
-          Tout sélectionner
-        </button>
-        <span className="text-muted text-xs">|</span>
+        {!maxSelected && (
+          <>
+            <button
+              type="button"
+              onClick={selectAll}
+              className="text-xs text-teal hover:underline font-medium"
+            >
+              Tout sélectionner
+            </button>
+            <span className="text-muted text-xs">|</span>
+          </>
+        )}
         <button
           type="button"
           onClick={clearAll}

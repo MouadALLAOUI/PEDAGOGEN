@@ -23,12 +23,29 @@ export function buildMarkdown(
   lines.push('');
 
   for (const [key, value] of Object.entries(content)) {
+    lines.push(`## ${key.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}`);
+    lines.push('');
     if (typeof value === 'string') {
-      lines.push(`## ${key.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}`);
-      lines.push('');
       lines.push(value);
-      lines.push('');
+    } else if (Array.isArray(value)) {
+      lines.push(value.map(item => `- ${item}`).join('\n'));
+    } else if (value && typeof value === 'object') {
+      for (const [subKey, subVal] of Object.entries(value)) {
+        lines.push(`### ${subKey.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}`);
+        lines.push('');
+        if (typeof subVal === 'string') {
+          lines.push(subVal);
+        } else if (Array.isArray(subVal)) {
+          lines.push(subVal.map(item => `- ${item}`).join('\n'));
+        } else {
+          lines.push(JSON.stringify(subVal, null, 2));
+        }
+        lines.push('');
+      }
+    } else {
+      lines.push(String(value));
     }
+    lines.push('');
   }
 
   return lines.join('\n');

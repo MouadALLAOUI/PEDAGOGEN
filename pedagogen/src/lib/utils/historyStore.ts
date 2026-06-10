@@ -1,7 +1,5 @@
+import { getDb } from '@/lib/db';
 import type { GenerationResult } from '@/types/generation';
-
-const STORAGE_KEY = 'pedagogen_history';
-const MAX_ENTRIES = 50;
 
 export interface HistoryEntry {
   id: string;
@@ -12,38 +10,95 @@ export interface HistoryEntry {
   createdAt: string;
   filesCount: number;
   tokensUsed: number;
-  files: GenerationResult['files'];
+  files: { name: string; url: string; format: string }[];
 }
 
-export function getHistory(): HistoryEntry[] {
-  if (typeof window === 'undefined') return [];
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
+export async function getHistory(): Promise<HistoryEntry[]> {
+  const db = getDb();
+  const generations = db.prepare(
+    'SELECT * FROM generations ORDER BY created_at DESC LIMIT 50'
+  ).all() as any[];
+
+  const entries: HistoryEntry[] = [];
+
+  for (const gen of generations) {
+    const files = db.prepare(
+      'SELECT name, url, format FROM generated_files WHERE generation_id = ?'
+    ).all(gen.id) as any[];
+
+    entries.push({
+      id: gen.id,
+      mode: gen.mode,
+      matiere: gen.matiere,
+      niveau: gen.niveau,
+      lecon: gen.lecon,
+      createdAt: gen.created_at,
+      filesCount: gen.files_count,
+      tokensUsed: gen.tokens_used,
+      files: files || [],
+    });
   }
+
+  return entries;
 }
 
-export function addHistoryEntry(result: GenerationResult): void {
-  if (typeof window === 'undefined') return;
-  try {
-    const history = getHistory();
-    const entry: HistoryEntry = {
-      id: result.id,
-      mode: result.mode,
-      matiere: result.metadata.matiere,
-      niveau: result.metadata.niveau,
-      lecon: result.metadata.lecon,
-      createdAt: String(result.createdAt),
-      filesCount: result.files.length,
-      tokensUsed: result.tokensUsed,
-      files: result.files,
-    };
-    history.unshift(entry);
-    if (history.length > MAX_ENTRIES) history.pop();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
-  } catch {
-    // Storage full or unavailable
+export async function addHistoryEntry(result: GenerationResult): Promise<void> {
+  const db = getDb();
+
+  // If a generation with this ID already exists, do not re-insert it
+  const existingGen = db.prepare('SELECT id FROM generations WHERE id = ?').get(result.id);
+  if (existingGen) {
+    return;
+  }
+
+  db.prepare(`
+    INSERT INTO generations (id, mode, matiere, niveau, lecon, unite, duree, competences, langue, semestre, tokens_used, duration_ms, files_count, zip_url)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(
+    result.id,
+    result.mode,
+    result.metadata.matiere,
+    result.metadata.niveau,
+    result.metadata.lecon,
+    result.metadata.unite,
+    result.metadata.duree,
+    JSON.stringify(result.metadata.competences),
+    result.metadata.langue,
+    result.metadata.semestre,
+    result.tokensUsed,
+    result.durationMs,
+    result.files.length,
+    result.zipUrl || null
+  );
+
+  if (result.files.length > 0) {
+    const updateFile = db.prepare(`
+      UPDATE generated_files 
+      SET generation_id = ?
+      WHERE url = ?
+    `);
+
+    const insertFile = db.prepare(`
+      INSERT INTO generated_files (id, generation_id, name, doc_type, format, storage_path, url, size_kb)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    for (const f of result.files) {
+      const existingFile = db.prepare('SELECT id FROM generated_files WHERE url = ?').get(f.url);
+      if (existingFile) {
+        updateFile.run(result.id, f.url);
+      } else {
+        insertFile.run(
+          crypto.randomUUID(),
+          result.id,
+          f.name,
+          f.type,
+          f.format,
+          f.url.split('/').pop() || '',
+          f.url,
+          f.sizeKb
+        );
+      }
+    }
   }
 }
