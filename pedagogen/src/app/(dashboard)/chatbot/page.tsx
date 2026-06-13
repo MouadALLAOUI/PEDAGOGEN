@@ -166,33 +166,35 @@ export default function ChatbotPage() {
     <PageTransition>
       <div className="max-w-4xl mx-auto flex flex-col h-[calc(100vh-8rem)]">
         {/* Header */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-teal/10 flex items-center justify-center">
-              <Bot size={20} className="text-teal" />
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-teal via-teal-dark to-navy p-6 lg:p-8 text-white mb-4">
+          <div className="absolute top-0 right-0 w-56 h-56 bg-teal-light/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
+          <div className="relative z-10 flex items-center gap-4">
+            <div className="w-11 h-11 rounded-xl bg-white/15 backdrop-blur flex items-center justify-center shrink-0">
+              <Bot size={20} className="text-white" />
             </div>
-            <div>
-              <h1 className="font-display text-xl font-bold text-navy">Chatbot API</h1>
-              <p className="text-xs text-muted">Testez votre modèle HuggingFace en direct</p>
+            <div className="flex-1">
+              <h1 className="font-display text-2xl lg:text-3xl font-bold tracking-tight">Chatbot API</h1>
+              <p className="text-white/60 text-sm mt-0.5">Testez votre modèle HuggingFace en direct</p>
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            {tokens > 0 && (
-              <Badge variant="green">
-                <Zap size={12} className="mr-1" />
-                {tokens.toLocaleString()} tokens
-              </Badge>
-            )}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowSettings(!showSettings)}
-            >
-              {showSettings ? 'Masquer' : 'Paramètres'}
-            </Button>
-            <Button variant="ghost" size="sm" onClick={clearChat}>
-              <Trash2 size={14} />
-            </Button>
+            <div className="flex items-center gap-2">
+              {tokens > 0 && (
+                <Badge variant="green">
+                  <Zap size={12} className="mr-1" />
+                  {tokens.toLocaleString()} tokens
+                </Badge>
+              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowSettings(!showSettings)}
+                className="text-white/70 hover:text-white hover:bg-white/10"
+              >
+                {showSettings ? 'Masquer' : 'Paramètres'}
+              </Button>
+              <Button variant="ghost" size="sm" onClick={clearChat} className="text-white/70 hover:text-white hover:bg-white/10">
+                <Trash2 size={14} />
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -210,7 +212,7 @@ export default function ChatbotPage() {
                 />
               </div>
 
-              <div className="flex flex-col gap-2 p-3 rounded-lg bg-navy-light/5 border border-border">
+              <div className="flex flex-col gap-2 p-3 rounded-lg bg-parchment-dark border border-border">
                 <label className="flex items-center gap-3 cursor-pointer">
                   <div className="relative">
                     <input
@@ -255,7 +257,7 @@ export default function ChatbotPage() {
         <div className="flex-1 overflow-y-auto space-y-4 mb-4 pr-2">
           {messages.length === 0 && (
             <div className="text-center py-20 text-muted">
-              <Bot size={48} className="mx-auto mb-4 text-navy-light/30" />
+              <Bot size={48} className="mx-auto mb-4 text-muted/30" />
               <p className="text-sm">Envoyez un message pour tester l&apos;API</p>
             </div>
           )}
@@ -274,7 +276,7 @@ export default function ChatbotPage() {
                 className={`max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
                   msg.role === 'user'
                     ? 'bg-navy text-parchment rounded-br-md'
-                    : 'bg-navy-light/5 text-navy border border-border rounded-bl-md'
+                    : 'bg-parchment-dark text-navy border border-border rounded-bl-md'
                 }`}
               >
                 {msg.content || msg.reasoning ? (

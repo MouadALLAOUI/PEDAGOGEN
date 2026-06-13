@@ -1,0 +1,652 @@
+/* ===== MARKDOWN RICH TEXT CONTENT STYLES =====
+ * All colors use --md-* variables, defined with defaults.
+ * Specific markdown theme classes override --md-* to lock their colors.
+ */
+
+.markdown-content {
+  width: 100%;
+  margin: 1.5rem auto;
+  padding: 1.5rem;
+  background-color: var(--md-bg);
+  border-radius: 0.375rem;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+  color: var(--md-text);
+  line-height: 1.6;
+  font-family: inherit;
+
+  /* Default Theme Variables */
+  --md-bg: var(--color-parchment, #fbfaf7);
+  --md-text: var(--color-navy, #1e293b);
+  --md-heading: var(--color-navy, #1e293b);
+  --md-accent: var(--color-teal, #0f766e);
+  --md-accent-hover: var(--color-teal-dark, #0f172a);
+  --md-muted: #64748b;
+  --md-border: #cbd5e1;
+  --md-code-bg: #0f172a;
+  --md-code-header: #1e293b;
+  --md-code-text: #f8fafc;
+  --md-inline-bg: rgba(15, 118, 110, 0.08);
+  --md-inline-text: #0f766e;
+  --md-inline-border: rgba(15, 118, 110, 0.2);
+  --md-blockquote-bg: rgba(15, 118, 110, 0.05);
+  --md-btn-bg: #334155;
+  --md-btn-text: #f8fafc;
+  --md-btn-hover: #475569;
+}
+
+/* Headings */
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+  font-family: inherit;
+  color: var(--md-heading);
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.markdown-content h1 {
+  font-size: 2.25rem;
+  border-bottom: 2px solid var(--md-accent);
+  padding-bottom: 0.5rem;
+}
+
+.markdown-content h2 {
+  font-size: 1.75rem;
+  border-bottom: 1px solid var(--md-border);
+  padding-bottom: 0.5rem;
+}
+
+.markdown-content h3 {
+  font-size: 1.5rem;
+}
+
+.markdown-content h4 {
+  font-size: 1.25rem;
+}
+
+.markdown-content h5 {
+  font-size: 1.1rem;
+}
+
+.markdown-content h6 {
+  font-size: 1rem;
+}
+
+/* Paragraphs */
+.markdown-content p {
+  margin-bottom: 1rem;
+  color: var(--md-text);
+  text-align: justify;
+}
+
+.markdown-content strong {
+  color: var(--md-accent);
+  font-weight: 700;
+}
+
+.markdown-content em {
+  color: var(--md-muted);
+  font-style: italic;
+}
+
+.markdown-content del {
+  color: var(--md-muted);
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+/* Links */
+.markdown-content a {
+  color: var(--md-accent);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--md-accent);
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.markdown-content a:hover {
+  color: var(--md-accent-hover);
+  border-bottom-color: var(--md-accent-hover);
+}
+
+/* Images */
+.markdown-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1.5rem auto;
+  border: 2px solid var(--md-accent);
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Code Blocks */
+.markdown-content .code-block-wrapper {
+  position: relative;
+  margin-bottom: 1rem;
+  border-radius: 0.375rem;
+  overflow: hidden;
+  border: 1px solid var(--md-border);
+  background: var(--md-code-bg);
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.markdown-content .code-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px 6px 42px;
+  background: var(--md-code-header);
+  border-bottom: 1px solid var(--md-border);
+  font-family: monospace;
+  font-size: 0.75rem;
+  user-select: none;
+  position: relative;
+}
+
+.markdown-content .code-lang {
+  color: var(--md-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.markdown-content pre,
+.markdown-content .code-block-container {
+  background: var(--md-code-bg);
+  color: var(--md-code-text);
+  padding: 1rem;
+  margin: 0;
+  white-space: pre-wrap !important;
+  word-break: normal !important;
+  overflow-y: auto;
+  max-height: 700px;
+  overflow-wrap: break-word !important;
+  max-width: 100% !important;
+}
+
+.markdown-content .code-block-container code,
+.markdown-content pre code {
+  font-family: monospace;
+  font-size: 0.9rem;
+  white-space: pre-wrap !important;
+  word-break: normal !important;
+  overflow-wrap: break-word !important;
+  background: transparent;
+  border: none;
+  color: inherit;
+  padding: 0;
+  max-width: 100% !important;
+}
+
+.markdown-content .copy-btn {
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--md-btn-bg);
+  color: var(--md-btn-text);
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  opacity: 0;
+  transition: opacity 0.2s, background 0.2s;
+  z-index: 1;
+}
+
+.markdown-content .copy-btn:hover,
+.markdown-content .copy-btn:focus {
+  background: var(--md-btn-hover);
+  opacity: 1 !important;
+}
+
+.markdown-content .code-block-wrapper:hover .copy-btn {
+  opacity: 1;
+}
+
+/* Inline Code */
+.markdown-content code {
+  background-color: var(--md-inline-bg);
+  color: var(--md-inline-text);
+  border: 1px solid var(--md-inline-border);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 0.9em;
+  cursor: pointer;
+  white-space: pre-wrap !important;
+  word-break: normal !important;
+  overflow-wrap: break-word !important;
+  max-width: 100% !important;
+}
+
+.markdown-content .inline-code.copied {
+  background: var(--md-accent);
+  color: var(--md-bg);
+}
+
+/* Blockquotes */
+.markdown-content blockquote {
+  border-left: 4px solid var(--md-accent);
+  padding-left: 1rem;
+  margin-left: 0;
+  margin-bottom: 1rem;
+  color: var(--md-muted);
+  font-style: italic;
+  background-color: var(--md-blockquote-bg);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-radius: 0 0.375rem 0.375rem 0;
+}
+
+/* Horizontal Rule */
+.markdown-content hr {
+  border: none;
+  border-top: 2px dashed var(--md-border);
+  margin: 2rem 0;
+  opacity: 0.6;
+}
+
+/* Lists */
+.markdown-content ul,
+.markdown-content ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  color: var(--md-text);
+}
+
+.markdown-content ul li,
+.markdown-content ol li {
+  margin-bottom: 0.25rem;
+  text-align: justify;
+}
+
+.markdown-content ul {
+  list-style-type: disc;
+}
+
+.markdown-content ol {
+  list-style-type: decimal;
+}
+
+/* Tables */
+.markdown-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+  background-color: var(--md-inline-bg);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  border: 1px solid var(--md-border);
+}
+
+.markdown-content table th,
+.markdown-content table td {
+  border: 1px solid var(--md-border);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.markdown-content table th {
+  background-color: var(--md-code-header);
+  color: var(--md-heading);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.markdown-content table tr:nth-child(even) td {
+  background-color: var(--md-inline-bg);
+}
+
+.markdown-content table tr:hover td {
+  background-color: color-mix(in srgb, var(--md-accent) 6%, transparent);
+}
+
+/* Table of Contents nav */
+.markdown-content .toc {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--md-border);
+  background: var(--md-inline-bg);
+}
+
+.markdown-content .toc h2 {
+  font-size: 1rem;
+  margin: 0 0 0.75rem;
+  color: var(--md-heading);
+  border: none;
+  padding: 0;
+}
+
+.markdown-content .toc ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.markdown-content .toc ul li {
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+}
+
+
+/* =============================================================
+ * THEMES
+ * ============================================================= */
+
+/* 1. MEDIEVAL Theme */
+.markdown-content.md-medieval {
+  --md-bg: #f4e4bc;
+  --md-text: #2c1810;
+  --md-heading: #5c2e00;
+  --md-accent: #8b5e00;
+  --md-accent-hover: #6b4500;
+  --md-muted: #7a5c3a;
+  --md-border: rgba(139, 94, 0, 0.35);
+  --md-code-bg: #2c1810;
+  --md-code-header: #1e0f08;
+  --md-code-text: #f4e4bc;
+  --md-inline-bg: rgba(139, 94, 0, 0.12);
+  --md-inline-text: #5c2e00;
+  --md-inline-border: rgba(139, 94, 0, 0.3);
+  --md-blockquote-bg: rgba(244, 228, 188, 0.5);
+  --md-btn-bg: rgba(139, 94, 0, 0.2);
+  --md-btn-text: #f4e4bc;
+  --md-btn-hover: rgba(139, 94, 0, 0.4);
+
+  background: var(--md-bg);
+  font-family: Georgia, serif;
+  padding: 2rem;
+  border: 2px solid rgba(139, 94, 0, 0.3);
+  border-radius: 0.5rem;
+}
+
+.markdown-content.md-medieval h1 {
+  font-family: serif;
+  border-bottom: 2px solid var(--md-accent);
+  padding-bottom: 0.5rem;
+  font-size: 2.2rem;
+}
+
+.markdown-content.md-medieval h2 {
+  font-family: serif;
+  border-bottom: 1px solid var(--md-border);
+  padding-bottom: 0.35rem;
+}
+
+.markdown-content.md-medieval>p:first-of-type::first-letter {
+  font-family: serif;
+  font-size: 3.5rem;
+  font-weight: bold;
+  float: left;
+  line-height: 0.85;
+  margin-right: 0.15em;
+  color: var(--md-heading);
+}
+
+.markdown-content.md-medieval blockquote {
+  border-left: 4px solid var(--md-accent);
+  font-style: italic;
+  border-radius: 0 0.375rem 0.375rem 0;
+}
+
+/* 2. GITHUB Theme */
+.markdown-content.md-github {
+  --md-bg: #ffffff;
+  --md-text: #1f2328;
+  --md-heading: #1f2328;
+  --md-accent: #0969da;
+  --md-accent-hover: #0550ae;
+  --md-muted: #636e7b;
+  --md-border: #d0d7de;
+  --md-code-bg: #161b22;
+  --md-code-header: #21262d;
+  --md-code-text: #e6edf3;
+  --md-inline-bg: rgba(175, 184, 193, 0.2);
+  --md-inline-text: #1f2328;
+  --md-inline-border: rgba(175, 184, 193, 0.4);
+  --md-blockquote-bg: rgba(0, 105, 218, 0.04);
+  --md-btn-bg: #21262d;
+  --md-btn-text: #e6edf3;
+  --md-btn-hover: #30363d;
+
+  background: var(--md-bg);
+  padding: 2rem;
+  border: 1px solid var(--md-border);
+  border-radius: 0.5rem;
+}
+
+.markdown-content.md-github h1 {
+  font-size: 2rem;
+  border-bottom: 1px solid var(--md-border);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.markdown-content.md-github h2 {
+  font-size: 1.5rem;
+  border-bottom: 1px solid var(--md-border);
+  padding-bottom: 0.35rem;
+}
+
+/* 3. TERMINAL Theme */
+.markdown-content.md-terminal {
+  --md-bg: #0d1117;
+  --md-text: #39d353;
+  --md-heading: #58e06f;
+  --md-accent: #58e06f;
+  --md-accent-hover: #39d353;
+  --md-muted: #3a6b40;
+  --md-border: #2d5a35;
+  --md-code-bg: #010409;
+  --md-code-header: #0a1628;
+  --md-code-text: #39d353;
+  --md-inline-bg: rgba(57, 211, 83, 0.1);
+  --md-inline-text: #58e06f;
+  --md-inline-border: rgba(57, 211, 83, 0.3);
+  --md-blockquote-bg: rgba(57, 211, 83, 0.05);
+  --md-btn-bg: rgba(57, 211, 83, 0.15);
+  --md-btn-text: #39d353;
+  --md-btn-hover: rgba(57, 211, 83, 0.25);
+
+  background: var(--md-bg);
+  font-family: monospace;
+  padding: 2rem;
+  border: 1px solid var(--md-border);
+  border-radius: 0.5rem;
+}
+
+.markdown-content.md-terminal h1::before {
+  content: '# ';
+  color: var(--md-muted);
+}
+
+.markdown-content.md-terminal h2::before {
+  content: '## ';
+  color: var(--md-muted);
+}
+
+.markdown-content.md-terminal h3::before {
+  content: '### ';
+  color: var(--md-muted);
+}
+
+.markdown-content.md-terminal a::before {
+  content: '[';
+  color: var(--md-muted);
+}
+
+.markdown-content.md-terminal a::after {
+  content: ']';
+  color: var(--md-muted);
+}
+
+.markdown-content.md-terminal blockquote {
+  border-left: 3px solid var(--md-accent);
+  border-radius: 0;
+}
+
+/* 4. NEWSPAPER Theme */
+.markdown-content.md-newspaper {
+  --md-bg: #faf8f0;
+  --md-text: #1a1a1a;
+  --md-heading: #0a0a0a;
+  --md-accent: #8b0000;
+  --md-accent-hover: #6b0000;
+  --md-muted: #555555;
+  --md-border: #1a1a1a;
+  --md-code-bg: #1a1a1a;
+  --md-code-header: #0a0a0a;
+  --md-code-text: #faf8f0;
+  --md-inline-bg: rgba(26, 26, 26, 0.08);
+  --md-inline-text: #1a1a1a;
+  --md-inline-border: rgba(26, 26, 26, 0.2);
+  --md-blockquote-bg: rgba(139, 0, 0, 0.04);
+  --md-btn-bg: #1a1a1a;
+  --md-btn-text: #faf8f0;
+  --md-btn-hover: #333333;
+
+  background: var(--md-bg);
+  font-family: serif;
+  padding: 2rem;
+  border-top: 3px double var(--md-border);
+  border-bottom: 3px double var(--md-border);
+}
+
+.markdown-content.md-newspaper h1 {
+  font-size: 2.5rem;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-top: 3px double var(--md-border);
+  border-bottom: 3px double var(--md-border);
+  padding: 0.75rem 0;
+  margin-bottom: 1.5rem;
+}
+
+.markdown-content.md-newspaper h2 {
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--md-border);
+  padding-bottom: 0.25rem;
+}
+
+.markdown-content.md-newspaper>p:first-of-type::first-letter {
+  font-size: 4rem;
+  font-weight: bold;
+  float: left;
+  line-height: 0.8;
+  margin-right: 0.1em;
+  margin-top: 0.1em;
+  color: var(--md-accent);
+}
+
+.markdown-content.md-newspaper blockquote {
+  border-left: 4px solid var(--md-border);
+  border-right: 4px solid var(--md-border);
+  text-align: center;
+  font-size: 1.15rem;
+  font-style: italic;
+  padding: 1rem 2rem;
+}
+
+.markdown-content.md-newspaper hr {
+  border: none;
+  border-top: 3px double var(--md-border);
+  opacity: 1;
+}
+
+/* 5. MINIMAL Theme */
+.markdown-content.md-minimal {
+  --md-bg: #ffffff;
+  --md-text: #374151;
+  --md-heading: #111827;
+  --md-accent: #2563eb;
+  --md-accent-hover: #1d4ed8;
+  --md-muted: #9ca3af;
+  --md-border: #e5e7eb;
+  --md-code-bg: #1e293b;
+  --md-code-header: #0f172a;
+  --md-code-text: #e2e8f0;
+  --md-inline-bg: #f3f4f6;
+  --md-inline-text: #374151;
+  --md-inline-border: #e5e7eb;
+  --md-blockquote-bg: #f9fafb;
+  --md-btn-bg: #374151;
+  --md-btn-text: #ffffff;
+  --md-btn-hover: #1f2937;
+
+  background: var(--md-bg);
+  padding: 2rem;
+  border: 1px solid var(--md-border);
+  border-radius: 0.5rem;
+}
+
+.markdown-content.md-minimal h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.markdown-content.md-minimal h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.markdown-content.md-minimal h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.markdown-content.md-minimal blockquote {
+  border-left: 3px solid var(--md-border);
+  border-radius: 0;
+  font-style: normal;
+}
+
+/* 6. OCEAN Theme */
+.markdown-content.md-ocean {
+  --md-bg: #0f1923;
+  --md-text: #cdd9e5;
+  --md-heading: #e6edf3;
+  --md-accent: #58a6ff;
+  --md-accent-hover: #79c0ff;
+  --md-muted: #8b949e;
+  --md-border: #30363d;
+  --md-code-bg: #010409;
+  --md-code-header: #0d1117;
+  --md-code-text: #cdd9e5;
+  --md-inline-bg: rgba(88, 166, 255, 0.1);
+  --md-inline-text: #79c0ff;
+  --md-inline-border: rgba(88, 166, 255, 0.2);
+  --md-blockquote-bg: rgba(88, 166, 255, 0.05);
+  --md-btn-bg: #21262d;
+  --md-btn-text: #cdd9e5;
+  --md-btn-hover: #30363d;
+
+  background: var(--md-bg);
+  padding: 2rem;
+  border-radius: 0.5rem;
+}
+
+.markdown-content.md-ocean h1 {
+  background: linear-gradient(135deg, #58a6ff, #79c0ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.markdown-content.md-ocean blockquote {
+  border-left: 3px solid var(--md-accent);
+}

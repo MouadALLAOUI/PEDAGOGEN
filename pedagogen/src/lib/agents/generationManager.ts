@@ -1,6 +1,6 @@
 
 export interface GenerationProgressStep {
-  type: 'progress' | 'tokens' | 'done' | 'error';
+  type: 'progress' | 'reasoning' | 'build' | 'tokens' | 'done' | 'error';
   step?: string;
   label?: string;
   status?: 'active' | 'done' | 'error';
@@ -8,6 +8,8 @@ export interface GenerationProgressStep {
   count?: number;
   result?: any;
   message?: string;
+  reasoning?: string;
+  format?: string;
 }
 
 export interface ActiveGeneration {

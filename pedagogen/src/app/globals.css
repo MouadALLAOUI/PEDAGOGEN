@@ -1,24 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
+@import "../styles/markdown.css";
 
 :root {
-  --navy: #0F172A;
-  --navy-light: #1E293B;
-  --navy-lighter: #334155;
-  --parchment: #FDF6E3;
-  --parchment-dark: #F5E6C8;
-  --teal: #0D9488;
-  --teal-light: #14B8A6;
-  --teal-dark: #0F766E;
-  --gold: #D97706;
-  --gold-light: #F59E0B;
+  --navy: #1C1917;
+  --navy-light: #292524;
+  --navy-lighter: #44403C;
+  --parchment: #FAFAF8;
+  --parchment-dark: #F5F0E8;
+  --teal: #059669;
+  --teal-light: #10B981;
+  --teal-dark: #047857;
+  --teal-50: #ECFDF5;
+  --gold: #B45309;
+  --gold-light: #D97706;
   --red: #DC2626;
   --green: #16A34A;
   --amber: #D97706;
-  --background: #F8FAFC;
-  --foreground: #0F172A;
-  --muted: #94A3B8;
-  --border: #E2E8F0;
+  --background: #FAFAF8;
+  --foreground: #1C1917;
+  --muted: #78716C;
+  --border: #E7E5E4;
 }
 
 @theme inline {
@@ -32,6 +34,7 @@
   --color-teal: var(--teal);
   --color-teal-light: var(--teal-light);
   --color-teal-dark: var(--teal-dark);
+  --color-teal-50: var(--teal-50);
   --color-gold: var(--gold);
   --color-gold-light: var(--gold-light);
   --color-red: var(--red);
@@ -50,34 +53,11 @@ body {
   font-family: 'Inter', sans-serif;
 }
 
-/* Zellige pattern background */
-.zellige-bg {
-  background-image:
-    linear-gradient(30deg, var(--navy) 12%, transparent 12.5%, transparent 87%, var(--navy) 87.5%, var(--navy)),
-    linear-gradient(150deg, var(--navy) 12%, transparent 12.5%, transparent 87%, var(--navy) 87.5%, var(--navy)),
-    linear-gradient(30deg, var(--navy) 12%, transparent 12.5%, transparent 87%, var(--navy) 87.5%, var(--navy)),
-    linear-gradient(150deg, var(--navy) 12%, transparent 12.5%, transparent 87%, var(--navy) 87.5%, var(--navy)),
-    linear-gradient(60deg, rgba(15,23,42,0.06) 25%, transparent 25.5%, transparent 75%, rgba(15,23,42,0.06) 75%, rgba(15,23,42,0.06)),
-    linear-gradient(60deg, rgba(15,23,42,0.06) 25%, transparent 25.5%, transparent 75%, rgba(15,23,42,0.06) 75%, rgba(15,23,42,0.06));
-  background-size: 40px 70px;
-  background-position: 0 0, 0 0, 20px 35px, 20px 35px, 0 0, 20px 35px;
-  opacity: 0.03;
-}
-
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: var(--parchment);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--navy-lighter);
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--teal);
-}
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--parchment); }
+::-webkit-scrollbar-thumb { background: var(--navy-lighter); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--teal); }
 
 /* Animations */
 @keyframes fadeInUp {
@@ -85,28 +65,53 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes pulse-teal {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.4); }
-  50% { box-shadow: 0 0 0 8px rgba(13, 148, 136, 0); }
+@keyframes pulse-emerald {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(5, 150, 105, 0); }
 }
 
-.animate-fade-in-up {
-  animation: fadeInUp 0.5s ease-out forwards;
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.animate-pulse-teal {
-  animation: pulse-teal 2s infinite;
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-fade-in-up { animation: fadeInUp 0.5s ease-out forwards; }
+.animate-pulse-emerald { animation: pulse-emerald 2s infinite; }
+.animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
+.animate-slide-up { animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+/* Geometric divider */
+.geometric-divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--teal), transparent);
+  position: relative;
+  margin: 2rem 0;
+}
+.geometric-divider::before {
+  content: "◆";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--teal);
+  font-size: 0.6rem;
+  background: var(--background);
+  padding: 0 0.75rem;
 }
 
 /* RTL support */
 [dir="rtl"] body {
   font-family: 'Noto Sans Arabic', 'Inter', sans-serif;
 }
-
 [dir="rtl"] .font-display {
   font-family: 'Noto Sans Arabic', 'Playfair Display', serif;
 }
-
 [dir="rtl"] .space-y-1 > :not([hidden]) ~ :not([hidden]),
 [dir="rtl"] .space-y-2 > :not([hidden]) ~ :not([hidden]),
 [dir="rtl"] .space-y-3 > :not([hidden]) ~ :not([hidden]),
@@ -116,10 +121,7 @@ body {
 [dir="rtl"] .space-y-8 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 1;
 }
-
-[dir="rtl"] .flex-row {
-  direction: rtl;
-}
+[dir="rtl"] .flex-row { direction: rtl; }
 
 /* docx-preview overrides */
 .docx-wrapper {
@@ -127,30 +129,24 @@ body {
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
-  background: #f1f5f9 !important; /* Elegant slate background */
+  background: #f5f0e8 !important;
   gap: 2.5rem !important;
   min-height: 100% !important;
   box-sizing: border-box !important;
 }
-
 .docx-wrapper > section {
   background: white !important;
-  box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 10px 10px -5px rgba(15, 23, 42, 0.04) !important;
-  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+  border-radius: 8px !important;
   border: 1px solid var(--border) !important;
-  padding: 4.5rem 5.5rem !important; /* Professional margins */
+  padding: 4.5rem 5.5rem !important;
   margin: 0 auto !important;
   width: 820px !important;
   max-width: 100% !important;
   box-sizing: border-box !important;
 }
+.docx-wrapper canvas { max-width: 100% !important; height: auto !important; }
 
-.docx-wrapper canvas {
-  max-width: 100% !important;
-  height: auto !important;
-}
-
-/* Premium docx typography overrides */
 .docx-wrapper section p,
 .docx-wrapper section span,
 .docx-wrapper section td,
@@ -159,7 +155,6 @@ body {
   color: var(--navy-light) !important;
   line-height: 1.65 !important;
 }
-
 .docx-wrapper section h1,
 .docx-wrapper section h2,
 .docx-wrapper section h3,
@@ -172,42 +167,27 @@ body {
   margin-top: 1.8rem !important;
   margin-bottom: 0.8rem !important;
 }
-
 .docx-wrapper section h1 {
   font-size: 1.8rem !important;
-  color: var(--navy) !important;
   border-bottom: 2px solid var(--teal) !important;
   padding-bottom: 0.5rem !important;
   margin-top: 1.25rem !important;
 }
+.docx-wrapper section h2 { font-size: 1.45rem !important; color: var(--teal) !important; }
+.docx-wrapper section h3 { font-size: 1.25rem !important; }
 
-.docx-wrapper section h2 {
-  font-size: 1.45rem !important;
-  color: var(--teal) !important;
-}
-
-.docx-wrapper section h3 {
-  font-size: 1.25rem !important;
-}
-
-/* Styled lists inside docx */
 .docx-wrapper section ul {
   list-style-type: disc !important;
   padding-left: 1.5rem !important;
   margin: 1rem 0 !important;
 }
-
 .docx-wrapper section ol {
   list-style-type: decimal !important;
   padding-left: 1.5rem !important;
   margin: 1rem 0 !important;
 }
+.docx-wrapper section li { margin-bottom: 0.5rem !important; }
 
-.docx-wrapper section li {
-  margin-bottom: 0.5rem !important;
-}
-
-/* Tables styled premium */
 .docx-wrapper section table {
   border-collapse: collapse !important;
   width: 100% !important;
@@ -216,86 +196,23 @@ body {
   border-radius: 8px !important;
   overflow: hidden !important;
 }
-
 .docx-wrapper section td,
 .docx-wrapper section th {
   padding: 12px 16px !important;
   border: 1px solid var(--border) !important;
 }
-
 .docx-wrapper section tr:first-child,
 .docx-wrapper section th {
-  background-color: rgba(13, 148, 136, 0.06) !important; /* soft teal */
+  background-color: var(--teal-50) !important;
   font-weight: 600 !important;
   color: var(--navy) !important;
 }
 
-/* Custom Animations */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideUp {
-  from { transform: translateY(30px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.2s ease-out forwards;
-}
-
-.animate-slide-up {
-  animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-/* Glassmorphism card header */
-.glass-header {
-  background: rgba(255, 255, 255, 0.75) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-}
-
-/* Custom premium card design */
-.premium-card {
-  background: white;
-  border: 1px solid rgba(15, 23, 42, 0.06) !important;
-  box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.02), 0 10px 15px -3px rgba(15, 23, 42, 0.03), 0 0 0 1px rgba(15, 23, 42, 0.01) !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-.premium-card:hover {
-  transform: translateY(-4px) !important;
-  box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.06), 0 10px 10px -5px rgba(15, 23, 42, 0.03) !important;
-  border-color: rgba(13, 148, 136, 0.25) !important;
-}
-
-/* Modern inputs & selects */
+/* Inputs/Selects/Textareas */
 input, select, textarea {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
-
 input:focus, select:focus, textarea:focus {
   border-color: var(--teal) !important;
-  box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.12) !important;
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1) !important;
 }
-
-/* Premium gradient buttons */
-.btn-gradient {
-  background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%) !important;
-  box-shadow: 0 4px 14px 0 rgba(13, 148, 136, 0.25) !important;
-  color: white !important;
-  border: none !important;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-.btn-gradient:hover:not(:disabled) {
-  background: linear-gradient(135deg, var(--teal-light) 0%, var(--teal) 100%) !important;
-  box-shadow: 0 6px 20px 0 rgba(13, 148, 136, 0.35) !important;
-  transform: translateY(-1px);
-}
-
-.btn-gradient:active:not(:disabled) {
-  transform: translateY(0);
-}
-

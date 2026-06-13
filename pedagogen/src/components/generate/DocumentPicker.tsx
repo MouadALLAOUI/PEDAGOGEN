@@ -2,8 +2,9 @@
 
 import {
   DOCUMENT_TYPE_LABELS,
-  type DocumentType,
-} from '@/types/generation';
+  BEST_FORMATS,
+} from '@/lib/validators/generation';
+import type { DocumentType } from '@/types/generation';
 import {
   FileText,
   Calendar,
@@ -39,7 +40,9 @@ export function DocumentPicker({ selected, onChange, maxSelected }: DocumentPick
       onChange(selected.filter((d) => d !== doc));
     } else {
       if (maxSelected && selected.length >= maxSelected) {
-        toast.error(`Le mode sélectif est limité à ${maxSelected} documents maximum. Pour générer plus de documents, veuillez utiliser le Mode Complet (Heavy).`);
+        toast.error(
+          `Le mode sélectif est limité à ${maxSelected} documents maximum. Pour générer plus de documents, veuillez utiliser le Mode Complet (Heavy).`,
+        );
         return;
       }
       onChange([...selected, doc]);
@@ -92,18 +95,21 @@ export function DocumentPicker({ selected, onChange, maxSelected }: DocumentPick
               onClick={() => toggle(doc)}
               className={`flex items-center gap-3 p-3 rounded-lg border-2 text-left transition-all ${
                 isSelected
-                  ? 'border-teal bg-teal/5 text-navy'
-                  : 'border-border bg-white text-muted hover:border-navy-lighter/30'
+                  ? "border-teal bg-teal/5 text-navy"
+                  : "border-border bg-white text-muted hover:border-navy-lighter/30"
               }`}
             >
               <div
                 className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                  isSelected ? 'bg-teal/10 text-teal' : 'bg-navy-light/5 text-muted'
+                  isSelected ? "bg-teal/10 text-teal" : "bg-navy-light/5 text-muted"
                 }`}
               >
                 <Icon size={16} />
               </div>
-              <span className="text-sm font-medium">{DOCUMENT_TYPE_LABELS[doc]}</span>
+              <div>
+                <span className="text-sm font-medium">{DOCUMENT_TYPE_LABELS[doc]}</span>
+                <span className="text-xs text-muted ml-1">({BEST_FORMATS[doc]})</span>
+              </div>
             </button>
           );
         })}

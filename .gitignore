@@ -4,6 +4,8 @@ node_modules/
 .pnp.js
 .pnp.cjs
 
+pedagogen-aistudio/
+pedagogen-aistudio/*
 # testing
 coverage/
 
@@ -49,3 +51,6 @@ pedagogen/~$*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+*.zip
+*.pdf
+*.docx

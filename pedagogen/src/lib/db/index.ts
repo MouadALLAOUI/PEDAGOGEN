@@ -101,8 +101,44 @@ function initSchema(db: Database.Database) {
       value TEXT NOT NULL
     );
 
+    CREATE TABLE IF NOT EXISTS reference_embeddings (
+      file_id TEXT NOT NULL,
+      chunk_index INTEGER NOT NULL DEFAULT 0,
+      chunk_text TEXT NOT NULL,
+      embedding TEXT,
+      PRIMARY KEY (file_id, chunk_index),
+      FOREIGN KEY (file_id) REFERENCES reference_files(id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS embed_index_status (
+      file_id TEXT PRIMARY KEY,
+      indexed_at TEXT NOT NULL DEFAULT (datetime('now')),
+      FOREIGN KEY (file_id) REFERENCES reference_files(id) ON DELETE CASCADE
+    );
+
     CREATE INDEX IF NOT EXISTS idx_image_cache_prompt ON image_cache(prompt_hash);
   `);
+
+  // Migration: add columns to generations if missing (migration schema was different)
+  const genCols = db.prepare("PRAGMA table_info(generations)").all() as any[];
+  const genNames = genCols.map((c: any) => c.name);
+  const genMigrations: [string, string][] = [
+    ['matiere', 'TEXT NOT NULL DEFAULT \'\''],
+    ['niveau', 'TEXT NOT NULL DEFAULT \'\''],
+    ['lecon', 'TEXT NOT NULL DEFAULT \'\''],
+    ['unite', 'TEXT NOT NULL DEFAULT \'\''],
+    ['duree', 'INTEGER NOT NULL DEFAULT 50'],
+    ['competences', 'TEXT NOT NULL DEFAULT \'[]\''],
+    ['langue', 'TEXT NOT NULL DEFAULT \'francais\''],
+    ['semestre', 'INTEGER NOT NULL DEFAULT 1'],
+    ['files_count', 'INTEGER NOT NULL DEFAULT 0'],
+    ['zip_url', 'TEXT'],
+  ];
+  for (const [col, def] of genMigrations) {
+    if (!genNames.includes(col)) {
+      db.exec(`ALTER TABLE generations ADD COLUMN ${col} ${def}`);
+    }
+  }
 
   // Migration: add enabled/builtin columns if missing
   const cols = db.prepare("PRAGMA table_info(reference_files)").all() as any[];

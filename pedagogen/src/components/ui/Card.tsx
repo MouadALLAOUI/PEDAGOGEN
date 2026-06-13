@@ -14,7 +14,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
           'rounded-xl transition-all duration-200',
           {
             'bg-white shadow-sm border border-border': variant === 'default',
-            'bg-white shadow-lg shadow-navy/5 border border-border': variant === 'elevated',
+            'bg-gradient-to-br from-teal-50/40 to-white shadow-sm border border-border/80': variant === 'elevated',
             'bg-transparent border-2 border-border': variant === 'outlined',
           },
           className

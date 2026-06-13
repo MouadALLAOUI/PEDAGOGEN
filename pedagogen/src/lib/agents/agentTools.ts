@@ -1,5 +1,6 @@
 import type { CourseMetadata } from '@/types/generation';
 import { estimateTokens } from '@/lib/utils/tokenEstimator';
+import { assembleSystemPrompt } from '@/lib/agents/prompts';
 
 const HF_API_URL = 'https://router.huggingface.co/v1/chat/completions';
 const HF_MODEL = 'openai/gpt-oss-120b:fastest';
@@ -112,6 +113,43 @@ export const pedagogicalTools = [
   {
     type: 'function' as const,
     function: {
+      name: 'generate_evaluation',
+      description: 'Generate an evaluation/quiz for the lesson.',
+      parameters: {
+        type: 'object',
+        properties: {
+          titre: { type: 'string', description: 'Title of the evaluation' },
+          consigne: { type: 'string', description: 'General instructions for students' },
+          questions: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                numero: { type: 'number' },
+                type: { type: 'string', enum: ['qcm', 'vrai_faux', 'ouvert', 'appariement', 'exercice'] },
+                enonce: { type: 'string', description: 'Question text' },
+                points: { type: 'number' },
+                options: { type: 'array', items: { type: 'string' }, description: 'Answer choices for QCM' },
+                correction: { type: 'string', description: 'Expected answer or correction key' },
+              },
+            },
+          },
+          bareme: {
+            type: 'object',
+            properties: {
+              total_points: { type: 'number' },
+              criteres: { type: 'array', items: { type: 'string' } },
+            },
+          },
+          grille_evaluation: { type: 'array', items: { type: 'string' } },
+        },
+        required: ['titre', 'questions'],
+      },
+    },
+  },
+  {
+    type: 'function' as const,
+    function: {
       name: 'generate_pptx_outline',
       description: 'Generate a structured PPTX slide outline (titles, bullets, speaker notes).',
       parameters: {
@@ -135,11 +173,13 @@ export const pedagogicalTools = [
   },
 ];
 
-function generateMockDebugResponse(systemPrompt: string, userMessage: string, tools?: typeof pedagogicalTools) {
+function generateMockDebugResponse(systemPrompt: string | any[], userMessage?: string, tools?: typeof pedagogicalTools) {
   const toolResults: Record<string, unknown> = {};
   const contentBlocks: unknown[] = [];
   
-  const textContent = `# MODE DÉBOGAGE\n\n### SYSTEM PROMPT\n${systemPrompt}\n\n### USER MESSAGE\n${userMessage}`;
+  const sysStr = Array.isArray(systemPrompt) ? JSON.stringify(systemPrompt) : systemPrompt;
+  const userStr = userMessage || '';
+  const textContent = `# MODE DÉBOGAGE\n\n### SYSTEM PROMPT\n${sysStr}\n\n### USER MESSAGE\n${userStr}`;
   contentBlocks.push({ type: 'text', text: textContent });
   
   const requestedToolName = tools?.[0]?.function.name || 'generate_fiche_pedagogique';
@@ -195,6 +235,17 @@ function generateMockDebugResponse(systemPrompt: string, userMessage: string, to
         { title: 'User Message', bullets: [userMessage], speaker_notes: userMessage }
       ]
     };
+  } else if (requestedToolName === 'generate_evaluation') {
+    mockArgs = {
+      titre: 'Évaluation — Leçon',
+      consigne: 'Lisez attentivement chaque question et répondez sur votre feuille.',
+      questions: [
+        { numero: 1, type: 'qcm', enonce: 'Question à choix multiples ?', points: 2, options: ['Option A', 'Option B', 'Option C'], correction: 'Option B' },
+        { numero: 2, type: 'vrai_faux', enonce: 'Vrai ou faux ?', points: 1, correction: 'Vrai' },
+        { numero: 3, type: 'ouvert', enonce: 'Expliquez en quelques phrases.', points: 4, correction: 'Réponse attendue...' },
+      ],
+      bareme: { total_points: 7, criteres: ['Clarté de la réponse', 'Utilisation des concepts clés'] },
+    };
   } else {
     mockArgs = {
       content: textContent
@@ -214,8 +265,8 @@ function generateMockDebugResponse(systemPrompt: string, userMessage: string, to
 }
 
 export async function callLocalModel(
-  systemPrompt: string,
-  userMessage: string,
+  systemPrompt: string | any[],
+  userMessage?: string,
   tools?: typeof pedagogicalTools,
   maxTokens: number = 4096,
   modelName?: string,
@@ -237,16 +288,19 @@ export async function callLocalModel(
   const url = localModelUrl || (apiType === 'openai' ? 'http://localhost:1234/v1/chat/completions' : 'http://localhost:1234/api/v1/chat');
 
   if (apiType === 'openai') {
-    const messages = [
-      { role: 'system', content: systemPrompt },
-      { role: 'user', content: userMessage },
-    ];
+    const messages = Array.isArray(systemPrompt)
+      ? systemPrompt
+      : [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userMessage || '' },
+        ];
     
     const body: Record<string, unknown> = {
       model,
       messages,
       max_tokens: Math.min(maxTokens, 2048),
       temperature: 0.7,
+      stream: true,
     };
     
     if (tools && tools.length > 0) {
@@ -254,7 +308,7 @@ export async function callLocalModel(
       body.tool_choice = 'auto';
     }
     
-    console.log('=== SENDING PROMPT TO LOCAL AI ===', {
+    console.log('=== SENDING PROMPT TO LOCAL AI (STREAMING) ===', {
       timestamp: new Date().toISOString(),
       apiUrl: url,
       apiType,
@@ -265,27 +319,97 @@ export async function callLocalModel(
       requestBody: body,
     });
 
+    const timeoutMs = 1200000; // 20 minutes
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+    if (signal) {
+      signal.addEventListener('abort', () => {
+        clearTimeout(timeoutId);
+        controller.abort();
+      });
+    }
+
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
-      signal,
+      signal: controller.signal,
     });
+    
+    clearTimeout(timeoutId);
     
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(`Local model OpenAI API error ${response.status}: ${errorText}`);
     }
-    
-    const data = await response.json();
-    const choice = data.choices?.[0];
-    const message = choice?.message;
-    
-    if (!message) {
-      throw new Error('No message in Local model response');
+
+    if (!response.body) {
+      throw new Error('No response body from Local Model API');
     }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder('utf-8');
+    let buffer = '';
+    let contentText = '';
+    let toolCallsBuffer: any[] = [];
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop() || '';
+
+      for (const line of lines) {
+        const cleanLine = line.trim();
+        if (!cleanLine) continue;
+        if (cleanLine === 'data: [DONE]') continue;
+
+        if (cleanLine.startsWith('data: ')) {
+          try {
+            const dataStr = cleanLine.slice(6);
+            const parsed = JSON.parse(dataStr);
+            const choice = parsed.choices?.[0];
+
+            if (choice?.delta?.content) {
+              contentText += choice.delta.content;
+            }
+
+            if (choice?.delta?.tool_calls) {
+              for (const tc of choice.delta.tool_calls) {
+                const index = tc.index ?? 0;
+                if (!toolCallsBuffer[index]) {
+                  toolCallsBuffer[index] = {
+                    id: tc.id || '',
+                    type: tc.type || 'function',
+                    function: {
+                      name: tc.function?.name || '',
+                      arguments: tc.function?.arguments || ''
+                    }
+                  };
+                } else {
+                  if (tc.id) toolCallsBuffer[index].id = tc.id;
+                  if (tc.function?.name) toolCallsBuffer[index].function.name += tc.function.name;
+                  if (tc.function?.arguments) toolCallsBuffer[index].function.arguments += tc.function.arguments;
+                }
+              }
+            }
+          } catch (e) {
+            // Ignore parse errors on incomplete JSON chunks
+          }
+        }
+      }
+    }
+
+    const message = {
+      role: 'assistant',
+      content: contentText,
+      tool_calls: toolCallsBuffer.filter(Boolean)
+    };
     
     const toolResults: Record<string, unknown> = {};
     const contentBlocks: unknown[] = [];
@@ -385,7 +509,15 @@ export async function callLocalModel(
       }
     }
     
-    let usage = data.usage || { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 };
+    const sysPromptStr = Array.isArray(systemPrompt) ? JSON.stringify(systemPrompt) : systemPrompt;
+    const userMsgStr = Array.isArray(userMessage) ? JSON.stringify(userMessage) : (userMessage || '');
+    const promptTokens = estimateTokens(sysPromptStr) + estimateTokens(userMsgStr);
+    const completionTokens = estimateTokens(contentText);
+    const usage = {
+      prompt_tokens: promptTokens,
+      completion_tokens: completionTokens,
+      total_tokens: promptTokens + completionTokens,
+    };
     return {
       content: contentBlocks,
       toolResults,
@@ -508,7 +640,9 @@ Return ONLY valid JSON matching this schema. Do not write any other conversation
       contentBlocks.push({ type: 'text', text: contentText });
     }
 
-    const promptTokens = estimateTokens(localSystemPrompt) + estimateTokens(localUserMessage);
+    const sysPromptStr = Array.isArray(localSystemPrompt) ? JSON.stringify(localSystemPrompt) : localSystemPrompt;
+    const userMsgStr = Array.isArray(localUserMessage) ? JSON.stringify(localUserMessage) : (localUserMessage || '');
+    const promptTokens = estimateTokens(sysPromptStr) + estimateTokens(userMsgStr);
     const completionTokens = estimateTokens(contentText);
 
     return {
@@ -524,8 +658,8 @@ Return ONLY valid JSON matching this schema. Do not write any other conversation
 }
 
 export async function callHuggingFace(
-  systemPrompt: string,
-  userMessage: string,
+  systemPrompt: string | any[],
+  userMessage?: string,
   tools?: typeof pedagogicalTools,
   maxTokens: number = 4096,
   model: string = HF_MODEL,
@@ -548,10 +682,12 @@ export async function callHuggingFace(
   if (options?.useLocalModel) {
     return callLocalModel(systemPrompt, userMessage, tools, maxTokens, options.localModelName, options.localModelUrl, options.localApiType, options.signal, options.debugMode);
   }
-  const messages = [
-    { role: 'system', content: systemPrompt },
-    { role: 'user', content: userMessage },
-  ];
+  const messages = Array.isArray(systemPrompt)
+    ? systemPrompt
+    : [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userMessage || '' },
+      ];
 
   const body: Record<string, unknown> = {
     model: model,
@@ -575,6 +711,17 @@ export async function callHuggingFace(
     requestBody: body,
   });
 
+  const timeoutMs = 1200000; // 20 minutes
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  if (options?.signal) {
+    options.signal.addEventListener('abort', () => {
+      clearTimeout(timeoutId);
+      controller.abort();
+    });
+  }
+
   const response = await fetch(HF_API_URL, {
     method: 'POST',
     headers: {
@@ -582,8 +729,10 @@ export async function callHuggingFace(
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(body),
-    signal: options?.signal,
+    signal: controller.signal,
   });
+
+  clearTimeout(timeoutId);
 
   if (!response.ok) {
     const errorText = await response.text();
@@ -700,9 +849,10 @@ export async function callHuggingFace(
   // Use API usage if available, otherwise estimate
   let usage = data.usage;
   if (!usage || (!usage.prompt_tokens && !usage.total_tokens)) {
-    // Estimate from actual content
     const allText = JSON.stringify(toolResults) + (message.content || '');
-    const estimatedPrompt = estimateTokens(systemPrompt) + estimateTokens(userMessage);
+    const sysPromptStr = Array.isArray(systemPrompt) ? JSON.stringify(systemPrompt) : systemPrompt;
+    const userMsgStr = Array.isArray(userMessage) ? JSON.stringify(userMessage) : (userMessage || '');
+    const estimatedPrompt = estimateTokens(sysPromptStr) + estimateTokens(userMsgStr);
     const estimatedCompletion = estimateTokens(allText);
     usage = {
       prompt_tokens: estimatedPrompt,
@@ -720,63 +870,21 @@ export async function callHuggingFace(
 
 export function buildSystemPrompt(
   metadata: CourseMetadata,
-  langue: string,
-  useReferences: boolean,
+  _langue: string,
+  _useReferences: boolean,
   referenceContents?: string,
   includePrompt?: string,
   excludePrompt?: string,
   customPrompts?: Record<string, string>
 ): string {
-  const langLabel = langue === 'fr' ? 'French' : langue === 'ar' ? 'Arabic' : 'bilingual French/Arabic';
-
-  let prompt = `You are PEDAGOGEN, an AI assistant specialized in generating pedagogical documents for Moroccan collège teachers (1AC, 2AC, 3AC).
-
-You follow the official Moroccan Ministry of Education curriculum guidelines.
-You write in ${langLabel} as specified.
-You produce structured, practical, classroom-ready content.`;
-
-  if (customPrompts?.global) {
-    prompt += `\n\n[GLOBAL INSTRUCTION FROM TEACHER]:\n${customPrompts.global.trim()}`;
-  }
-  if (customPrompts?.context) {
-    prompt += `\n\n[GLOBAL CLASSROOM CONTEXT]:\n${customPrompts.context.trim()}`;
-  }
-
-  prompt += `\n\nThe teacher is preparing:
-- Lesson: ${metadata.lecon}
-- Subject: ${metadata.matiere}
-- Level: ${metadata.niveau}
-- Semester: ${metadata.semestre}
-- Unit: ${metadata.unite}
-- Duration: ${metadata.duree} minutes
-- Target competences: ${metadata.competences.join(', ')}`;
-
-  if (metadata.profilEleves && metadata.profilEleves.trim()) {
-    prompt += `\n- Real Student Profile & Classroom Culture: ${metadata.profilEleves.trim()}
-    
-[IMPORTANT - ADAPTATION TO CLASSROOM PROFILE]
-The teacher described their classroom dynamics and social culture as: "${metadata.profilEleves.trim()}".
-You MUST adapt the language complexity, pedagogical approach, examples, and exercise difficulty to this specific profile. For example:
-- If students struggle with the language of instruction (e.g. French), use simplified, clear language and scaffolding.
-- Integrate cultural references and practical examples suited to their social context and interests to maximize engagement.`;
-  }
-
-  prompt += `\n\nAlways structure your output strictly for document builders.
-Return valid JSON matching the requested schema — no extra prose.`;
-
-  if (useReferences && referenceContents) {
-    prompt += `\n\nReference documents provided by the teacher:\n${referenceContents}`;
-  }
-
-  if (includePrompt && includePrompt.trim()) {
-    prompt += `\n\nIMPORTANT — Instructions to INCLUDE in your generation:\n${includePrompt.trim()}\nFollow these instructions carefully when generating content.`;
-  }
-
-  if (excludePrompt && excludePrompt.trim()) {
-    prompt += `\n\nIMPORTANT — Things to EXCLUDE from your generation:\n${excludePrompt.trim()}\nStrictly avoid these elements in your output.`;
-  }
-
-  return prompt;
+  return assembleSystemPrompt({
+    metadata,
+    includePrompt,
+    excludePrompt,
+    customGlobal: customPrompts?.global,
+    customContext: customPrompts?.context,
+    referenceContents,
+  });
 }
 
 export { HF_MODEL, HF_API_URL };

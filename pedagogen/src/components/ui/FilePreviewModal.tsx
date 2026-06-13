@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { X, Loader2, FileText, Download, ChevronLeft, ChevronRight } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { X, Loader2, FileText, Download } from 'lucide-react';
 import { MarkdownRenderer } from '@/components/ui/MarkdownRenderer';
 
 interface FilePreviewModalProps {
@@ -19,11 +20,17 @@ export function FilePreviewModal({
   fileUrl,
   onClose,
 }: FilePreviewModalProps) {
+  const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [textContent, setTextContent] = useState<string | null>(null);
   const [rawUrl, setRawUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const docxRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -89,10 +96,12 @@ export function FilePreviewModal({
     if (e.target === e.currentTarget) onClose();
   };
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4 animate-fade-in"
-      style={{ backgroundColor: 'rgba(15, 23, 42, 0.6)' }}
+      style={{ backgroundColor: 'rgba(28, 25, 23, 0.5)' }}
       onClick={handleClose}
     >
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl h-[85vh] flex flex-col overflow-hidden animate-slide-up">
@@ -118,7 +127,7 @@ export function FilePreviewModal({
             </a>
             <button
               onClick={onClose}
-              className="p-2 rounded-lg hover:bg-navy-light/5 text-muted hover:text-navy transition-colors"
+              className="p-2 rounded-lg hover:bg-parchment-dark text-muted hover:text-navy transition-colors"
             >
               <X size={16} />
             </button>
@@ -140,14 +149,14 @@ export function FilePreviewModal({
           {/* Markdown */}
           {!loading && !error && textContent !== null && (
             <div className="p-8 h-full overflow-y-auto bg-slate-100/40">
-              <div className="bg-white border border-border rounded-xl p-8 max-w-3xl mx-auto shadow-md">
+              {/* <div className="bg-white border border-border rounded-xl p-8 max-w-3xl mx-auto shadow-md w-full overflow-hidden"> */}
                 <MarkdownRenderer content={textContent} />
-              </div>
+              {/* </div> */}
             </div>
           )}
 
-          {/* PDF via iframe */}
-          {!loading && !error && textContent === null && fileFormat === 'pdf' && rawUrl && (
+          {/* PDF / HTML via iframe */}
+          {!loading && !error && textContent === null && (fileFormat === 'pdf' || fileFormat === 'html') && rawUrl && (
             <iframe
               src={rawUrl}
               className="w-full h-full border-0"
@@ -168,7 +177,7 @@ export function FilePreviewModal({
           {/* PPTX — not renderable */}
           {!loading && !error && textContent === null && fileFormat === 'pptx' && rawUrl && (
             <div className="flex flex-col items-center justify-center h-full">
-              <FileText size={48} className="mb-4 text-navy-light/30" />
+              <FileText size={48} className="mb-4 text-muted/30" />
               <p className="text-sm text-muted mb-1">Aperçu PPTX non disponible en ligne</p>
               <p className="text-xs text-muted mb-4">Téléchargez le fichier pour le visualiser</p>
               <a
@@ -185,7 +194,7 @@ export function FilePreviewModal({
           {/* Fallback */}
           {!loading && !error && textContent === null && !rawUrl && (
             <div className="flex flex-col items-center justify-center h-full">
-              <FileText size={48} className="mb-4 text-navy-light/30" />
+              <FileText size={48} className="mb-4 text-muted/30" />
               <p className="text-sm text-muted mb-4">Aperçu non disponible</p>
               <a
                 href={fileUrl}
@@ -199,6 +208,7 @@ export function FilePreviewModal({
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

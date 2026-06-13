@@ -1,6 +1,6 @@
 import { getDb } from '@/lib/db';
 import { join } from 'path';
-import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
+import { existsSync, writeFileSync, mkdirSync } from 'fs';
 
 const IMAGES_DIR = join(process.cwd(), 'data', 'images');
 if (!existsSync(IMAGES_DIR)) mkdirSync(IMAGES_DIR, { recursive: true });

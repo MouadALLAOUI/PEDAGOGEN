@@ -1,65 +1,88 @@
-import { NextRequest } from 'next/server';
-import { getGeneration, GenerationProgressStep } from '@/lib/agents/generationManager';
+import { NextRequest } from "next/server";
+import { getProvider } from "@/lib/ai/factory";
+import { runAgent } from "@/lib/agents/orchestrator";
+import { generationRequestSchema } from "@/lib/validators/generation";
+import type { ProviderId } from "@/lib/ai/types";
 
-function sseEvent(event: any): string {
+function sseEvent(event: unknown): string {
   return `data: ${JSON.stringify(event)}\n\n`;
 }
 
-export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get('id');
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const parsed = generationRequestSchema.safeParse(body);
 
-  if (!id) {
-    return new Response('Missing generation ID', { status: 400 });
-  }
+    if (!parsed.success) {
+      return new Response(
+        JSON.stringify({ error: "Invalid request", details: parsed.error.issues }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
 
-  const gen = getGeneration(id);
-  if (!gen) {
-    // If not found in active list, check if it's already in history/database or just return 404
-    return new Response('Generation not found', { status: 404 });
-  }
+    const req = parsed.data;
 
-  const encoder = new TextEncoder();
-  const stream = new ReadableStream({
-    start(controller) {
-      // 1. Flush existing progress steps
-      for (const step of gen.progress) {
-        controller.enqueue(encoder.encode(sseEvent(step)));
-      }
+    const providerId = (await getProviderSetting("provider")) as ProviderId || "none";
+    const provider = getProvider(providerId);
 
-      // If already completed, close immediately
-      if (gen.isCompleted) {
-        controller.close();
-        return;
-      }
+    const [hfToken, lmstudioUrl, lmstudioModel, opencodeModel] = await Promise.all([
+      getProviderSetting("huggingface_token"),
+      getProviderSetting("lmstudio_url"),
+      getProviderSetting("lmstudio_model"),
+      getProviderSetting("opencode_model"),
+    ]);
 
-      // 2. Add listener for future events
-      const listener = (step: GenerationProgressStep) => {
+    const extraOptions = {
+      apiKey: hfToken || undefined,
+      baseUrl: lmstudioUrl || undefined,
+      modelName: lmstudioModel || undefined,
+      opencodeModel: opencodeModel || undefined,
+    };
+
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream({
+      async start(controller) {
         try {
-          controller.enqueue(encoder.encode(sseEvent(step)));
-          if (step.type === 'done' || step.type === 'error') {
-            gen.listeners.delete(listener);
-            controller.close();
+          for await (const event of runAgent(provider, req, extraOptions)) {
+            controller.enqueue(encoder.encode(sseEvent(event)));
           }
-        } catch (e) {
-          gen.listeners.delete(listener);
+          controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+        } catch (err) {
+          const errorEvent = {
+            type: "error",
+            message: err instanceof Error ? err.message : "Unknown error",
+          };
+          controller.enqueue(encoder.encode(sseEvent(errorEvent)));
+        } finally {
+          controller.close();
         }
-      };
+      },
+    });
 
-      gen.listeners.add(listener);
+    return new Response(stream, {
+      headers: {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
+      },
+    });
+  } catch (err) {
+    return new Response(
+      JSON.stringify({ error: err instanceof Error ? err.message : "Server error" }),
+      { status: 500, headers: { "Content-Type": "application/json" } },
+    );
+  }
+}
 
-      // Clean up listener when connection is aborted by client
-      request.signal.addEventListener('abort', () => {
-        gen.listeners.delete(listener);
-      });
-    },
-  });
-
-  return new Response(stream, {
-    headers: {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
-      Connection: 'keep-alive',
-    },
-  });
+async function getProviderSetting(key: string): Promise<string | undefined> {
+  try {
+    const { getDb } = await import("@/lib/db");
+    const db = getDb();
+    const row = db
+      .prepare("SELECT value FROM settings WHERE key = ? AND user_id = 'default'")
+      .get(key) as { value: string } | undefined;
+    return row?.value;
+  } catch {
+    return undefined;
+  }
 }

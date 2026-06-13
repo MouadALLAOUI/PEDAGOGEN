@@ -46,7 +46,7 @@ const PEDAGOGICAL_REASONING: Record<string, string> = {
 interface GenerationProgressProps {
   mode: GenerationMode;
   activeStep?: string;
-  stepStatus?: 'active' | 'done' | 'error';
+  stepStatus?: 'active' | 'done' | 'error' | 'pending';
   stepStatuses?: Record<string, 'pending' | 'active' | 'done' | 'error' | { status: 'pending' | 'active' | 'done' | 'error'; error?: string }>;
   tokens?: number;
 }
@@ -116,12 +116,14 @@ export function GenerationProgress({ mode, activeStep, stepStatus, stepStatuses,
   const baseSteps = mode === 'heavy' ? HEAVY_STEPS : MEDIUM_STEPS;
 
   const steps = baseSteps.map((step) => {
-    if (stepStatuses && stepStatuses[step.id]) {
+    if (stepStatuses) {
       const entry = stepStatuses[step.id];
-      if (typeof entry === 'object') {
-        return { ...step, status: entry.status, error: entry.error };
+      if (entry) {
+        if (typeof entry === 'object') {
+          return { ...step, status: entry.status, error: entry.error };
+        }
+        return { ...step, status: entry };
       }
-      return { ...step, status: entry };
     }
     if (!activeStep) return step;
     if (step.id === activeStep && stepStatus) {

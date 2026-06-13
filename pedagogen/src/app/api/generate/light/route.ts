@@ -6,9 +6,15 @@ import type { GenerationRequest } from '@/types/generation';
 import { logGenerationError } from '@/lib/utils/logger';
 import { createGeneration, addProgress } from '@/lib/agents/generationManager';
 
+export const maxDuration = 900;
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     const body: GenerationRequest = await request.json();
+
+    const dbToken = await getDbSetting('huggingface_token');
+    if (dbToken) process.env.HF_TOKEN = dbToken;
 
     if (body.mode !== 'light') {
       return NextResponse.json({ error: 'Invalid mode' }, { status: 400 });
@@ -39,7 +45,7 @@ export async function POST(request: NextRequest) {
             const contents: string[] = [];
 
             const { getBuiltinReferences } = await import('@/lib/utils/builtinReferences');
-            const builtin = await getBuiltinReferences(body.metadata.matiere, body.metadata.niveau);
+            const builtin = await getBuiltinReferences(body.metadata.matiere, body.metadata.niveau, body.metadata.unite);
             contents.push(...builtin);
 
             if (signal.aborted) return;
@@ -49,10 +55,14 @@ export async function POST(request: NextRequest) {
               'SELECT id, name FROM reference_files WHERE enabled = 1 AND builtin = 0'
             ).all() as any[];
             const { readReferenceContent } = await import('@/lib/utils/fileStorage');
+            const { compressReferenceDocument } = await import('@/lib/utils/builtinReferences');
             for (const f of enabledRefs) {
               if (signal.aborted) return;
-              const content = await readReferenceContent(f.id);
-              if (content) contents.push(`[${f.name}]\n${content}`);
+              let content = await readReferenceContent(f.id);
+              if (content) {
+                content = compressReferenceDocument(content, body.metadata.niveau, body.metadata.unite);
+                contents.push(`[${f.name}]\n${content}`);
+              }
             }
 
             if (contents.length > 0) {
@@ -108,7 +118,7 @@ export async function POST(request: NextRequest) {
         addProgress(generationId, {
           type: 'done',
           result: {
-            id: `light-${Date.now()}`,
+            id: generationId,
             createdAt: new Date(),
             mode: 'light',
             metadata: body.metadata,
@@ -133,5 +143,16 @@ export async function POST(request: NextRequest) {
       { error: error instanceof Error ? error.message : 'Generation failed' },
       { status: 500 }
     );
+  }
+}
+
+async function getDbSetting(key: string): Promise<string | undefined> {
+  try {
+    const row = getDb()
+      .prepare("SELECT value FROM settings WHERE key = ? AND user_id = 'default'")
+      .get(key) as { value: string } | undefined;
+    return row?.value;
+  } catch {
+    return undefined;
   }
 }

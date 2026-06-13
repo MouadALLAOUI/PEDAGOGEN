@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
 import {
   Upload,
@@ -15,11 +15,16 @@ import {
   Check,
   Plus,
   Minus,
+  Search,
+  RefreshCw,
+
+  X,
 } from 'lucide-react';
 import { Card, CardHeader, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { PageTransition } from '@/components/layout/PageTransition';
+import { SkeletonFileList } from '@/components/ui/Skeleton';
 import {
   REFERENCE_CATEGORY_LABELS,
   type ReferenceCategory,
@@ -28,12 +33,19 @@ import {
 
 export default function ReferencesPage() {
   const [files, setFiles] = useState<ReferenceFile[]>([]);
+  const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<ReferenceCategory>('custom');
   const [cachedImages, setCachedImages] = useState<any[]>([]);
   const [includePrompt, setIncludePrompt] = useState('');
   const [excludePrompt, setExcludePrompt] = useState('');
   const [saved, setSaved] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [indexing, setIndexing] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Load saved prompts from localStorage
@@ -45,7 +57,8 @@ export default function ReferencesPage() {
       .then((data) => {
         if (data.files) setFiles(data.files);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoading(false));
 
     fetch('/api/images')
       .then((res) => res.json())
@@ -54,6 +67,43 @@ export default function ReferencesPage() {
       })
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (searchQuery.trim().length < 2) {
+      setSearchResults([]);
+      setShowSearch(false);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      setSearching(true);
+      try {
+        const res = await fetch(`/api/references/search?q=${encodeURIComponent(searchQuery)}`);
+        const data = await res.json();
+        setSearchResults(data.results || []);
+        setShowSearch(true);
+      } catch {}
+      setSearching(false);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setShowSearch(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  const handleReindex = async () => {
+    setIndexing(true);
+    try {
+      await fetch('/api/references/reindex', { method: 'POST' });
+    } catch {}
+    setIndexing(false);
+  };
 
   const savePrompts = () => {
     localStorage.setItem('pedagogen_include_prompt', includePrompt);
@@ -130,13 +180,18 @@ export default function ReferencesPage() {
   return (
     <PageTransition>
       <div className="max-w-4xl mx-auto space-y-8">
-        <div>
-          <h1 className="font-display text-2xl font-bold text-navy">
-            Fichiers de Référence
-          </h1>
-          <p className="text-muted mt-1">
-            Uploadez et gérez les documents de référence pour enrichir les générations IA.
-          </p>
+        {/* Header */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-teal via-teal-dark to-navy p-6 lg:p-8 text-white">
+          <div className="absolute top-0 right-0 w-56 h-56 bg-teal-light/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
+          <div className="relative z-10 flex items-center gap-4">
+            <div className="w-11 h-11 rounded-xl bg-white/15 backdrop-blur flex items-center justify-center shrink-0">
+              <FolderOpen size={20} className="text-white" />
+            </div>
+            <div>
+              <h1 className="font-display text-2xl lg:text-3xl font-bold tracking-tight">Fichiers de Référence</h1>
+              <p className="text-white/60 text-sm mt-0.5">Uploadez et gérez les documents de référence pour enrichir les générations IA.</p>
+            </div>
+          </div>
         </div>
 
         {/* Category selector */}
@@ -154,7 +209,7 @@ export default function ReferencesPage() {
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                       selectedCategory === key
                         ? 'bg-teal text-white'
-                        : 'bg-navy-light/5 text-muted hover:bg-navy-light/10'
+                        : 'bg-parchment-dark text-muted hover:bg-parchment-dark'
                     }`}
                   >
                     {label}
@@ -165,19 +220,83 @@ export default function ReferencesPage() {
           </CardContent>
         </Card>
 
+        {/* Recherche vectorielle */}
+        <Card>
+          <CardContent className="py-4">
+            <label className="block text-sm font-medium text-navy mb-2">
+              Recherche sémantique dans les références
+            </label>
+            <div ref={searchRef} className="relative">
+              <div className="relative">
+                <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Rechercher par similarité de contenu..."
+                  className="w-full pl-9 pr-9 py-2.5 rounded-lg border border-border bg-white text-navy text-sm focus:outline-none focus:ring-2 focus:ring-teal/30 focus:border-teal transition-all placeholder:text-muted/50"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => { setSearchQuery(''); setSearchResults([]); setShowSearch(false); }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-navy"
+                  >
+                    <X size={14} />
+                  </button>
+                )}
+              </div>
+
+              {showSearch && (
+                <div className="absolute z-50 mt-1 w-full bg-white border border-border rounded-xl shadow-lg max-h-80 overflow-y-auto">
+                  {searching ? (
+                    <div className="p-4 text-center text-sm text-muted">Recherche en cours...</div>
+                  ) : searchResults.length === 0 ? (
+                    <div className="p-4 text-center text-sm text-muted">Aucun résultat</div>
+                  ) : (
+                    searchResults.map((r, i) => (
+                      <div key={i} className="p-3 border-b border-border last:border-b-0 hover:bg-parchment-dark/50 transition-colors">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-xs font-medium text-teal truncate max-w-[70%]">{r.fileName}</span>
+                          <span className="text-[10px] text-muted bg-parchment-dark px-1.5 py-0.5 rounded">
+                            {(r.score * 100).toFixed(0)}%
+                          </span>
+                        </div>
+                        <p className="text-xs text-navy/70 line-clamp-2">{r.chunkText}</p>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
+            <div className="flex items-center justify-between mt-2">
+              <p className="text-xs text-muted">
+                Les résultats sont classés par pertinence sémantique.
+              </p>
+              <button
+                onClick={handleReindex}
+                disabled={indexing}
+                className="text-xs text-teal hover:text-teal-dark font-medium flex items-center gap-1 disabled:opacity-50"
+              >
+                <RefreshCw size={12} className={indexing ? 'animate-spin' : ''} />
+                {indexing ? 'Indexation...' : 'Réindexer tout'}
+              </button>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Upload zone */}
         <div
           {...getRootProps()}
           className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${
             isDragActive
               ? 'border-teal bg-teal/5'
-              : 'border-border hover:border-teal/50 hover:bg-navy-light/2'
+              : 'border-border hover:border-teal/50 hover:bg-parchment-dark/50'
           }`}
         >
           <input {...getInputProps()} />
           <div className="flex flex-col items-center gap-3">
             <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-              isDragActive ? 'bg-teal/10 text-teal' : 'bg-navy-light/5 text-muted'
+              isDragActive ? 'bg-teal/10 text-teal' : 'bg-parchment-dark text-muted'
             }`}>
               <Upload size={24} />
             </div>
@@ -204,7 +323,9 @@ export default function ReferencesPage() {
             <Badge variant="muted">{files.length} fichier(s)</Badge>
           </div>
 
-          {files.length === 0 ? (
+          {loading ? (
+            <SkeletonFileList count={3} />
+          ) : files.length === 0 ? (
             <Card>
               <CardContent className="py-12 text-center">
                 <FolderOpen size={40} className="text-muted/30 mx-auto mb-3" />
@@ -291,7 +412,7 @@ export default function ReferencesPage() {
               {cachedImages.map((img) => (
                 <Card key={img.id}>
                   <CardContent className="p-3">
-                    <div className="aspect-square rounded-lg bg-navy-light/5 overflow-hidden mb-2">
+                    <div className="aspect-square rounded-lg bg-parchment-dark overflow-hidden mb-2">
                       <img
                         src={img.url}
                         alt={img.prompt}

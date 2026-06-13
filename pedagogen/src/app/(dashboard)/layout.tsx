@@ -1,5 +1,7 @@
 import { Sidebar } from "@/components/layout/Sidebar";
 import { TopBar } from "@/components/layout/TopBar";
+import { QuickActionFab } from "@/components/layout/QuickActionFab";
+import { OnboardingWizard } from "@/components/OnboardingWizard";
 import { Toaster } from "react-hot-toast";
 
 export default function DashboardLayout({
@@ -14,22 +16,22 @@ export default function DashboardLayout({
         toastOptions={{
           duration: 3000,
           style: {
-            background: '#0F172A',
-            color: '#FDF6E3',
+            background: '#1C1917',
+            color: '#FAFAF8',
             borderRadius: '12px',
             fontSize: '14px',
             padding: '12px 16px',
           },
           success: {
             iconTheme: {
-              primary: '#10B981',
-              secondary: '#FDF6E3',
+              primary: '#059669',
+              secondary: '#FAFAF8',
             },
           },
           error: {
             iconTheme: {
               primary: '#EF4444',
-              secondary: '#FDF6E3',
+              secondary: '#FAFAF8',
             },
           },
         }}
@@ -41,6 +43,8 @@ export default function DashboardLayout({
           {children}
         </main>
       </div>
+      <QuickActionFab />
+      <OnboardingWizard />
     </div>
   );
 }

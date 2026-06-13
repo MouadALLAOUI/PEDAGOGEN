@@ -9,6 +9,7 @@ const MIME_TYPES: Record<string, string> = {
   pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
   pdf: 'application/pdf',
   md: 'text/markdown',
+  html: 'text/html',
   zip: 'application/zip',
 };
 

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 import { saveReferenceFile, deleteReferenceFile } from '@/lib/utils/fileStorage';
-import type { ReferenceCategory } from '@/types/references';
+import { indexReferenceFile } from '@/lib/search/vectorStore';
 
 export async function GET() {
   try {
@@ -39,6 +39,10 @@ export async function POST(request: NextRequest) {
 
     const buffer = Buffer.from(await file.arrayBuffer());
     const result = await saveReferenceFile(file.name, category, buffer);
+
+    indexReferenceFile(result.id).catch((err) =>
+      console.error('Auto-index failed for', result.name, err)
+    );
 
     return NextResponse.json({ file: { ...result, enabled: true, builtin: false } });
   } catch (error) {

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Loader2, Save, User, BookOpen, Building, Phone } from 'lucide-react';
+import { Loader2, Save, User, BookOpen, Building, Phone, Beaker } from 'lucide-react';
 import { Card, CardHeader, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { PageTransition } from '@/components/layout/PageTransition';
@@ -65,9 +65,17 @@ export default function ProfilePage() {
   return (
     <PageTransition>
       <div className="max-w-2xl mx-auto space-y-6">
-        <div>
-          <h1 className="font-display text-2xl font-bold text-navy">Mon Profil</h1>
-          <p className="text-sm text-muted mt-1">Gérez vos informations personnelles</p>
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-teal via-teal-dark to-navy p-6 lg:p-8 text-white">
+          <div className="absolute top-0 right-0 w-56 h-56 bg-teal-light/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
+          <div className="relative z-10 flex items-center gap-4">
+            <div className="w-11 h-11 rounded-xl bg-white/15 backdrop-blur flex items-center justify-center shrink-0">
+              <Beaker size={20} className="text-white" />
+            </div>
+            <div>
+              <h1 className="font-display text-2xl lg:text-3xl font-bold tracking-tight">Mon Profil</h1>
+              <p className="text-white/60 text-sm mt-0.5">Gérez vos informations personnelles</p>
+            </div>
+          </div>
         </div>
 
         <Card>
