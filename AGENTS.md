@@ -37,7 +37,7 @@ PEDAGOGEN/                    # Workspace root (NOT the Next.js project)
 │   ├── src/lib/builders/     #   DOCX, PPTX, PDF, MD document builders
 │   ├── src/lib/curriculum/   #   Moroccan curriculum metadata (1AC/2AC/3AC)
 │   └── src/lib/utils/        #   cn(), fileStorage, tokenEstimator
-├── .agents/skills/           #   Agent skills (git-workflow, laravel, frontend-design)
+├── .agents/skills/           #   Agent skills (efficient-codebase-exploration, git-workflow, laravel, frontend-design)
 └── Prompt.md                 #   Project spec / design doc
 ```
 
@@ -66,38 +66,6 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 ⚠️ **Naming mismatch:** The root `.env` file uses `hugging_face_api` but the code reads `process.env.HF_TOKEN`. Always use `HF_TOKEN`.
 
-## Supabase Setup (Docker)
-
-```bash
-# Start Supabase
-docker compose up -d
-
-# Check status
-docker compose ps
-
-# View logs
-docker compose logs -f
-
-# Stop
-docker compose down
-```
-
-**Services:**
-| Service | Port | URL |
-|---------|------|-----|
-| Kong (API Gateway) | 54321 | http://localhost:54321 |
-| Studio (Dashboard) | 3001 | http://localhost:3001 |
-| Database (PostgreSQL) | 5432 | localhost:5432 |
-
-**Default credentials:**
-- Postgres: `postgres` / `postgres`
-- Anon key: in `.env` (root)
-- Service role key: in `.env` (root)
-
-**Migration:** The SQL migration at `supabase/migrations/001_initial.sql` runs automatically on first `docker compose up`. It creates:
-- Tables: `generations`, `reference_files`, `generated_files`
-- Storage buckets: `references`, `generated`
-
 ## Key Conventions
 
 - **Tailwind v4:** No config file. Custom theme colors defined in `globals.css` via `@theme inline` block (navy, teal, parchment, gold, etc.)
@@ -110,6 +78,7 @@ docker compose down
 
 ## Agent Skills
 
+- `efficient-codebase-exploration` — Search-first, read-second workflow. Minimize file reads, use parallel tool calls, keep context/structure docs updated. Follow the 9-phase funnel: Orient → Search → Read → Edit.
 - `git-workflow-agent` — Branch naming: `DEV01`, `DEV02`, etc. Commit format: `[DEVXX] type: description`
 - `frontend-design` — Avoid generic AI aesthetics. Use distinctive typography, bold color choices.
 - `laravel-best-practices` — Not relevant to this project (skill exists for reuse elsewhere).

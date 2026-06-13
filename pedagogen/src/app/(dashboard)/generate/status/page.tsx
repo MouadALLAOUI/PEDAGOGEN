@@ -1,36 +1,59 @@
 'use client';
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, useMemo, Suspense } from 'react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
-import { ArrowLeft, Loader2, Play, Square, Check, X, AlertTriangle, Clock } from 'lucide-react';
+import { ArrowLeft, Loader2, Play, Square, Check, X, AlertTriangle, Clock, Activity, Brain, FileCode, ChevronDown, ChevronRight } from 'lucide-react';
 import { Card, CardHeader, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { PageTransition } from '@/components/layout/PageTransition';
 import { OutputPreview } from '@/components/generate/OutputPreview';
 import type { GenerationResult } from '@/types/generation';
 
+const FORMAT_LABELS: Record<string, string> = {
+  pdf: 'PDF',
+  docx: 'DOCX',
+  pptx: 'PPTX',
+  html: 'HTML',
+  md: 'MD',
+  png: 'PNG',
+  zip: 'ZIP',
+};
+
+const FORMAT_COLORS: Record<string, string> = {
+  pdf: 'bg-red/10 text-red',
+  docx: 'bg-blue-100 text-blue-700',
+  pptx: 'bg-orange-100 text-orange-700',
+  html: 'bg-purple-100 text-purple-700',
+  md: 'bg-teal/10 text-teal',
+  png: 'bg-green/10 text-green',
+};
+
 function StatusContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const id = searchParams.get('id');
 
-  const [activeStep, setActiveStep] = useState<string | undefined>('init');
-  const [stepStatuses, setStepStatuses] = useState<Record<string, { status: 'pending' | 'active' | 'done' | 'error'; label: string; error?: string }>>({
-    init: { status: 'active', label: 'Initialisation...' },
-    references: { status: 'pending', label: 'Chargement des références...' },
-    docs: { status: 'pending', label: 'Analyse des documents...' },
-    build: { status: 'pending', label: 'Compilation des documents...' }
-  });
+  const [steps, setSteps] = useState<Record<string, { status: string; label: string; error?: string }>>({});
+  const [reasoningSteps, setReasoningSteps] = useState<{ step: string; label: string }[]>([]);
+  const [buildSteps, setBuildSteps] = useState<{ step: string; label: string; format?: string; status: string }[]>([]);
   const [result, setResult] = useState<GenerationResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [tokens, setTokens] = useState<number>(0);
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [isStopping, setIsStopping] = useState<boolean>(false);
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
+  const [reasoningOpen, setReasoningOpen] = useState(true);
   const [activeGenerations, setActiveGenerations] = useState<any[]>([]);
   const [loadingActive, setLoadingActive] = useState<boolean>(true);
+
+  const orderedSteps = useMemo(() => {
+    const order = ['init', 'references', 'docs', 'fiche', 'planification', 'cours', 'gestion', 'evaluation', 'resume', 'pptx', 'images', 'build'];
+    return Object.entries(steps)
+      .filter(([id]) => id !== 'build')
+      .sort(([a], [b]) => order.indexOf(a) - order.indexOf(b));
+  }, [steps]);
 
   // Fetch active list if no id
   useEffect(() => {
@@ -53,6 +76,19 @@ function StatusContent() {
     return () => clearInterval(interval);
   }, [id]);
 
+  // Request notification permission on mount
+  useEffect(() => {
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission().catch(() => {});
+    }
+  }, []);
+
+  const notify = (title: string, body: string) => {
+    if ('Notification' in window && Notification.permission === 'granted' && document.hidden) {
+      try { new Notification(title, { body, icon: '/favicon.ico' }); } catch {}
+    }
+  };
+
   // Timer
   useEffect(() => {
     if (!id || isCompleted || error) return;
@@ -62,73 +98,94 @@ function StatusContent() {
     return () => clearInterval(interval);
   }, [id, isCompleted, error]);
 
-  // Connect to SSE stream
+  // Connect to progress SSE
   useEffect(() => {
     if (!id || isCompleted || result || error) return;
 
     let eventSource: EventSource;
+    let reconnectTimer: ReturnType<typeof setTimeout>;
 
-    try {
-      eventSource = new EventSource(`/api/generate/stream?id=${id}`);
+    const connect = () => {
+      try {
+        eventSource = new EventSource(`/api/generate/progress/${id}`);
 
-      eventSource.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          
-          if (data.type === 'progress') {
-            setActiveStep(data.step);
-            const status = data.status || 'active';
-            
-            setStepStatuses((prev) => {
-              const current = prev[data.step] || { label: data.label || data.step };
-              return {
+        eventSource.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+
+            if (data.type === 'progress' && data.step) {
+              setSteps((prev) => ({
                 ...prev,
                 [data.step]: {
-                  status,
-                  label: data.label || current.label,
-                  error: data.error
+                  status: data.status || 'active',
+                  label: data.label || data.step,
+                  error: data.error,
+                },
+              }));
+              if (data.status === 'active') {
+                setReasoningSteps((prev) => {
+                  const existing = prev.find(s => s.step === data.step);
+                  if (existing) return prev;
+                  return [...prev, { step: data.step, label: data.label || data.step }];
+                });
+              }
+            } else if (data.type === 'reasoning' && data.step) {
+              setReasoningSteps((prev) => {
+                const existing = prev.find(s => s.step === data.step);
+                if (existing) return prev;
+                return [...prev, { step: data.step, label: data.label || 'Analyse...' }];
+              });
+            } else if (data.type === 'build') {
+              setBuildSteps((prev) => {
+                if (data.status === 'active') {
+                  return [...prev, { step: data.step, label: data.label, format: data.format, status: 'active' }];
                 }
-              };
-            });
-          } else if (data.type === 'tokens') {
-            setTokens(data.count);
-          } else if (data.type === 'done') {
-            setResult(data.result);
-            setIsCompleted(true);
-            toast.success('Génération terminée !');
-            eventSource.close();
-            
-            // Sync with history
-            fetch('/api/history', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(data.result),
-            }).catch(() => {});
-          } else if (data.type === 'error') {
-            setError(data.message);
-            setIsCompleted(true);
-            toast.error(data.message);
-            eventSource.close();
+                return prev.map(s =>
+                  s.step === data.step && s.label === data.label
+                    ? { ...s, status: data.status }
+                    : s
+                );
+              });
+            } else if (data.type === 'tokens') {
+              setTokens(data.count || 0);
+            } else if (data.type === 'done') {
+              setResult(data.result);
+              setIsCompleted(true);
+              toast.success('Génération terminée !');
+              notify('PEDAGOGEN', 'Vos documents pédagogiques sont prêts !');
+              eventSource.close();
+              fetch('/api/history', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data.result),
+              }).catch(() => {});
+            } else if (data.type === 'error') {
+              setError(data.message);
+              setIsCompleted(true);
+              toast.error(data.message);
+              eventSource.close();
+            }
+          } catch (e) {
+            console.error('Failed to parse SSE event', e);
           }
-        } catch (e) {
-          console.error('Failed to parse SSE event', e);
-        }
-      };
+        };
 
-      eventSource.onerror = (e) => {
-        if (!isCompleted && !result && !error) {
-          console.error('SSE connection lost, retrying...', e);
-        }
-      };
-    } catch (e) {
-      console.error('EventSource initialization error', e);
-      setError('Impossible de se connecter au flux de génération.');
-    }
+        eventSource.onerror = () => {
+          if (!isCompleted && !result && !error) {
+            reconnectTimer = setTimeout(connect, 3000);
+          }
+        };
+      } catch (e) {
+        console.error('EventSource initialization error', e);
+        setError('Impossible de se connecter au flux de génération.');
+      }
+    };
+
+    connect();
 
     return () => {
-      if (eventSource) {
-        eventSource.close();
-      }
+      if (eventSource) eventSource.close();
+      clearTimeout(reconnectTimer);
     };
   }, [id, isCompleted, result, error]);
 
@@ -191,7 +248,7 @@ function StatusContent() {
                         <span className="font-semibold text-navy">
                           {gen.metadata?.lecon || 'Génération'}
                         </span>
-                        <span className="text-xs px-2 py-0.5 bg-navy-light/10 rounded uppercase font-bold text-muted">
+                        <span className="text-xs px-2 py-0.5 bg-parchment-dark rounded uppercase font-bold text-muted">
                           {gen.mode}
                         </span>
                       </div>
@@ -238,119 +295,193 @@ function StatusContent() {
 
   return (
     <PageTransition>
-      <div className="max-w-4xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link
-              href="/generate"
-              className="p-2 rounded-lg hover:bg-navy-light/5 text-muted hover:text-navy transition-colors"
-            >
-              <ArrowLeft size={20} />
-            </Link>
-            <div>
-              <h1 className="font-display text-2xl font-bold text-navy">
-                Suivi de la Génération
-              </h1>
-              <p className="text-sm text-muted mt-0.5">ID: {id}</p>
-            </div>
-          </div>
+      <div className="max-w-5xl mx-auto space-y-6">
 
-          <div className="flex items-center gap-2 text-sm text-muted bg-navy-light/5 px-3 py-1.5 rounded-lg border border-border">
-            <Clock size={16} className="text-teal" />
-            <span>Temps écoulé : {elapsedTime}s</span>
+        {/* Header */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-teal via-teal-dark to-navy p-6 lg:p-8 text-white">
+          <div className="absolute top-0 right-0 w-72 h-72 bg-teal-light/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
+          <div className="relative z-10 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link
+                href="/generate"
+                className="p-2 rounded-lg hover:bg-white/15 text-white/80 hover:text-white transition-colors"
+              >
+                <ArrowLeft size={20} />
+              </Link>
+              <div className="flex items-center gap-4">
+                <div className="w-11 h-11 rounded-xl bg-white/15 backdrop-blur flex items-center justify-center shrink-0">
+                  <Activity size={20} className="text-white" />
+                </div>
+                <div>
+                  <h1 className="font-display text-2xl lg:text-3xl font-bold tracking-tight">Suivi de la Génération</h1>
+                  <p className="text-white/60 text-sm mt-0.5">ID: {id}</p>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 text-sm text-white/80 bg-white/10 px-4 py-2 rounded-lg border border-white/15">
+              {tokens > 0 && <span className="text-teal-light font-mono">{tokens.toLocaleString()} tokens</span>}
+              <Clock size={16} className="text-teal-light" />
+              <span>{elapsedTime}s</span>
+            </div>
           </div>
         </div>
 
-        {/* Live status */}
+        {/* Main content grid */}
         {!result && !error && (
-          <Card className="overflow-hidden border-teal/20">
-            <CardHeader className="bg-navy text-parchment py-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Loader2 size={18} className="animate-spin text-teal-light" />
-                  <span className="font-medium">Génération en cours...</span>
-                </div>
-                {tokens > 0 && (
-                  <span className="text-xs bg-white/10 px-2 py-0.5 rounded">
-                    {tokens} tokens
-                  </span>
-                )}
-              </div>
-            </CardHeader>
-            <CardContent className="py-6 space-y-6">
-              {/* Progress Tracker Checklist */}
-              <div className="space-y-4">
-                {Object.entries(stepStatuses).map(([key, item]) => {
-                  const isActive = item.status === 'active';
-                  const isDone = item.status === 'done';
-                  const isError = item.status === 'error';
+          <div className="grid lg:grid-cols-3 gap-6">
+            {/* Progress column — 2/3 */}
+            <div className="lg:col-span-2">
+              <Card className="overflow-hidden border-teal/20">
+                <CardHeader className="bg-navy text-parchment py-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Loader2 size={18} className="animate-spin text-teal-light" />
+                      <span className="font-medium">Génération en cours...</span>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="py-6 space-y-3">
+                  {orderedSteps.map(([key, item]) => {
+                    const isActive = item.status === 'active';
+                    const isDone = item.status === 'done';
+                    const isError = item.status === 'error';
 
-                  return (
-                    <div
-                      key={key}
-                      className={`flex items-center justify-between p-3 rounded-lg border transition-all ${
-                        isActive
-                          ? 'border-teal/30 bg-teal/5 shadow-sm'
-                          : isDone
-                          ? 'border-green/20 bg-green/5 opacity-80'
-                          : isError
-                          ? 'border-red/20 bg-red/5'
-                          : 'border-border bg-white/40 opacity-50'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
+                    const stepBuilds = buildSteps.filter(s => s.step === key);
+
+                    return (
+                      <div key={key}>
                         <div
-                          className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
+                          className={`flex items-center justify-between p-3 rounded-lg border transition-all ${
                             isActive
-                              ? 'bg-teal text-white'
+                              ? 'border-teal/30 bg-teal/5 shadow-sm'
                               : isDone
-                              ? 'bg-green text-white'
+                              ? 'border-green/20 bg-green/5 opacity-80'
                               : isError
-                              ? 'bg-red text-white'
-                              : 'bg-navy-light/10 text-navy'
+                              ? 'border-red/20 bg-red/5'
+                              : 'border-border bg-white/40 opacity-50'
                           }`}
                         >
-                          {isDone ? (
-                            <Check size={14} />
-                          ) : isError ? (
-                            <X size={14} />
-                          ) : isActive ? (
-                            <Loader2 size={14} className="animate-spin" />
-                          ) : (
-                            <span className="text-xs font-semibold">•</span>
-                          )}
+                          <div className="flex items-center gap-3">
+                            <div
+                              className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
+                                isActive
+                                  ? 'bg-teal text-white'
+                                  : isDone
+                                  ? 'bg-green text-white'
+                                  : isError
+                                  ? 'bg-red text-white'
+                                  : 'bg-parchment-dark text-navy'
+                              }`}
+                            >
+                              {isDone ? (
+                                <Check size={14} />
+                              ) : isError ? (
+                                <X size={14} />
+                              ) : isActive ? (
+                                <Loader2 size={14} className="animate-spin" />
+                              ) : (
+                                <span className="text-xs font-semibold">•</span>
+                              )}
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-navy">{item.label}</p>
+                              {item.error && (
+                                <p className="text-xs text-red mt-0.5">{item.error}</p>
+                              )}
+                            </div>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-sm font-medium text-navy">{item.label}</p>
-                          {item.error && (
-                            <p className="text-xs text-red mt-0.5">{item.error}</p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
 
-              {/* Stop Button */}
-              <div className="flex justify-end border-t border-border pt-4">
-                <Button
-                  onClick={handleStop}
-                  disabled={isStopping}
-                  variant="danger"
-                  className="flex items-center gap-2"
-                >
-                  {isStopping ? (
-                    <Loader2 size={16} className="animate-spin" />
-                  ) : (
-                    <Square size={16} />
+                        {/* Build sub-steps */}
+                        {stepBuilds.length > 0 && (
+                          <div className="ml-8 mt-1 space-y-1">
+                            {stepBuilds.map((b, i) => (
+                              <div key={i} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-border/50">
+                                <FileCode size={12} className={b.status === 'done' ? 'text-green' : 'text-teal animate-pulse'} />
+                                <span className="text-xs text-muted flex-1">{b.label}</span>
+                                {b.format && (
+                                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${FORMAT_COLORS[b.format] || 'bg-parchment-dark text-muted'}`}>
+                                    {FORMAT_LABELS[b.format] || b.format.toUpperCase()}
+                                  </span>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+
+                  {/* Stop Button */}
+                  <div className="flex justify-end border-t border-border pt-4 mt-4">
+                    <Button
+                      onClick={handleStop}
+                      disabled={isStopping}
+                      variant="danger"
+                      className="flex items-center gap-2"
+                    >
+                      {isStopping ? (
+                        <Loader2 size={16} className="animate-spin" />
+                      ) : (
+                        <Square size={16} />
+                      )}
+                      Arrêter la Génération
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Reasoning aside — 1/3 */}
+            <div className="lg:col-span-1">
+              <Card className="border-amber/20 bg-amber/5 sticky top-6">
+                <CardContent className="py-4 space-y-3">
+                  <button
+                    onClick={() => setReasoningOpen(!reasoningOpen)}
+                    className="flex items-center gap-2 w-full text-left"
+                  >
+                    {reasoningOpen ? <ChevronDown size={14} className="text-amber" /> : <ChevronRight size={14} className="text-amber" />}
+                    <Brain size={16} className="text-amber" />
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-amber">Raisonnement Pédagogique</h3>
+                  </button>
+
+                  {reasoningOpen && (
+                    <div className="space-y-2 mt-2">
+                      {reasoningSteps.length === 0 ? (
+                        <p className="text-[11px] text-muted italic">Analyse pédagogique en cours...</p>
+                      ) : (
+                        reasoningSteps.map((rs, i) => {
+                          const isActive = steps[rs.step]?.status === 'active';
+                          const isDone = steps[rs.step]?.status === 'done';
+                          return (
+                            <div key={i} className="flex items-start gap-2 text-xs">
+                              <div className={`mt-1 w-1.5 h-1.5 rounded-full shrink-0 ${isDone ? 'bg-green' : isActive ? 'bg-amber animate-pulse' : 'bg-muted'}`} />
+                              <div>
+                                <p className="text-navy font-medium">{rs.label.replace(/ — .*$/, '')}</p>
+                                <p className="text-muted mt-0.5 leading-relaxed">
+                                  {isDone
+                                    ? 'Contenu généré avec succès, passage à la compilation...'
+                                    : isActive
+                                    ? 'Analyse des objectifs pédagogiques et structuration du contenu selon le programme officiel...'
+                                    : 'En attente...'}
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        })
+                      )}
+                      {!isCompleted && reasoningSteps.length > 0 && (
+                        <div className="flex items-center gap-2 pt-2 text-[11px] text-muted border-t border-amber/10">
+                          <Loader2 size={10} className="animate-spin text-amber" />
+                          Traitement en cours...
+                        </div>
+                      )}
+                    </div>
                   )}
-                  Arrêter la Génération
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         )}
 
         {/* Error State */}
@@ -371,8 +502,24 @@ function StatusContent() {
           </Card>
         )}
 
+        {/* Debug Prompt (provider = aucun) */}
+        {result && result.debugPrompt && (
+          <Card className="border-amber/20 bg-amber/5">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <FileCode size={18} className="text-amber" />
+                <h2 className="font-display font-semibold text-navy">Aperçu du Prompt (Mode Aucun)</h2>
+              </div>
+              <p className="text-xs text-muted mt-1">Aucun appel IA n&apos;a été effectué. Voici le prompt qui aurait été envoyé.</p>
+            </CardHeader>
+            <CardContent>
+              <pre className="text-xs font-mono leading-relaxed whitespace-pre-wrap bg-navy text-parchment p-4 rounded-xl overflow-x-auto max-h-[70vh] overflow-y-auto">{result.debugPrompt}</pre>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Result Preview State */}
-        {result && (
+        {result && !result.debugPrompt && (
           <OutputPreview
             result={result}
             onReset={() => {

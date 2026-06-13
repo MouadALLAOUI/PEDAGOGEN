@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useRef, type ReactNode } from 'react';
+import { animate, stagger } from 'animejs';
+import { usePathname } from 'next/navigation';
 
 interface PageTransitionProps {
   children: ReactNode;
@@ -8,21 +10,34 @@ interface PageTransitionProps {
 
 export function PageTransition({ children }: PageTransitionProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
-    if (ref.current) {
-      ref.current.style.opacity = '0';
-      ref.current.style.transform = 'translateY(12px)';
+    if (!ref.current) return;
 
-      requestAnimationFrame(() => {
-        if (ref.current) {
-          ref.current.style.transition = 'opacity 0.4s ease-out, transform 0.4s ease-out';
-          ref.current.style.opacity = '1';
-          ref.current.style.transform = 'translateY(0)';
-        }
+    const el = ref.current;
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(12px)';
+
+    requestAnimationFrame(() => {
+      if (!ref.current) return;
+      animate(el, {
+        opacity: [0, 1],
+        translateY: [24, 0],
+        scale: [0.98, 1],
+        ease: 'outExpo',
+        duration: 500,
       });
-    }
-  }, []);
+
+      animate(el.querySelectorAll('[data-stagger]'), {
+        opacity: [0, 1],
+        translateY: [12, 0],
+        delay: stagger(60),
+        ease: 'outQuad',
+        duration: 400,
+      });
+    });
+  }, [pathname]);
 
   return <div ref={ref}>{children}</div>;
 }

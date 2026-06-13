@@ -1,12 +1,16 @@
 'use client';
 
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Select } from '@/components/ui/Select';
+import { Textarea } from '@/components/ui/Textarea';
 import { MATIERES, NIVEAUX, LANGUES } from '@/lib/curriculum/moroccoCollege';
 import type { CourseMetadata } from '@/types/generation';
-import { useState } from 'react';
+import { GraduationCap, HelpCircle } from 'lucide-react';
 
 const schema = z.object({
   niveau: z.enum(['1AC', '2AC', '3AC']),
@@ -26,151 +30,247 @@ interface CourseFormProps {
   onSubmit: (data: CourseMetadata) => void;
 }
 
+const METHODES = [
+  "Méthode expositive (Lecture/Presentation)",
+  "Méthode démonstrative (Show-Do-Say)",
+  "Méthode interrogative (Questioning/Diagnostic)",
+  "Méthode de découverte (Trial and Error)",
+  "Méthode de résolution de problèmes (PBL)",
+  "Méthode de projet (Project-Based)",
+];
+
+const TONS = ["Formal", "Engaging", "Modern", "Academic"];
+
+const BLOOM_LEVELS = ["Remember", "Understand", "Apply", "Analyze", "Evaluate", "Create"];
+
 export function CourseForm({ onSubmit }: CourseFormProps) {
-  const [niveau, setNiveau] = useState<string>('1AC');
+  const [methode, setMethode] = useState(METHODES[3]);
+  const [ton, setTon] = useState("Engaging");
+  const [niveauxBloom, setNiveauxBloom] = useState<string[]>(["Understand", "Apply"]);
+  const [differentiation, setDifferentiation] = useState<'soutien' | 'standard' | 'defi'>('standard');
 
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      niveau: '1AC',
-      matiere: 'Informatique',
-      langue: 'fr',
+      niveau: "1AC",
+      matiere: "Informatique",
+      langue: "fr",
       semestre: 1,
       duree: 50,
-      profilEleves: '',
+      profilEleves: "",
     },
   });
+
+  const watchNiveau = watch("niveau");
+  const watchSemestre = watch("semestre");
 
   const onFormSubmit = (data: FormData) => {
     onSubmit({
       ...data,
-      competences: data.competences.split(',').map((c) => c.trim()).filter(Boolean),
+      competences: data.competences.split(",").map((c) => c.trim()).filter(Boolean),
+      methodePedagogique: methode,
+      ton,
+      niveauxBloom,
+      differentiationLevel: differentiation,
     });
   };
 
-  const filteredMatieres = MATIERES.filter((m) => m.id === 'info' && m.niveaux.includes(niveau as '1AC' | '2AC' | '3AC'));
+  const filteredMatieres = MATIERES.filter(
+    (m) => m.id === "info" && m.niveaux.includes(watchNiveau as "1AC" | "2AC" | "3AC"),
+  );
 
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-5">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Niveau */}
-        <div>
-          <label className="block text-sm font-medium text-navy mb-1.5">Niveau</label>
-          <select
-            {...register('niveau')}
-            onChange={(e) => setNiveau(e.target.value)}
-            className="w-full rounded-lg border border-border bg-white px-3 py-2.5 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-teal focus:border-transparent"
-          >
-            {NIVEAUX.map((n) => (
-              <option key={n} value={n}>{n}</option>
-            ))}
-          </select>
-          {errors.niveau && <p className="text-red text-xs mt-1">{errors.niveau.message}</p>}
+        <Select
+          label="Niveau"
+          value={watchNiveau}
+          onChange={(e) => setValue("niveau", e.target.value as "1AC" | "2AC" | "3AC")}
+          options={NIVEAUX.map((n) => ({ value: n, label: n }))}
+          error={errors.niveau?.message}
+        />
+
+        <Select
+          label="Semestre"
+          value={String(watchSemestre)}
+          onChange={(e) => setValue("semestre", Number(e.target.value) as 1 | 2)}
+          options={[
+            { value: "1", label: "Semestre 1" },
+            { value: "2", label: "Semestre 2" },
+          ]}
+        />
+
+        <Select
+          label="Matière"
+          value={watch("matiere")}
+          onChange={(e) => setValue("matiere", e.target.value)}
+          options={[
+            { value: "", label: "Sélectionner..." },
+            ...filteredMatieres.map((m) => ({ value: m.nom, label: m.nom })),
+          ]}
+          error={errors.matiere?.message}
+        />
+
+        <Select
+          label="Langue"
+          value={watch("langue")}
+          onChange={(e) => setValue("langue", e.target.value as "fr" | "ar" | "fr+ar")}
+          options={LANGUES.map((l) => ({ value: l.value, label: l.label }))}
+        />
+
+        <Input
+          label="Unité / Chapitre"
+          placeholder="ex: Les fractions"
+          error={errors.unite?.message}
+          {...register("unite")}
+        />
+
+        <Input
+          label="Titre de la Leçon"
+          placeholder="ex: Addition et soustraction de fractions"
+          error={errors.lecon?.message}
+          {...register("lecon")}
+        />
+
+        <Input
+          label="Durée (minutes)"
+          type="number"
+          error={errors.duree?.message}
+          {...register("duree", { valueAsNumber: true })}
+        />
+
+        <Input
+          label="Compétences Visées"
+          placeholder="séparées par des virgules"
+          error={errors.competences?.message}
+          {...register("competences")}
+        />
+      </div>
+
+      <Textarea
+        label="Profil & niveau réel des élèves"
+        placeholder="ex: Élèves très dynamiques mais en difficulté avec la langue française..."
+        rows={3}
+        {...register("profilEleves")}
+      />
+
+      {/* Strategy Section */}
+      <div className="border-t border-border pt-5 space-y-4">
+        <div className="flex items-center gap-2 text-navy">
+          <GraduationCap className="text-indigo-600" size={20} />
+          <h3 className="font-display font-bold text-lg uppercase tracking-wide">Stratégie</h3>
         </div>
 
-        {/* Semestre */}
-        <div>
-          <label className="block text-sm font-medium text-navy mb-1.5">Semestre</label>
-          <select
-            {...register('semestre', { valueAsNumber: true })}
-            className="w-full rounded-lg border border-border bg-white px-3 py-2.5 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-teal focus:border-transparent"
-          >
-            <option value={1}>Semestre 1</option>
-            <option value={2}>Semestre 2</option>
-          </select>
-        </div>
+        <div className="space-y-4">
+          {/* Différenciation */}
+          <div>
+            <div className="flex items-center gap-1.5 mb-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-navy/70">Niveau de Différenciation</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { value: 'soutien' as const, label: '★ Soutien', desc: 'Guidé pas à pas' },
+                { value: 'standard' as const, label: '★★ Standard', desc: 'Niveau programme' },
+                { value: 'defi' as const, label: '★★★ Défi', desc: 'Problèmes ouverts' },
+              ].map((d) => (
+                <button
+                  key={d.value}
+                  type="button"
+                  onClick={() => setDifferentiation(d.value)}
+                  className={`px-4 py-2 rounded-full text-xs font-medium transition-all ${
+                    differentiation === d.value
+                      ? "bg-emerald-600 text-white shadow-md"
+                      : "bg-white border border-border text-navy/70 hover:bg-parchment-dark"
+                  }`}
+                >
+                  {d.label}
+                  <span className="ml-1.5 opacity-70">{d.desc}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <div className="flex items-center gap-1.5 mb-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-navy/70">Méthode Pédagogique</span>
+              <HelpCircle size={14} className="text-muted/60" />
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {METHODES.map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  onClick={() => setMethode(m)}
+                  className={`px-4 py-2 rounded-full text-xs font-medium transition-all ${
+                    methode === m
+                      ? "bg-indigo-600 text-white shadow-md"
+                      : "bg-white border border-border text-navy/70 hover:bg-navy-light/5"
+                  }`}
+                >
+                  {m}
+                </button>
+              ))}
+            </div>
+          </div>
 
-        {/* Matière */}
-        <div>
-          <label className="block text-sm font-medium text-navy mb-1.5">Matière</label>
-          <select
-            {...register('matiere')}
-            className="w-full rounded-lg border border-border bg-white px-3 py-2.5 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-teal focus:border-transparent"
-          >
-            <option value="">Sélectionner...</option>
-            {filteredMatieres.map((m) => (
-              <option key={m.id} value={m.nom}>{m.nom}</option>
-            ))}
-          </select>
-          {errors.matiere && <p className="text-red text-xs mt-1">{errors.matiere.message}</p>}
-        </div>
+          <div>
+            <div className="flex items-center gap-1.5 mb-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-navy/70">Ton</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {TONS.map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => setTon(t)}
+                  className={`px-4 py-2 rounded-full text-xs font-medium transition-all ${
+                    ton === t
+                      ? "bg-indigo-600 text-white shadow-md"
+                      : "bg-white border border-border text-navy/70 hover:bg-navy-light/5"
+                  }`}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+          </div>
 
-        {/* Langue */}
-        <div>
-          <label className="block text-sm font-medium text-navy mb-1.5">Langue</label>
-          <select
-            {...register('langue')}
-            className="w-full rounded-lg border border-border bg-white px-3 py-2.5 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-teal focus:border-transparent"
-          >
-            {LANGUES.map((l) => (
-              <option key={l.value} value={l.value}>{l.label}</option>
-            ))}
-          </select>
-        </div>
-
-        {/* Unité */}
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-navy mb-1.5">Unité / Chapitre</label>
-          <input
-            {...register('unite')}
-            placeholder="ex: Les fractions"
-            className="w-full rounded-lg border border-border bg-white px-3 py-2.5 text-sm text-navy placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-teal focus:border-transparent"
-          />
-          {errors.unite && <p className="text-red text-xs mt-1">{errors.unite.message}</p>}
-        </div>
-
-        {/* Leçon */}
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-navy mb-1.5">Titre de la Leçon</label>
-          <input
-            {...register('lecon')}
-            placeholder="ex: Addition et soustraction de fractions"
-            className="w-full rounded-lg border border-border bg-white px-3 py-2.5 text-sm text-navy placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-teal focus:border-transparent"
-          />
-          {errors.lecon && <p className="text-red text-xs mt-1">{errors.lecon.message}</p>}
-        </div>
-
-        {/* Durée */}
-        <div>
-          <label className="block text-sm font-medium text-navy mb-1.5">Durée (minutes)</label>
-          <input
-            type="number"
-            {...register('duree', { valueAsNumber: true })}
-            className="w-full rounded-lg border border-border bg-white px-3 py-2.5 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-teal focus:border-transparent"
-          />
-          {errors.duree && <p className="text-red text-xs mt-1">{errors.duree.message}</p>}
-        </div>
-
-        {/* Compétences */}
-        <div>
-          <label className="block text-sm font-medium text-navy mb-1.5">
-            Compétences Visées
-          </label>
-          <input
-            {...register('competences')}
-            placeholder="séparées par des virgules"
-            className="w-full rounded-lg border border-border bg-white px-3 py-2.5 text-sm text-navy placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-teal focus:border-transparent"
-          />
-          <p className="text-xs text-muted mt-1">Séparez par des virgules</p>
-          {errors.competences && <p className="text-red text-xs mt-1">{errors.competences.message}</p>}
-        </div>
-
-        {/* Profil & Niveau réel des élèves */}
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-navy mb-1.5">
-            Profil & niveau réel des élèves (comportement en classe, culture sociale, niveau scolaire...)
-          </label>
-          <textarea
-            {...register('profilEleves')}
-            placeholder="ex: Élèves très dynamiques mais en difficulté avec la langue française. Ils viennent d'un milieu périurbain, et s'intéressent beaucoup aux applications pratiques."
-            rows={3}
-            className="w-full rounded-lg border border-border bg-white px-3 py-2.5 text-sm text-navy placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-teal focus:border-transparent"
-          />
-          {errors.profilEleves && <p className="text-red text-xs mt-1">{errors.profilEleves.message}</p>}
+          <div>
+            <div className="flex items-center gap-1.5 mb-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-navy/70">Niveaux de Bloom</span>
+              <HelpCircle size={14} className="text-muted/60" />
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {BLOOM_LEVELS.map((b) => {
+                const isSelected = niveauxBloom.includes(b);
+                return (
+                  <button
+                    key={b}
+                    type="button"
+                    onClick={() => {
+                      setNiveauxBloom(
+                        isSelected
+                          ? niveauxBloom.filter((item) => item !== b)
+                          : [...niveauxBloom, b],
+                      );
+                    }}
+                    className={`px-4 py-2 rounded-full text-xs font-medium transition-all ${
+                      isSelected
+                        ? "bg-indigo-600 text-white shadow-md"
+                        : "bg-white border border-border text-navy/70 hover:bg-navy-light/5"
+                    }`}
+                  >
+                    {b}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
 

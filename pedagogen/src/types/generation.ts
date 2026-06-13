@@ -1,27 +1,33 @@
-export type GenerationMode = 'heavy' | 'medium' | 'light';
+export type ProviderId = "none" | "huggingface" | "lmstudio" | "opencode";
+
+export type GenerationMode = "heavy" | "medium" | "light";
 
 export type DocumentType =
-  | 'fiche_pedagogique'
-  | 'planification'
-  | 'plan_gestion_classe'
-  | 'evaluation'
-  | 'cours_complet'
-  | 'resume_eleve'
-  | 'presentation_pptx'
-  | 'images_illustratives';
+  | "fiche_pedagogique"
+  | "planification"
+  | "plan_gestion_classe"
+  | "evaluation"
+  | "cours_complet"
+  | "resume_eleve"
+  | "presentation_pptx"
+  | "images_illustratives";
 
-export type OutputFormat = 'docx' | 'pptx' | 'pdf' | 'md' | 'zip' | 'png';
+export type OutputFormat = "docx" | "pptx" | "pdf" | "md" | "zip" | "png" | "html";
 
 export interface CourseMetadata {
-  niveau: '1AC' | '2AC' | '3AC';
+  niveau: "1AC" | "2AC" | "3AC";
   matiere: string;
   unite: string;
   lecon: string;
   duree: number;
   competences: string[];
-  langue: 'fr' | 'ar' | 'fr+ar';
+  langue: "fr" | "ar" | "fr+ar";
   semestre: 1 | 2;
   profilEleves?: string;
+  methodePedagogique?: string;
+  ton?: string;
+  niveauxBloom?: string[];
+  differentiationLevel?: 'soutien' | 'standard' | 'defi';
 }
 
 export interface GenerationRequest {
@@ -35,9 +41,10 @@ export interface GenerationRequest {
   useLocalModel?: boolean;
   localModelName?: string;
   localModelUrl?: string;
-  localApiType?: 'openai' | 'custom';
+  localApiType?: "openai" | "custom";
   customPrompts?: Record<string, string>;
   debugMode?: boolean;
+  provider?: ProviderId;
 }
 
 export interface GenerationResult {
@@ -50,6 +57,7 @@ export interface GenerationResult {
   tokensUsed: number;
   durationMs: number;
   markdown?: string;
+  debugPrompt?: string;
 }
 
 export interface GeneratedFile {
@@ -62,20 +70,20 @@ export interface GeneratedFile {
 }
 
 export const DOCUMENT_TYPE_LABELS: Record<DocumentType, string> = {
-  fiche_pedagogique: 'Fiche Pédagogique',
-  planification: 'Planification',
-  plan_gestion_classe: 'Plan de Gestion de Classe',
-  evaluation: 'Évaluation',
-  cours_complet: 'Cours Complet',
-  resume_eleve: 'Résumé Élève',
-  presentation_pptx: 'Présentation PPTX',
-  images_illustratives: 'Images Illustratives',
+  fiche_pedagogique: "Fiche Pédagogique",
+  planification: "Planification",
+  plan_gestion_classe: "Plan de Gestion de Classe",
+  evaluation: "Évaluation",
+  cours_complet: "Cours Complet",
+  resume_eleve: "Résumé Élève",
+  presentation_pptx: "Présentation PPTX",
+  images_illustratives: "Images Illustratives",
 };
 
 export const MODE_LABELS: Record<GenerationMode, string> = {
-  heavy: 'Mode Complet',
-  medium: 'Mode Sélectif',
-  light: 'Mode Rapide',
+  heavy: "Mode Complet",
+  medium: "Mode Sélectif",
+  light: "Mode Rapide",
 };
 
 export const MODE_DESCRIPTIONS: Record<GenerationMode, {
@@ -86,36 +94,35 @@ export const MODE_DESCRIPTIONS: Record<GenerationMode, {
   color: string;
 }> = {
   heavy: {
-    title: 'Mode Complet',
-    description: 'Génération intégrale : fiche, planification, cours, gestion de classe, résumé, présentation et images.',
-    estimatedTime: '3-5 min',
-    tokenRange: '15,000 – 30,000',
-    color: '#DC2626',
+    title: "Mode Complet",
+    description: "Génération intégrale : fiche, planification, cours, gestion de classe, résumé, présentation et images.",
+    estimatedTime: "3-5 min",
+    tokenRange: "15,000 – 30,000",
+    color: "#DC2626",
   },
   medium: {
-    title: 'Mode Sélectif',
-    description: 'Choisissez les documents spécifiques à générer selon vos besoins.',
-    estimatedTime: '1-3 min',
-    tokenRange: '3,000 – 12,000',
-    color: '#D97706',
+    title: "Mode Sélectif",
+    description: "Choisissez les documents spécifiques à générer selon vos besoins.",
+    estimatedTime: "1-3 min",
+    tokenRange: "3,000 – 12,000",
+    color: "#D97706",
   },
   light: {
-    title: 'Mode Rapide',
-    description: 'Un résumé Markdown structuré de votre leçon en quelques secondes.',
-    estimatedTime: '< 30 sec',
-    tokenRange: '500 – 2,000',
-    color: '#16A34A',
+    title: "Mode Rapide",
+    description: "Un résumé Markdown structuré de votre leçon en quelques secondes.",
+    estimatedTime: "< 30 sec",
+    tokenRange: "500 – 2,000",
+    color: "#16A34A",
   },
 };
 
 export const BEST_FORMATS: Record<DocumentType, OutputFormat> = {
-  fiche_pedagogique: 'docx',
-  planification: 'pdf',
-  plan_gestion_classe: 'pdf',
-  evaluation: 'docx',
-  cours_complet: 'pdf',
-  resume_eleve: 'pdf',
-  presentation_pptx: 'pptx',
-  images_illustratives: 'md',
+  fiche_pedagogique: "pdf",
+  planification: "pdf",
+  plan_gestion_classe: "pdf",
+  evaluation: "html",
+  cours_complet: "pdf",
+  resume_eleve: "md",
+  presentation_pptx: "pptx",
+  images_illustratives: "md",
 };
-

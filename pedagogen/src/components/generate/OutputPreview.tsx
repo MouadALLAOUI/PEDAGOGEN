@@ -1,11 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { Download, RotateCcw, FileText, Check, Copy, Archive, Eye, Code, Loader2 } from 'lucide-react';
+import { Download, RotateCcw, FileText, Check, Copy, Archive, Eye, Code, Loader2, Monitor, Globe } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { MarkdownRenderer } from '@/components/ui/MarkdownRenderer';
 import { FilePreviewModal } from '@/components/ui/FilePreviewModal';
+import { FullscreenBoard } from '@/components/generate/FullscreenBoard';
+import { generateStandaloneHtml, downloadHtmlFile } from '@/lib/utils/pwaExport';
 import type { GenerationResult, GeneratedFile } from '@/types/generation';
 import toast from 'react-hot-toast';
 
@@ -20,6 +22,7 @@ export function OutputPreview({ result, onReset }: OutputPreviewProps) {
   const [previewFile, setPreviewFile] = useState<GeneratedFile | null>(null);
   const [zipUrl, setZipUrl] = useState<string | undefined>(result.zipUrl);
   const [zipping, setZipping] = useState(false);
+  const [showBoard, setShowBoard] = useState(false);
 
   const handleGenerateZip = async () => {
     setZipping(true);
@@ -186,6 +189,29 @@ export function OutputPreview({ result, onReset }: OutputPreviewProps) {
             </div>
           )}
 
+          <Button variant="secondary" onClick={() => setShowBoard(true)} className="w-full">
+            <Monitor size={16} />
+            Mode Tableau
+          </Button>
+
+          <Button
+            variant="secondary"
+            onClick={() => {
+              const html = generateStandaloneHtml({
+                title: result.metadata?.lecon || 'Cours',
+                metadata: result.metadata || { niveau: '1AC', matiere: '', unite: '', lecon: '', duree: 50, competences: [], langue: 'fr', semestre: 1 },
+                files: result.files,
+                markdown: result.markdown,
+              });
+              downloadHtmlFile(html, `cours-${(result.metadata?.lecon || 'document').replace(/\s+/g, '-').toLowerCase()}`);
+              toast.success('Export HTML prêt !');
+            }}
+            className="w-full"
+          >
+            <Globe size={16} />
+            Export HTML Hors-Ligne
+          </Button>
+
           <Button variant="secondary" onClick={onReset} className="w-full">
             <RotateCcw size={16} />
             Nouvelle Génération
@@ -201,6 +227,10 @@ export function OutputPreview({ result, onReset }: OutputPreviewProps) {
           fileUrl={previewFile.url}
           onClose={() => setPreviewFile(null)}
         />
+      )}
+
+      {showBoard && (
+        <FullscreenBoard onClose={() => setShowBoard(false)} />
       )}
     </>
   );

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Save, RotateCcw, Sparkles, BookOpen, GraduationCap, Users, Compass, Globe, Info, Loader2 } from 'lucide-react';
+import { ArrowLeft, Save, RotateCcw, BookOpen, GraduationCap, Users, Compass, Globe, Info, Loader2, Sparkles } from 'lucide-react';
 import { Card, CardHeader, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { PageTransition } from '@/components/layout/PageTransition';
@@ -84,7 +84,8 @@ export default function PromptsPage() {
       .catch(() => {
         const loaded: Record<string, string> = {};
         for (const key of Object.keys(DEFAULT_PROMPTS)) {
-          loaded[key] = DEFAULT_PROMPTS[key];
+          const value = DEFAULT_PROMPTS[key];
+          if (value !== undefined) loaded[key] = value;
         }
         setPrompts(loaded);
         setLoading(false);
@@ -154,16 +155,22 @@ export default function PromptsPage() {
     <PageTransition>
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => router.push('/settings')}
-            className="p-2 rounded-lg hover:bg-navy-light/5 text-muted hover:text-navy transition-colors"
-          >
-            <ArrowLeft size={20} />
-          </button>
-          <div>
-            <h1 className="font-display text-2xl font-bold text-navy">Personnalisation des Prompts</h1>
-            <p className="text-sm text-muted mt-0.5">Modifiez les consignes d&apos;IA stockées en base de données et intégrez des profils d&apos;élèves.</p>
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-teal via-teal-dark to-navy p-6 lg:p-8 text-white">
+          <div className="absolute top-0 right-0 w-56 h-56 bg-teal-light/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
+          <div className="relative z-10 flex items-center gap-4">
+            <button
+              onClick={() => router.push('/settings')}
+              className="w-11 h-11 rounded-xl bg-white/15 backdrop-blur flex items-center justify-center shrink-0 text-white hover:bg-white/25 transition-colors"
+            >
+              <ArrowLeft size={20} />
+            </button>
+            <div className="w-11 h-11 rounded-xl bg-white/15 backdrop-blur flex items-center justify-center shrink-0">
+              <Sparkles size={20} className="text-white" />
+            </div>
+            <div>
+              <h1 className="font-display text-2xl lg:text-3xl font-bold tracking-tight">Personnalisation des Prompts</h1>
+              <p className="text-white/60 text-sm mt-0.5">Modifiez les consignes d&apos;IA stockées en base de données et intégrez des profils d&apos;élèves.</p>
+            </div>
           </div>
         </div>
 
@@ -228,8 +235,8 @@ export default function PromptsPage() {
                       onClick={() => setActiveDoc(key)}
                       className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                         activeDoc === key
-                          ? 'bg-teal text-white shadow-sm'
-                          : 'bg-navy-light/5 text-navy hover:bg-navy-light/10'
+                          ? 'bg-teal text-white shadow-sm shadow-teal/20'
+                          : 'bg-parchment-dark text-muted hover:bg-parchment-dark'
                       }`}
                     >
                       {DOC_LABELS[key]}
@@ -253,7 +260,7 @@ export default function PromptsPage() {
                 </div>
 
                 <div className="flex items-center gap-3 mt-6 border-t border-border pt-4">
-                  <Button onClick={handleSave} disabled={saving} className="btn-gradient">
+                  <Button onClick={handleSave} disabled={saving}>
                     {saving ? (
                       <>
                         <Loader2 size={16} className="animate-spin mr-2" /> Enregistrement...

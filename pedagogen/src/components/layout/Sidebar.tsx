@@ -56,19 +56,19 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        'hidden lg:flex flex-col bg-navy text-parchment min-h-screen transition-all duration-300',
+        'hidden lg:flex flex-col bg-white text-navy min-h-screen border-r border-border transition-all duration-300',
         collapsed ? 'w-[68px]' : 'w-64'
       )}
     >
       {/* Header */}
-      <div className="flex items-center gap-3 px-4 py-5 border-b border-white/10">
+      <div className="flex items-center gap-3 px-4 py-5 border-b border-border">
         <div className="w-10 h-10 rounded-xl bg-teal flex items-center justify-center flex-shrink-0">
           <BookOpen size={20} className="text-white" />
         </div>
         {!collapsed && (
           <div className="overflow-hidden">
             <h1 className="font-display text-lg font-bold tracking-tight whitespace-nowrap">PEDAGOGEN</h1>
-            <p className="text-xs text-parchment/50 whitespace-nowrap">Assistant Pédagogique IA</p>
+            <p className="text-xs text-muted whitespace-nowrap">Assistant Pédagogique IA</p>
           </div>
         )}
       </div>
@@ -76,7 +76,7 @@ export function Sidebar() {
       {/* Toggle button */}
       <button
         onClick={toggle}
-        className="mx-3 mt-3 flex items-center justify-center gap-2 px-2 py-1.5 rounded-lg text-parchment/40 hover:text-parchment hover:bg-white/5 transition-colors"
+        className="mx-3 mt-3 flex items-center justify-center gap-2 px-2 py-1.5 rounded-lg text-muted hover:text-navy hover:bg-parchment-dark transition-colors"
         title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
       >
         {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
@@ -95,8 +95,8 @@ export function Sidebar() {
                 'flex items-center gap-3 rounded-lg text-sm font-medium transition-all duration-200',
                 collapsed ? 'justify-center px-2 py-2.5' : 'px-3 py-2.5',
                 isActive
-                  ? 'bg-gradient-to-r from-teal/20 to-teal/0 text-teal-light border-l-2 border-teal rounded-l-none'
-                  : 'text-parchment/60 hover:bg-white/5 hover:text-parchment'
+                  ? 'bg-teal-50 text-teal-dark border-l-2 border-teal rounded-l-none'
+                  : 'text-muted hover:bg-parchment-dark hover:text-navy'
               )}
               title={collapsed ? item.label : undefined}
             >
@@ -108,7 +108,7 @@ export function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="px-4 py-4 border-t border-white/10">
+      <div className="px-4 py-4 border-t border-border">
         {user ? (
           <div className="space-y-2">
             <Link
@@ -117,19 +117,19 @@ export function Sidebar() {
                 'flex items-center gap-3 px-2 py-2 rounded-lg text-sm transition-colors',
                 collapsed ? 'justify-center' : '',
                 pathname === '/profile'
-                  ? 'bg-teal/20 text-teal-light'
-                  : 'text-parchment/60 hover:bg-white/5 hover:text-parchment'
+                  ? 'bg-teal-50 text-teal-dark'
+                  : 'text-muted hover:bg-parchment-dark hover:text-navy'
               )}
             >
-              <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center flex-shrink-0">
-                <GraduationCap size={16} className="text-gold-light" />
+              <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center flex-shrink-0">
+                <GraduationCap size={16} className="text-gold" />
               </div>
               {!collapsed && (
                 <div className="text-xs overflow-hidden">
-                  <p className="text-parchment/80 font-medium whitespace-nowrap">
+                  <p className="text-navy font-medium whitespace-nowrap">
                     {profile?.full_name || 'Enseignant'}
                   </p>
-                  <p className="text-parchment/40 whitespace-nowrap">
+                  <p className="text-muted whitespace-nowrap">
                     {profile?.matiere || 'Collège'}
                   </p>
                 </div>
@@ -140,7 +140,7 @@ export function Sidebar() {
               className={cn(
                 'flex items-center gap-3 w-full px-2 py-1.5 rounded-lg text-xs transition-colors',
                 collapsed ? 'justify-center' : '',
-                'text-parchment/40 hover:bg-white/5 hover:text-parchment'
+                'text-muted hover:bg-parchment-dark hover:text-navy'
               )}
               title={collapsed ? 'Déconnexion' : undefined}
             >
@@ -154,11 +154,11 @@ export function Sidebar() {
             className={cn(
               'flex items-center gap-3 px-2 py-2 rounded-lg text-sm transition-colors',
               collapsed ? 'justify-center' : '',
-              'text-parchment/60 hover:bg-white/5 hover:text-parchment'
+              'text-muted hover:bg-parchment-dark hover:text-navy'
             )}
           >
-            <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center flex-shrink-0">
-              <User size={16} className="text-gold-light" />
+            <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center flex-shrink-0">
+              <User size={16} className="text-gold" />
             </div>
             {!collapsed && <span className="whitespace-nowrap">Connexion</span>}
           </Link>

@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Providers } from "@/components/Providers";
+import { initDb } from "@/lib/db/init";
 import "./globals.css";
+import "@/styles/markdown.css";
+
+initDb();
 
 export const metadata: Metadata = {
   title: "PEDAGOGEN — Assistant Pédagogique IA",
