@@ -1,16 +1,32 @@
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { TopBar } from "@/components/layout/TopBar";
 import { QuickActionFab } from "@/components/layout/QuickActionFab";
 import { OnboardingWizard } from "@/components/OnboardingWizard";
 import { Toaster } from "react-hot-toast";
 
-export default function DashboardLayout({
+import { verifyToken } from "@/lib/db/auth";
+
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('auth-token')?.value;
+
+  if (!token) {
+    redirect('/login');
+  }
+
+  const payload = await verifyToken(token);
+  if (!payload?.sub) {
+    redirect('/login');
+  }
+
   return (
-    <div className="flex h-full">
+    <div className="flex h-screen overflow-hidden bg-background">
       <Toaster
         position="top-right"
         toastOptions={{
@@ -37,9 +53,9 @@ export default function DashboardLayout({
         }}
       />
       <Sidebar />
-      <div className="flex-1 flex flex-col min-h-full">
+      <div className="flex-1 flex flex-col h-full min-w-0 overflow-hidden">
         <TopBar />
-        <main className="flex-1 p-4 lg:p-8 overflow-auto">
+        <main className="flex-1 p-4 lg:p-8 overflow-y-auto min-h-0">
           {children}
         </main>
       </div>

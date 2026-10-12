@@ -2,15 +2,31 @@ import { NextRequest, NextResponse } from 'next/server';
 import { saveGeneratedFile, getDynamicFilename } from '@/lib/utils/generatedStorage';
 import { buildDocx } from '@/lib/builders/docxBuilder';
 import { buildPdf, type WatermarkInfo } from '@/lib/builders/pdfBuilder';
+import { buildFichePedagogiquePdf, type FicheContent } from '@/lib/builders/fichePedagogiqueBuilder';
+import { buildFichePedagogiqueDocx } from '@/lib/builders/fichePedagogiqueDocxBuilder';
+import { buildCoursCompletPdf, normalizeCoursComplet, type CoursCompletContent } from '@/lib/builders/coursCompletBuilder';
+import { normalizeDocContent } from '@/lib/builders/normalizeDocContent';
+import { buildCoursCompletDocx } from '@/lib/builders/coursCompletDocxBuilder';
+import { buildPlanGestionPdf, type PlanGestionContent } from '@/lib/builders/planGestionBuilder';
+import { buildPlanGestionDocx } from '@/lib/builders/planGestionDocxBuilder';
+import { buildResumePdf, type ResumeContent } from '@/lib/builders/resumeBuilder';
+import { buildResumeDocx } from '@/lib/builders/resumeDocxBuilder';
+import { buildEvaluationPdf, type EvaluationContent } from '@/lib/builders/evaluationBuilder';
+import { buildEvaluationDocx } from '@/lib/builders/evaluationDocxBuilder';
 import { buildPptx } from '@/lib/builders/pptxBuilder';
 import { buildMarkdown } from '@/lib/builders/mdBuilder';
+import { buildHtml } from '@/lib/builders/htmlBuilder';
 import { getDb } from '@/lib/db';
-import { generateFluxImage } from '@/lib/utils/imageCache';
+import { getDbSetting } from '@/lib/db/settings';
+import { buildImagePromptsTxt } from '@/lib/builders/imagesTxtBuilder';
 import { callHuggingFace, pedagogicalTools } from '@/lib/agents/agentTools';
 import { GenerationRequest, DocumentType, BEST_FORMATS } from '@/types/generation';
 import { logGenerationError } from '@/lib/utils/logger';
-import { createGeneration, addProgress } from '@/lib/agents/generationManager';
+import { createGeneration, addProgress, enqueueGeneration, queuePosition } from '@/lib/agents/generationManager';
 import { verifyToken, getUserFromDb } from '@/lib/db/auth';
+import { addHistoryEntry } from '@/lib/utils/historyStore';
+import { MinisterialHeaderInfo } from '@/lib/utils/ministerialHeader';
+import { generationRequestSchema } from '@/lib/validators/generation';
 
 export const maxDuration = 900;
 export const dynamic = 'force-dynamic';
@@ -64,22 +80,38 @@ const DOC_STEP_MAP: Record<string, string> = {
   cours_complet: 'cours',
   plan_gestion_classe: 'gestion',
   resume_eleve: 'resume',
+  evaluation: 'evaluation',
   presentation_pptx: 'pptx',
   images_illustratives: 'images',
 };
 
 export async function POST(request: NextRequest) {
   try {
-    const body: GenerationRequest = await request.json();
+    const rawBody = await request.json();
+    const parsed = generationRequestSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Données invalides', details: parsed.error.format() }, { status: 400 });
+    }
+    const body: GenerationRequest = rawBody as GenerationRequest;
 
-    const dbToken = await getDbSetting('huggingface_token');
-    if (dbToken) process.env.HF_TOKEN = dbToken;
+    const userIdHeader = request.headers.get('x-user-id');
+    let userId = userIdHeader || undefined;
+    if (!userId) {
+      const token = request.cookies.get('auth-token')?.value;
+      if (token) {
+        const payload = await verifyToken(token);
+        if (payload?.sub) userId = String(payload.sub);
+      }
+    }
+
+    const dbToken = await getDbSetting('huggingface_token', userId);
+    const apiKey = dbToken || process.env.HF_TOKEN;
 
     if (body.mode !== 'medium') {
       return NextResponse.json({ error: 'Invalid mode' }, { status: 400 });
     }
 
-    if (!body.useLocalModel && !process.env.HF_TOKEN) {
+    if (!body.useLocalModel && !apiKey) {
       return NextResponse.json({ error: 'HF_TOKEN not configured' }, { status: 500 });
     }
 
@@ -88,24 +120,32 @@ export async function POST(request: NextRequest) {
     }
 
     let watermark: WatermarkInfo | undefined;
+    let ministerialHeader: MinisterialHeaderInfo | undefined;
     try {
-      const token = request.cookies.get('auth-token')?.value;
-      if (token) {
-        const payload = await verifyToken(token);
-        if (payload?.sub) {
-          const user = getUserFromDb(payload.sub);
-          if (user) {
-            watermark = { fullName: user.full_name, etablissement: user.etablissement };
-          }
+      if (userId) {
+        const user = getUserFromDb(userId);
+        if (user) {
+          ministerialHeader = {
+            aref: user.aref || '',
+            directionProvinciale: user.direction_provinciale || '',
+            etablissement: user.etablissement || '',
+            teacherName: user.full_name || '',
+            subject: user.matiere || body.metadata.matiere || '',
+          };
+          watermark = { fullName: user.full_name, etablissement: user.etablissement };
         }
       }
     } catch {}
+    let defaultFormat: 'pdf' | 'docx' = getDbSetting('default_format', userId) === 'docx' ? 'docx' : 'pdf';
+    try {
+      if (getDbSetting('filigran_enabled', userId) === 'false') watermark = undefined;
+    } catch { /* non-critical */ }
 
     const generationId = `medium-${Date.now()}`;
     const gen = createGeneration(generationId, 'medium', body.metadata);
 
-    // Run generation asynchronously in the background
-    (async () => {
+    // Run generation asynchronously in the background (R6: via the concurrency queue)
+    enqueueGeneration(generationId, queuePosition(), async () => {
       const signal = gen.controller.signal;
       try {
         addProgress(generationId, { type: 'progress', step: 'init', label: 'Initialisation...', status: 'active' });
@@ -129,8 +169,8 @@ export async function POST(request: NextRequest) {
             // User-uploaded references (only enabled ones)
             const db = getDb();
             const enabledRefs = db.prepare(
-              'SELECT id, name FROM reference_files WHERE enabled = 1 AND builtin = 0'
-            ).all() as any[];
+              "SELECT id, name FROM reference_files WHERE enabled = 1 AND builtin = 0 AND (user_id = ? OR user_id = 'default')"
+            ).all(userId || 'default') as any[];
             const { readReferenceContent } = await import('@/lib/utils/fileStorage');
             const { compressReferenceDocument } = await import('@/lib/utils/builtinReferences');
             for (const f of enabledRefs) {
@@ -165,21 +205,24 @@ export async function POST(request: NextRequest) {
           ...body.customPrompts,
         };
         const { buildSystemPrompt } = await import('@/lib/agents/agentTools');
+        const { resolveApplicableSkills } = await import('@/lib/skills/skillManager');
+        const { activeSkills } = resolveApplicableSkills(body.metadata, body.activeSkillIds, userId || 'default');
+
         const systemPrompt = buildSystemPrompt(
           body.metadata, body.metadata.langue, body.useReferences,
           referenceContents, body.includePrompt, body.excludePrompt,
-          customPrompts
+          customPrompts, activeSkills
         );
 
         const DOC_TOOL_MAP: Record<DocumentType, string> = {
           fiche_pedagogique: 'generate_fiche_pedagogique',
           planification: 'generate_planification',
           plan_gestion_classe: 'generate_gestion_classe',
-          evaluation: 'generate_fiche_pedagogique',
+          evaluation: 'generate_evaluation',
           cours_complet: 'generate_cours_complet',
           resume_eleve: 'generate_resume_eleve',
           presentation_pptx: 'generate_pptx_outline',
-          images_illustratives: 'generate_fiche_pedagogique',
+          images_illustratives: 'generate_images_illustratives',
         };
 
         const docsToGenerate = body.documentsToGenerate!;
@@ -221,7 +264,8 @@ export async function POST(request: NextRequest) {
                 localModelUrl: body.localModelUrl,
                 localApiType: body.localApiType,
                 signal,
-                debugMode: body.debugMode
+                debugMode: body.debugMode,
+                apiKey,
               }
             );
 
@@ -252,78 +296,6 @@ export async function POST(request: NextRequest) {
           const stepId = DOC_STEP_MAP[docType] || docType;
           addProgress(generationId, { type: 'progress', step: stepId, label: config.label, status: 'active' });
 
-          if (docType === 'images_illustratives') {
-            if (body.debugMode) {
-              const mdContent = `# Images Illustratives - DEBUG PROMPT\n\n## Conversations History\n\n${JSON.stringify(messages, null, 2)}`;
-              const filename = getDynamicFilename('Images_Illustratives', body.metadata, 'md');
-              const file = await saveGeneratedFile(Buffer.from(mdContent), filename, 'md', 'images_illustratives');
-              files.push(file);
-              messages.push({ role: 'user', content: 'Génère les invites d\'images.' });
-              messages.push({ role: 'assistant', content: `[MOCK IMAGES]` });
-              addProgress(generationId, { type: 'progress', step: stepId, label: `${config.label} — Terminé`, status: 'done' });
-              continue;
-            }
-
-            try {
-              addProgress(generationId, { type: 'progress', step: stepId, label: `${config.label} — IA en cours...`, status: 'active' });
-              const userMsg = `generate: images_illustratives | count: 2 | output: JSON`;
-              
-              messages.push({ role: 'user', content: userMsg });
-
-              if (signal.aborted) return;
-              const promptsResponse = await callHuggingFace(messages, undefined, undefined, 500, 'openai/gpt-oss-120b:fastest', {
-                useLocalModel: body.useLocalModel,
-                localModelName: body.localModelName,
-                localModelUrl: body.localModelUrl,
-                localApiType: body.localApiType,
-                signal,
-                debugMode: body.debugMode
-              });
-
-              if (signal.aborted) return;
-
-              const responseText = (promptsResponse.content.find((c: any) => c.type === 'text') as any)?.text || '';
-              messages.push({ role: 'assistant', content: responseText });
-
-              if (promptsResponse.usage) {
-                totalUsage.prompt_tokens += promptsResponse.usage.prompt_tokens;
-                totalUsage.completion_tokens += promptsResponse.usage.completion_tokens;
-                totalUsage.total_tokens += promptsResponse.usage.total_tokens;
-              }
-
-              let prompts = [
-                `Moroccan classroom illustrating ${body.metadata.lecon}`,
-                `Students interacting with computer systems for ${body.metadata.lecon}`
-              ];
-              try {
-                const match = responseText.match(/\[([\s\S]*?)\]/);
-                if (match) {
-                  prompts = JSON.parse(match[0]);
-                }
-              } catch (e) {
-                console.error("Failed to parse prompts", e);
-              }
-
-              addProgress(generationId, { type: 'progress', step: stepId, label: `${config.label} — Compilation...`, status: 'active' });
-              for (let i = 0; i < prompts.length; i++) {
-                if (signal.aborted) return;
-                const prompt = prompts[i]!;
-                const imgBuffer = await generateFluxImage(prompt);
-                const filename = getDynamicFilename(`Illustration_${i + 1}`, body.metadata, 'png');
-                const file = await saveGeneratedFile(imgBuffer, filename, 'png', 'images_illustratives');
-                files.push(file);
-              }
-
-              addProgress(generationId, { type: 'progress', step: stepId, label: `${config.label} — Terminé`, status: 'done' });
-            } catch (err) {
-              console.error(`Failed to generate images in medium route:`, err);
-              logGenerationError('medium', 'images_illustratives', err);
-              const errMsg = err instanceof Error ? err.message : 'Unknown error';
-              addProgress(generationId, { type: 'progress', step: stepId, label: `${config.label} — échoué`, status: 'error', error: errMsg });
-            }
-            continue;
-          }
-
           // Find matching tool definition
           const toolName = DOC_TOOL_MAP[docType];
           const toolDef = toolName ? pedagogicalTools.find((t) => t.function.name === toolName) : undefined;
@@ -333,15 +305,21 @@ export async function POST(request: NextRequest) {
             if (signal.aborted) return;
             addProgress(generationId, { type: 'progress', step: stepId, label: `${config.label} — IA en cours...`, status: 'active' });
 
-            const modelToUse = docType === 'cours_complet' ? 'deepseek-ai/DeepSeek-R1' : 'openai/gpt-oss-120b:fastest';
+            const modelToUse = 'openai/gpt-oss-120b:fastest';
             
             let userPrompt = '';
             if (docType === 'fiche_pedagogique') {
               userPrompt = "Génère maintenant uniquement la fiche_pedagogique pour cette leçon.";
             } else if (docType === 'cours_complet') {
-              userPrompt = "En te basant sur la fiche précédente, génère maintenant le cours_complet pour cette leçon.";
+              const hasFiche = sortedDocs.indexOf('fiche_pedagogique') !== -1 && sortedDocs.indexOf('fiche_pedagogique') < sortedDocs.indexOf('cours_complet');
+              userPrompt = hasFiche
+                ? "En te basant sur la fiche précédente, génère maintenant le cours_complet pour cette leçon."
+                : "Génère maintenant le document Cours Complet (type: cours_complet) pour cette leçon.";
             } else if (docType === 'presentation_pptx') {
-              userPrompt = "En te basant sur le cours complet précédent, génère maintenant le plan PPTX (presentation_pptx) sous forme de slides.";
+              const hasCours = sortedDocs.indexOf('cours_complet') !== -1 && sortedDocs.indexOf('cours_complet') < sortedDocs.indexOf('presentation_pptx');
+              userPrompt = hasCours
+                ? "En te basant sur le cours complet précédent, génère maintenant le plan PPTX (presentation_pptx) sous forme de slides."
+                : "Génère maintenant le plan PPTX (presentation_pptx) sous forme de slides pour cette leçon.";
             } else {
               const prefix = customPrompts?.[docType] || config.promptPrefix;
               userPrompt = `${prefix}\nGénère maintenant le document "${config.label}" (type: ${docType}).`;
@@ -359,11 +337,12 @@ export async function POST(request: NextRequest) {
               continue;
             }
 
+            const maxTokensForDoc = docType === 'evaluation' ? 4000 : docType === 'resume_eleve' ? 4000 : 16000;
             const result = await callHuggingFace(
               messages,
               undefined,
               [toolDef],
-              16000,
+              maxTokensForDoc,
               modelToUse,
               {
                 useLocalModel: body.useLocalModel,
@@ -371,31 +350,42 @@ export async function POST(request: NextRequest) {
                 localModelUrl: body.localModelUrl,
                 localApiType: body.localApiType,
                 signal,
-                debugMode: body.debugMode
+                debugMode: body.debugMode,
+                apiKey,
               }
             );
 
             if (signal.aborted) return;
 
+            // Build the assistant message with ALL tool_use blocks; each must be
+            // answered by a role:'tool' message or the next API call fails with
+            // "assistant message with 'tool_calls' must be followed by tool messages".
+            const toolUses = result.content.filter((c: any) => c.type === 'tool_use') as any[];
             const assistantMsg: any = {
               role: 'assistant',
               content: (result.content.find((c: any) => c.type === 'text') as any)?.text || ''
             };
-            
-            const toolCallResult = result.content.find((c: any) => c.type === 'tool_use') as any;
-            if (toolCallResult) {
-              assistantMsg.tool_calls = [
-                {
-                  id: `call_${Date.now()}`,
+            const toolResponses: any[] = [];
+            if (toolUses.length > 0) {
+              assistantMsg.tool_calls = toolUses.map((tc, i) => {
+                const id = `call_${Date.now()}_${i}`;
+                toolResponses.push({
+                  role: 'tool',
+                  tool_call_id: id,
+                  content: JSON.stringify(tc.input ?? {}).slice(0, 4000) || 'OK',
+                });
+                return {
+                  id,
                   type: 'function',
                   function: {
-                    name: toolCallResult.name,
-                    arguments: JSON.stringify(toolCallResult.input)
+                    name: tc.name,
+                    arguments: JSON.stringify(tc.input ?? {})
                   }
-                }
-              ];
+                };
+              });
             }
             messages.push(assistantMsg);
+            messages.push(...toolResponses);
 
             for (const [key, value] of Object.entries(result.toolResults)) {
               allToolResults[key] = value;
@@ -411,23 +401,52 @@ export async function POST(request: NextRequest) {
 
             for (const [, toolArgs] of Object.entries(result.toolResults)) {
               if (signal.aborted) return;
-              const content = toolArgs as Record<string, unknown>;
-              const fmt = body.debugMode ? 'md' : (BEST_FORMATS[docType] || 'pdf');
+              const content = (docType === 'cours_complet'
+                ? normalizeCoursComplet(toolArgs, body.metadata.lecon)
+                : normalizeDocContent(docType, toolArgs, config.label)) as Record<string, unknown>;
+              const bestFmt = BEST_FORMATS[docType] || 'pdf';
+              const fmt = body.debugMode ? 'md' : (bestFmt === 'pdf' && defaultFormat === 'docx' ? 'docx' : bestFmt);
 
               try {
                 let buffer: Buffer;
                 switch (fmt) {
                   case 'docx':
-                    buffer = await buildDocx(body.metadata, content, config.label);
+                    buffer = docType === 'fiche_pedagogique'
+                      ? await buildFichePedagogiqueDocx(body.metadata, content as FicheContent, config.label)
+                      : docType === 'plan_gestion_classe'
+                      ? await buildPlanGestionDocx(body.metadata, content as PlanGestionContent, config.label)
+                      : docType === 'cours_complet'
+                      ? await buildCoursCompletDocx(body.metadata, content as CoursCompletContent, config.label)
+                      : docType === 'resume_eleve'
+                      ? await buildResumeDocx(body.metadata, content as ResumeContent, config.label)
+                      : docType === 'evaluation'
+                      ? await buildEvaluationDocx(body.metadata, content as EvaluationContent, config.label)
+                      : await buildDocx(body.metadata, content, config.label, ministerialHeader);
                     break;
                   case 'pdf':
-                    buffer = buildPdf(body.metadata, content, config.label, watermark);
+                    buffer = docType === 'fiche_pedagogique'
+                      ? buildFichePedagogiquePdf(body.metadata, content as FicheContent, config.label, watermark)
+                      : docType === 'plan_gestion_classe'
+                      ? buildPlanGestionPdf(body.metadata, content as PlanGestionContent, config.label, watermark)
+                      : docType === 'cours_complet'
+                      ? buildCoursCompletPdf(body.metadata, content as CoursCompletContent, config.label, watermark)
+                      : docType === 'resume_eleve'
+                      ? buildResumePdf(body.metadata, content as ResumeContent, config.label, watermark)
+                      : docType === 'evaluation'
+                      ? buildEvaluationPdf(body.metadata, content as EvaluationContent, config.label, watermark)
+                      : buildPdf(body.metadata, content, config.label, watermark);
                     break;
                   case 'pptx':
                     buffer = await buildPptx(body.metadata, content, config.label);
                     break;
+                  case 'html':
+                    buffer = Buffer.from(buildHtml(body.metadata, content, config.label, ministerialHeader));
+                    break;
                   case 'md':
                     buffer = Buffer.from(buildMarkdown(body.metadata, content, config.label));
+                    break;
+                  case 'txt':
+                    buffer = Buffer.from(buildImagePromptsTxt(content));
                     break;
                   default:
                     continue;
@@ -436,6 +455,18 @@ export async function POST(request: NextRequest) {
                 const filename = getDynamicFilename(config.label, body.metadata, fmt);
                 const file = await saveGeneratedFile(buffer, filename, fmt, config.docType);
                 files.push(file);
+
+                // For evaluation: also auto-generate offline HTML quiz/flashcard
+                if (docType === 'evaluation' && fmt !== 'html') {
+                  try {
+                    const htmlBuffer = Buffer.from(buildHtml(body.metadata, content, 'Quiz & Flashcards Interactifs', ministerialHeader));
+                    const htmlFilename = getDynamicFilename('Quiz Interactif', body.metadata, 'html');
+                    const htmlFile = await saveGeneratedFile(htmlBuffer, htmlFilename, 'html', 'evaluation');
+                    files.push(htmlFile);
+                  } catch (e) {
+                    console.error('Failed to auto-generate offline HTML quiz:', e);
+                  }
+                }
               } catch (err) {
                 console.error(`Failed to build ${fmt} for ${docType}:`, err);
               }
@@ -448,6 +479,9 @@ export async function POST(request: NextRequest) {
             logGenerationError('medium', docType, err);
             const errMsg = err instanceof Error ? err.message : 'Unknown error';
             addProgress(generationId, { type: 'progress', step: stepId, label: `${config.label} — échoué`, status: 'error', error: errMsg });
+            if (docType !== 'images_illustratives') {
+              throw err;
+            }
           }
         }
 
@@ -455,17 +489,25 @@ export async function POST(request: NextRequest) {
 
         if (signal.aborted) return;
 
+        const generationResult = {
+          id: generationId,
+          createdAt: new Date(),
+          mode: 'medium' as const,
+          metadata: body.metadata,
+          files,
+          tokensUsed: totalUsage.total_tokens,
+          durationMs,
+        };
+
+        try {
+          await addHistoryEntry(generationResult, userId);
+        } catch (histErr) {
+          console.error('Failed to save history entry server-side:', histErr);
+        }
+
         addProgress(generationId, {
           type: 'done',
-          result: {
-            id: generationId,
-            createdAt: new Date(),
-            mode: 'medium',
-            metadata: body.metadata,
-            files,
-            tokensUsed: totalUsage.total_tokens,
-            durationMs,
-          },
+          result: generationResult,
         });
       } catch (error) {
         if (signal.aborted) return;
@@ -473,21 +515,10 @@ export async function POST(request: NextRequest) {
         const msg = error instanceof Error ? error.message : 'Generation failed';
         addProgress(generationId, { type: 'error', message: msg });
       }
-    })();
+    });
 
     return NextResponse.json({ success: true, generationId });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to initiate background generation' }, { status: 500 });
-  }
-}
-
-async function getDbSetting(key: string): Promise<string | undefined> {
-  try {
-    const row = getDb()
-      .prepare("SELECT value FROM settings WHERE key = ? AND user_id = 'default'")
-      .get(key) as { value: string } | undefined;
-    return row?.value;
-  } catch {
-    return undefined;
   }
 }

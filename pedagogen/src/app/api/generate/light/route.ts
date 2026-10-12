@@ -2,25 +2,44 @@ import { NextRequest, NextResponse } from 'next/server';
 import { runLightAgent } from '@/lib/agents/lightAgent';
 import { saveGeneratedFile, getDynamicFilename } from '@/lib/utils/generatedStorage';
 import { getDb } from '@/lib/db';
+import { getDbSetting } from '@/lib/db/settings';
 import type { GenerationRequest } from '@/types/generation';
 import { logGenerationError } from '@/lib/utils/logger';
-import { createGeneration, addProgress } from '@/lib/agents/generationManager';
+import { createGeneration, addProgress, enqueueGeneration, queuePosition } from '@/lib/agents/generationManager';
+import { verifyToken } from '@/lib/db/auth';
+import { addHistoryEntry } from '@/lib/utils/historyStore';
+import { generationRequestSchema } from '@/lib/validators/generation';
 
 export const maxDuration = 900;
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   try {
-    const body: GenerationRequest = await request.json();
+    const rawBody = await request.json();
+    const parsed = generationRequestSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Données invalides', details: parsed.error.format() }, { status: 400 });
+    }
+    const body: GenerationRequest = rawBody as GenerationRequest;
 
-    const dbToken = await getDbSetting('huggingface_token');
-    if (dbToken) process.env.HF_TOKEN = dbToken;
+    const userIdHeader = request.headers.get('x-user-id');
+    let userId = userIdHeader || undefined;
+    if (!userId) {
+      const token = request.cookies.get('auth-token')?.value;
+      if (token) {
+        const payload = await verifyToken(token);
+        if (payload?.sub) userId = String(payload.sub);
+      }
+    }
+
+    const dbToken = await getDbSetting('huggingface_token', userId);
+    const apiKey = dbToken || process.env.HF_TOKEN;
 
     if (body.mode !== 'light') {
       return NextResponse.json({ error: 'Invalid mode' }, { status: 400 });
     }
 
-    if (!body.useLocalModel && !process.env.HF_TOKEN) {
+    if (!body.useLocalModel && !apiKey) {
       return NextResponse.json(
         { error: 'HF_TOKEN not configured' },
         { status: 500 }
@@ -30,8 +49,8 @@ export async function POST(request: NextRequest) {
     const generationId = `light-${Date.now()}`;
     const gen = createGeneration(generationId, 'light', body.metadata);
 
-    // Run generation asynchronously in the background
-    (async () => {
+    // Run generation asynchronously in the background (via concurrency queue)
+    enqueueGeneration(generationId, queuePosition(), async () => {
       const signal = gen.controller.signal;
       try {
         addProgress(generationId, { type: 'progress', step: 'init', label: 'Initialisation...', status: 'active' });
@@ -100,7 +119,8 @@ export async function POST(request: NextRequest) {
           body.localApiType,
           signal,
           customPrompts,
-          body.debugMode
+          body.debugMode,
+          apiKey
         );
 
         if (signal.aborted) return;
@@ -115,18 +135,26 @@ export async function POST(request: NextRequest) {
 
         if (signal.aborted) return;
 
+        const generationResult = {
+          id: generationId,
+          createdAt: new Date(),
+          mode: 'light' as const,
+          metadata: body.metadata,
+          files: [savedFile],
+          tokensUsed: result.usage?.total_tokens || 0,
+          durationMs,
+          markdown: result.markdown,
+        };
+
+        try {
+          await addHistoryEntry(generationResult, userId);
+        } catch (histErr) {
+          console.error('Failed to save history entry server-side:', histErr);
+        }
+
         addProgress(generationId, {
           type: 'done',
-          result: {
-            id: generationId,
-            createdAt: new Date(),
-            mode: 'light',
-            metadata: body.metadata,
-            files: [savedFile],
-            tokensUsed: result.usage?.total_tokens || 0,
-            durationMs,
-            markdown: result.markdown,
-          },
+          result: generationResult,
         });
       } catch (error) {
         if (signal.aborted) return;
@@ -135,7 +163,7 @@ export async function POST(request: NextRequest) {
         const msg = error instanceof Error ? error.message : 'Generation failed';
         addProgress(generationId, { type: 'error', message: msg });
       }
-    })();
+    });
 
     return NextResponse.json({ success: true, generationId });
   } catch (error) {
@@ -143,16 +171,5 @@ export async function POST(request: NextRequest) {
       { error: error instanceof Error ? error.message : 'Generation failed' },
       { status: 500 }
     );
-  }
-}
-
-async function getDbSetting(key: string): Promise<string | undefined> {
-  try {
-    const row = getDb()
-      .prepare("SELECT value FROM settings WHERE key = ? AND user_id = 'default'")
-      .get(key) as { value: string } | undefined;
-    return row?.value;
-  } catch {
-    return undefined;
   }
 }

@@ -11,13 +11,15 @@ export interface HistoryEntry {
   filesCount: number;
   tokensUsed: number;
   files: { name: string; url: string; format: string }[];
+  metadata?: Record<string, unknown>;
 }
 
-export async function getHistory(): Promise<HistoryEntry[]> {
+export async function getHistory(userId?: string): Promise<HistoryEntry[]> {
   const db = getDb();
-  const generations = db.prepare(
-    'SELECT * FROM generations ORDER BY created_at DESC LIMIT 50'
-  ).all() as any[];
+  const query = userId
+    ? 'SELECT id, mode, matiere, niveau, lecon, created_at, files_count, tokens_used, metadata FROM generations WHERE user_id = ? OR user_id IS NULL ORDER BY created_at DESC LIMIT 50'
+    : 'SELECT id, mode, matiere, niveau, lecon, created_at, files_count, tokens_used, metadata FROM generations ORDER BY created_at DESC LIMIT 50';
+  const generations = (userId ? db.prepare(query).all(userId) : db.prepare(query).all()) as any[];
 
   const entries: HistoryEntry[] = [];
 
@@ -25,6 +27,11 @@ export async function getHistory(): Promise<HistoryEntry[]> {
     const files = db.prepare(
       'SELECT name, url, format FROM generated_files WHERE generation_id = ?'
     ).all(gen.id) as any[];
+
+    let metadata: Record<string, unknown> | undefined;
+    try {
+      metadata = gen.metadata ? JSON.parse(gen.metadata) : undefined;
+    } catch {}
 
     entries.push({
       id: gen.id,
@@ -36,6 +43,7 @@ export async function getHistory(): Promise<HistoryEntry[]> {
       filesCount: gen.files_count,
       tokensUsed: gen.tokens_used,
       files: files || [],
+      metadata,
     });
   }
 

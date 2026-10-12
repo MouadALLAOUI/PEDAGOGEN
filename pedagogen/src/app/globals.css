@@ -2,6 +2,8 @@
 @import "tailwindcss";
 @import "../styles/markdown.css";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --navy: #1C1917;
   --navy-light: #292524;
@@ -215,4 +217,74 @@ input, select, textarea {
 input:focus, select:focus, textarea:focus {
   border-color: var(--teal) !important;
   box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1) !important;
+}
+
+/* ---------- Dark mode ---------- */
+/* Warm dark palette derived from the existing stone/teal tokens (--navy #1C1917 family) */
+html.dark { color-scheme: dark; }
+html.dark body { background: #191614; color: #E7E5E4; }
+
+.dark .bg-white { background-color: #211E1B; }
+.dark .bg-white\/80 { background-color: rgba(33, 30, 27, 0.85); }
+.dark .bg-white\/95 { background-color: rgba(33, 30, 27, 0.95); }
+.dark .bg-parchment { background-color: #1F1C19; }
+.dark .bg-parchment\/50 { background-color: rgba(42, 37, 33, 0.5); }
+.dark .bg-parchment\/20 { background-color: rgba(42, 37, 33, 0.2); }
+.dark .bg-parchment-dark { background-color: #262220; }
+.dark .bg-parchment-dark\/50 { background-color: rgba(42, 37, 33, 0.5); }
+.dark .bg-parchment-dark\/40 { background-color: rgba(42, 37, 33, 0.4); }
+.dark .bg-parchment-dark\/30 { background-color: rgba(42, 37, 33, 0.3); }
+.dark .text-navy { color: #E7E5E4; }
+.dark .text-navy-light { color: #D6D3D1; }
+.dark .text-navy-lighter { color: #A8A29E; }
+.dark .text-muted { color: #A8A29E; }
+.dark .hover\:text-navy:hover { color: #E7E5E4; }
+.dark .border-border { border-color: #3B3733; }
+.dark .bg-border { background-color: #3B3733; }
+.dark .bg-teal-50 { background-color: rgba(16, 185, 129, 0.12); }
+.dark .hover\:bg-teal-50:hover { background-color: rgba(16, 185, 129, 0.12); }
+.dark .text-teal { color: #34D399; }
+.dark .text-teal-dark { color: #34D399; }
+.dark .text-amber { color: #FBBF24; }
+.dark .text-gold { color: #FBBF24; }
+.dark .text-green { color: #4ADE80; }
+.dark .text-red { color: #F87171; }
+.dark .bg-navy\/5 { background-color: rgba(255, 255, 255, 0.06); }
+.dark .bg-navy-light\/3 { background-color: rgba(255, 255, 255, 0.04); }
+.dark .bg-navy-light\/5 { background-color: rgba(255, 255, 255, 0.05); }
+.dark .bg-navy-light\/10 { background-color: rgba(255, 255, 255, 0.08); }
+.dark .hover\:bg-navy-light\/5:hover { background-color: rgba(255, 255, 255, 0.07); }
+.dark .hover\:bg-parchment-dark:hover { background-color: #2E2925; }
+.dark .hover\:bg-parchment-dark\/30:hover { background-color: rgba(42, 37, 33, 0.45); }
+.dark .hover\:bg-parchment-dark\/40:hover { background-color: rgba(42, 37, 33, 0.5); }
+.dark .hover\:bg-parchment-dark\/50:hover { background-color: rgba(42, 37, 33, 0.6); }
+
+/* docx preview: darken the desk, keep the paper white */
+.dark .docx-wrapper { background: #191614 !important; }
+.dark .docx-wrapper > section { border-color: #3B3733 !important; }
+
+.dark ::-webkit-scrollbar-track { background: #1F1C19; }
+.dark ::-webkit-scrollbar-thumb { background: #44403C; }
+.dark .geometric-divider::before { background: #191614; }
+
+/* ---------- Print ---------- */
+@media print {
+  nav, aside, .no-print { display: none !important; }
+  html, body { background: #ffffff !important; color: #1C1917 !important; }
+  html.dark, html.dark body { background: #ffffff !important; color: #1C1917 !important; }
+  .dark .bg-white, .dark .bg-parchment, .dark .bg-parchment-dark,
+  .dark .bg-parchment-dark\/50, .dark .bg-parchment-dark\/40, .dark .bg-parchment-dark\/30 {
+    background-color: #ffffff !important;
+  }
+  .dark .text-navy, .dark .text-navy-light { color: #1C1917 !important; }
+  .dark .text-muted { color: #57534E !important; }
+  .max-h-96 { max-height: none !important; overflow: visible !important; }
+  .docx-wrapper { padding: 0 !important; background: #ffffff !important; }
+  .docx-wrapper > section {
+    box-shadow: none !important;
+    border: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
 }

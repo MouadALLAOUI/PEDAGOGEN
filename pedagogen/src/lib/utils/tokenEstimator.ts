@@ -5,15 +5,15 @@
  */
 export function estimateTokens(text: string): number {
   if (!text) return 0;
-  // Count Arabic vs Latin characters
+  // Count Arabic vs other (Latin, digits, punctuation, whitespace) characters
   const arabicChars = (text.match(/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/g) || []).length;
   const totalChars = text.length;
-  const latinChars = totalChars - arabicChars;
+  const otherChars = Math.max(0, totalChars - arabicChars);
 
-  const latinTokens = Math.ceil(latinChars / 4);
+  const otherTokens = Math.ceil(otherChars / 4);
   const arabicTokens = Math.ceil(arabicChars / 3);
 
-  return latinTokens + arabicTokens;
+  return otherTokens + arabicTokens;
 }
 
 /**

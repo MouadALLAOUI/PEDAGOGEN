@@ -11,11 +11,12 @@ const writeFileAsync = promisify(writeFile);
 const REFERENCES_DIR = join(process.cwd(), 'data', 'references');
 if (!existsSync(REFERENCES_DIR)) mkdirSync(REFERENCES_DIR, { recursive: true });
 
-export async function listReferenceFiles(): Promise<ReferenceFile[]> {
+export async function listReferenceFiles(userId?: string): Promise<ReferenceFile[]> {
+  const owner = userId || 'default';
   const db = getDb();
   const files = db.prepare(
-    'SELECT * FROM reference_files ORDER BY uploaded_at DESC'
-  ).all() as any[];
+    "SELECT * FROM reference_files WHERE user_id IN (?, 'default') ORDER BY uploaded_at DESC"
+  ).all(owner) as any[];
 
   return files.map((f) => ({
     id: f.id,
@@ -33,10 +34,17 @@ export async function readReferenceContent(id: string): Promise<string | null> {
   try {
     const db = getDb();
     const record = db.prepare(
-      'SELECT storage_path FROM reference_files WHERE id = ?'
+      'SELECT storage_path, name FROM reference_files WHERE id = ?'
     ).get(id) as any;
 
     if (!record) return null;
+
+    const ext = (record.name || record.storage_path).split('.').pop()?.toLowerCase();
+    const binaryExts = ['pdf', 'docx', 'doc', 'pptx', 'ppt', 'xlsx', 'xls', 'zip', 'png', 'jpg', 'jpeg', 'webp'];
+    if (ext && binaryExts.includes(ext)) {
+      // Binary files cannot be read as raw UTF-8 without corruption
+      return null;
+    }
 
     const filePath = join(REFERENCES_DIR, record.storage_path);
     return await readFileAsync(filePath, 'utf-8');
@@ -48,7 +56,8 @@ export async function readReferenceContent(id: string): Promise<string | null> {
 export async function saveReferenceFile(
   name: string,
   category: string,
-  buffer: Buffer
+  buffer: Buffer,
+  userId?: string
 ): Promise<{ id: string; name: string; category: string; size: number; url: string }> {
   const db = getDb();
   const id = crypto.randomUUID();
@@ -59,9 +68,9 @@ export async function saveReferenceFile(
   await writeFileAsync(filePath, buffer);
 
   db.prepare(`
-    INSERT INTO reference_files (id, name, category, size, storage_path)
-    VALUES (?, ?, ?, ?, ?)
-  `).run(id, name, category, buffer.length, storagePath);
+    INSERT INTO reference_files (id, name, category, size, storage_path, user_id)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `).run(id, name, category, buffer.length, storagePath, userId || 'default');
 
   return {
     id,

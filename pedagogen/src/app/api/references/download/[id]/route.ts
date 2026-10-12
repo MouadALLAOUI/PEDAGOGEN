@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readFile } from 'fs/promises';
 import { getReferenceRecord } from '@/lib/utils/fileStorage';
-import { join } from 'path';
+import path, { join } from 'path';
 
 const MIME_TYPES: Record<string, string> = {
   pdf: 'application/pdf',
@@ -25,17 +25,23 @@ export async function GET(
     return NextResponse.json({ error: 'File not found' }, { status: 404 });
   }
 
-  const filePath = join(process.cwd(), 'data', 'references', record.storage_path);
+  const REFERENCES_DIR = join(process.cwd(), 'data', 'references');
+  const resolvedPath = path.resolve(join(REFERENCES_DIR, record.storage_path));
+  if (!resolvedPath.startsWith(path.resolve(REFERENCES_DIR) + path.sep)) {
+    return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+  }
 
   try {
-    const buffer = await readFile(filePath);
+    const buffer = await readFile(resolvedPath);
     const ext = record.name.split('.').pop() || '';
     const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+    // Sanitize filename to prevent CRLF / header injection
+    const displayName = record.name.replace(/[\r\n"]/g, '_');
 
     return new NextResponse(buffer, {
       headers: {
         'Content-Type': contentType,
-        'Content-Disposition': `attachment; filename="${record.name}"`,
+        'Content-Disposition': `attachment; filename="${displayName}"`,
         'Cache-Control': 'public, max-age=3600',
       },
     });

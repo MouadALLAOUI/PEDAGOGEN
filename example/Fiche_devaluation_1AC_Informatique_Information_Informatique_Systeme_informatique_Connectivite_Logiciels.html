@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fiche d'évaluation</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f8f6f3;
+      color: #0f172a;
+      line-height: 1.6;
+      padding: 2rem 1rem;
+    }
+    .container { max-width: 800px; margin: 0 auto; }
+    .header {
+      background: linear-gradient(135deg, #0f172a 0%, #0d9488 100%);
+      color: white;
+      padding: 2rem;
+      border-radius: 16px;
+      margin-bottom: 2rem;
+    }
+    .header h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .header .meta { font-size: 0.85rem; opacity: 0.8; line-height: 1.8; }
+    .header .meta strong { opacity: 1; }
+    .consigne {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-left: 4px solid #0d9488;
+      padding: 1.25rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      color: #334155;
+    }
+    .consigne strong { color: #0d9488; }
+    .question {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      transition: box-shadow 0.2s;
+    }
+    .question:hover { box-shadow: 0 2px 12px rgba(13, 148, 136, 0.08); }
+    .question-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.875rem 1.25rem;
+      background: #f1f5f9;
+      border-bottom: 1px solid #e2e8f0;
+      flex-wrap: wrap;
+    }
+    .question-number {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #0f172a;
+    }
+    .question-type {
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.2rem 0.6rem;
+      background: #0d9488;
+      color: white;
+      border-radius: 20px;
+    }
+    .interactive-badge { background: #2563eb; }
+    .q-badge-interactive {
+      font-size: 0.65rem;
+      font-weight: 500;
+      padding: 0.15rem 0.5rem;
+      background: #dbeafe;
+      color: #2563eb;
+      border-radius: 20px;
+      border: 1px solid #bfdbfe;
+    }
+    .bloom-badge { background: #fef3c7; color: #92400e; border-color: #fde68a; }
+    .competence-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #0d9488;
+      margin-bottom: 0.5rem;
+      padding: 0.25rem 0.5rem;
+      background: #f0fdfa;
+      border-radius: 6px;
+      display: inline-block;
+    }
+    .question-points {
+      margin-left: auto;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #64748b;
+    }
+    .question-body { padding: 1.25rem; }
+    .question-text { font-size: 0.95rem; margin-bottom: 0.75rem; color: #1e293b; }
+    .options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0.75rem;
+      margin: 0.75rem 0;
+    }
+    @media (max-width: 600px) {
+      .options {
+        grid-template-columns: 1fr;
+      }
+    }
+    .option {
+      padding: 0.65rem 0.85rem;
+      background: #f8fafc;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      border: 1.5px solid #e2e8f0;
+      transition: all 0.15s ease;
+    }
+    .option.interactive {
+      cursor: pointer;
+    }
+    .option.interactive:hover { border-color: #0d9488; background: #f0fdfa; }
+    .option.correct {
+      border-color: #16a34a !important;
+      background: #f0fdf4 !important;
+      color: #166534;
+    }
+    .option.correct::after { content: " \2713"; float: right; color: #16a34a; font-weight: bold; }
+    .option.incorrect {
+      border-color: #dc2626 !important;
+      background: #fef2f2 !important;
+      color: #991b1b;
+    }
+    .option.incorrect::after { content: " \2717"; float: right; color: #dc2626; font-weight: bold; }
+    .option.disabled { pointer-events: none; opacity: 0.85; }
+    .option-letter {
+      display: inline-block;
+      width: 1.5rem;
+      height: 1.5rem;
+      line-height: 1.5rem;
+      text-align: center;
+      background: #e2e8f0;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      margin-right: 0.5rem;
+      color: #475569;
+    }
+    .option.correct .option-letter { background: #bbf7d0; color: #166534; }
+    .option.incorrect .option-letter { background: #fecaca; color: #991b1b; }
+    .open-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      resize: vertical;
+      margin: 0.5rem 0;
+      transition: border-color 0.2s;
+    }
+    .open-input:focus { outline: none; border-color: #0d9488; }
+    .show-correction {
+      display: inline-block;
+      margin: 0.25rem 0;
+      padding: 0.4rem 1rem;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      color: #0d9488;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    .show-correction:hover { background: #e2e8f0; }
+    .correction-inner {
+      margin-top: 0.75rem;
+      padding: 1rem;
+      background: #f0fdfa;
+      border: 1px solid #0d948833;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: #334155;
+    }
+    .correction {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px dashed #e2e8f0;
+    }
+    .correction summary {
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.85rem;
+      color: #0d9488;
+      padding: 0.25rem 0;
+    }
+    .correction p {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: #334155;
+      padding: 0.75rem;
+      background: #f0fdfa;
+      border-radius: 8px;
+    }
+    .score-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 2rem;
+      padding: 1rem 1.5rem;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+    }
+    .score-bar span { font-size: 0.9rem; color: #475569; }
+    .score-bar strong { color: #0f172a; }
+    .progress-container {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #475569;
+    }
+    .progress-bar-outer {
+      width: 100%;
+      height: 10px;
+      background: #e2e8f0;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #2563eb);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .btn-score {
+      padding: 0.5rem 1.25rem;
+      background: linear-gradient(135deg, #0d9488, #0f766e);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      transition: opacity 0.15s;
+    }
+    .btn-score:hover { opacity: 0.9; }
+    #interactive-results {
+      display: none;
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background: #fff;
+      border: 2px solid #0d9488;
+      border-radius: 12px;
+      text-align: center;
+    }
+    #interactive-results h3 { font-size: 1.2rem; color: #0f172a; margin-bottom: 0.75rem; }
+    #interactive-results .final-score-value { font-size: 1.5rem; font-weight: 700; color: #0d9488; }
+    #interactive-results .final-pct { font-size: 1.1rem; color: #475569; }
+    #interactive-results .final-msg { font-size: 1rem; font-weight: 500; margin-top: 0.5rem; }
+    .score-bar-outer {
+      width: 100%;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      margin: 0.75rem 0;
+      overflow: hidden;
+    }
+    .score-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #0d9488, #0f766e);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+    .bareme {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-top: 1.5rem;
+    }
+    .bareme h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: #0f172a;
+    }
+    .bareme .total {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0d9488;
+      margin-bottom: 0.5rem;
+    }
+    .bareme ul { list-style: none; padding: 0; }
+    .bareme li {
+      padding: 0.3rem 0;
+      font-size: 0.9rem;
+      color: #475569;
+    }
+    .bareme li::before { content: "\2022"; color: #0d9488; font-weight: bold; margin-right: 0.5rem; }
+    .page-break { page-break-before: always; }
+    .timer-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      padding: 0.75rem 1.25rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.95rem;
+      color: #334155;
+    }
+    .timer-card strong { color: #2563eb; }
+    .timer-btn {
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 0.2rem 0.5rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.15s;
+    }
+    .timer-btn:hover { background: #e2e8f0; }
+    .teacher-controls {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      padding: 0.75rem 1.25rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+    body.hide-corrections .correction-content,
+    body.hide-corrections .feedback,
+    body.hide-corrections .correction,
+    body.hide-corrections .show-correction,
+    body.hide-corrections details,
+    body.hide-corrections .btn-score,
+    body.hide-corrections #interactive-results {
+      display: none !important;
+    }
+    body.hide-corrections .option.correct,
+    body.hide-corrections .option.incorrect {
+      border-color: #e2e8f0 !important;
+      background: #f8fafc !important;
+      color: #334155 !important;
+    }
+    body.hide-corrections .option.correct::after,
+    body.hide-corrections .option.incorrect::after {
+      display: none !important;
+    }
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .header { border-radius: 0; }
+      .question { break-inside: avoid; }
+      button.interactive, .show-correction, .btn-score, .no-print { display: none !important; }
+      .correction-content { display: block !important; }
+      details.correction { display: block !important; }
+      details.correction summary { display: none; }
+      details.correction p { display: block !important; }
+      body.hide-corrections .correction-content,
+      body.hide-corrections .feedback,
+      body.hide-corrections .correction,
+      body.hide-corrections .show-correction,
+      body.hide-corrections details,
+      body.hide-corrections .btn-score,
+      body.hide-corrections #interactive-results {
+        display: none !important;
+      }
+      .option.correct {
+        background-color: #f0fdf4 !important;
+        border-color: #16a34a !important;
+        color: #166534 !important;
+      }
+      .option.incorrect {
+        background-color: #fef2f2 !important;
+        border-color: #dc2626 !important;
+        color: #991b1b !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Fiche d'évaluation</h1>
+      <div class="meta">
+        <strong>1AC</strong> — Informatique<br>
+        Système informatique —  Information, Informatique, Système informatique, Connectivité, Logiciels.<br>
+        Semestre: 1
+      </div>
+    </div>
+
+    <div class="timer-card no-print">
+      <span>⏱️ Temps restant : <strong id="timer-display">--:--</strong></span>
+      <span style="font-size:0.85rem;color:#64748b;">(Durée conseillée : 60)</span>
+      <span style="display:flex;gap:0.4rem;">
+        <button class="timer-btn" id="timer-pause-btn" onclick="toggleTimerPause()" title="Pause/Reprendre">⏸️</button>
+        <button class="timer-btn" onclick="resetTimer()" title="Réinitialiser le timer">🔄</button>
+      </span>
+    </div>
+
+    <div class="teacher-controls no-print">
+      <label style="cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; font-weight: 500; color: #475569;">
+        <input type="checkbox" id="toggle-print-mode" onchange="document.body.classList.toggle('hide-corrections', this.checked)">
+        Mode impression sans correction (pour distribuer aux élèves)
+      </label>
+    </div>
+
+    
+
+    
+
+    
+    <div class="progress-container no-print">
+      <div class="progress-header">
+        <span>Progression</span>
+        <span id="progress-text">0 / 0 questions répondues</span>
+      </div>
+      <div class="progress-bar-outer">
+        <div class="progress-bar-fill" id="progress-bar-fill"></div>
+      </div>
+    </div>
+
+    <div class="score-bar">
+      <span>Score : <strong id="score-display">0</strong> / <strong id="max-score">0</strong> &nbsp; (Note : <strong id="score-on-20">0.0</strong> / 20)</span>
+      <div style="display: flex; gap: 0.5rem;" class="no-print">
+        <button class="btn-score" onclick="resetEvaluation()" style="background: #64748b;">Réinitialiser</button>
+        <button class="btn-score" onclick="showAllScores()">Voir les corrigés</button>
+        <button class="btn-score" onclick="window.print()" style="background: linear-gradient(135deg, #0284c7, #0369a1);">Imprimer / PDF</button>
+      </div>
+    </div>
+
+    <div id="interactive-results">
+      <h3>Résultat final</h3>
+      <p style="font-size: 1.1rem; color: #475569; margin-bottom: 0.5rem;">Score : <strong class="final-score-value">0 / 0</strong></p>
+      <p style="font-size: 1.5rem; font-weight: 700; color: #0d9488; margin-bottom: 0.5rem;">Note : <span class="final-score-20">0 / 20</span></p>
+      <p class="final-pct">0%</p>
+      <div class="score-bar-outer">
+        <div class="score-bar-fill"></div>
+      </div>
+      <p class="final-msg"></p>
+    </div>
+
+    
+
+    
+  </div>
+  
+<script>
+(function() {
+  let totalScore = 0;
+  let maxScore = 0;
+  const scoreEl = document.getElementById('score-display');
+  const maxScoreEl = document.getElementById('max-score');
+  const results = document.getElementById('interactive-results');
+
+  function updateScore() {
+    if (scoreEl) scoreEl.textContent = totalScore;
+    if (maxScoreEl) maxScoreEl.textContent = maxScore;
+    const scoreOn20El = document.getElementById('score-on-20');
+    if (scoreOn20El) {
+      const scoreOn20 = maxScore > 0 ? (totalScore / maxScore * 20).toFixed(1) : '0';
+      scoreOn20El.textContent = scoreOn20;
+    }
+  }
+
+  function updateProgress() {
+    const totalQ = document.querySelectorAll('.question[data-type="qcm"], .question[data-type="vrai_faux"]').length;
+    const answeredQ = document.querySelectorAll('.question[data-type="qcm"][data-answered="true"], .question[data-type="vrai_faux"][data-answered="true"]').length;
+    const progressFill = document.getElementById('progress-bar-fill');
+    const progressText = document.getElementById('progress-text');
+    if (progressFill) {
+      const pct = totalQ > 0 ? Math.round((answeredQ / totalQ) * 100) : 0;
+      progressFill.style.width = pct + '%';
+    }
+    if (progressText) {
+      progressText.textContent = answeredQ + ' / ' + totalQ + ' questions répondues';
+    }
+  }
+
+  function showFinalScore() {
+    if (!results) return;
+    results.style.display = 'block';
+    results.querySelector('.final-score-value').textContent = totalScore + ' / ' + maxScore;
+    const scoreOn20 = maxScore > 0 ? (totalScore / maxScore * 20).toFixed(1) : '0';
+    const finalScore20El = results.querySelector('.final-score-20');
+    if (finalScore20El) finalScore20El.textContent = scoreOn20 + ' / 20';
+    
+    const pct = maxScore > 0 ? Math.round(totalScore / maxScore * 100) : 0;
+    results.querySelector('.final-pct').textContent = pct + '%';
+    const bar = results.querySelector('.score-bar-fill');
+    if (bar) bar.style.width = pct + '%';
+    const msg = results.querySelector('.final-msg');
+    if (msg) {
+      if (pct >= 80) msg.textContent = 'Très bien !';
+      else if (pct >= 60) msg.textContent = 'Bien, continuez vos efforts.';
+      else if (pct >= 40) msg.textContent = 'Peut mieux faire, revoyez le cours.';
+      else msg.textContent = 'À revoir, relisez attentivement la leçon.';
+    }
+  }
+
+  window.handleSelect = function(qIndex, optIndex, isVraiFaux) {
+    const q = document.querySelector('.question[data-index="' + qIndex + '"]');
+    if (!q || q.dataset.answered === 'true') return;
+    q.dataset.answered = 'true';
+    const correction = q.dataset.correction || '';
+    const points = parseFloat(q.dataset.points) || 0;
+    const opts = q.querySelectorAll('.option');
+    let isCorrect = false;
+
+    if (isVraiFaux) {
+      const selectedText = opts[optIndex]?.textContent?.trim() || '';
+      isCorrect = selectedText.toLowerCase() === correction.toLowerCase();
+      opts.forEach(function(o) { o.classList.add('disabled'); });
+      if (isCorrect) {
+        opts[optIndex].classList.add('correct');
+        totalScore += points;
+      } else {
+        opts[optIndex].classList.add('incorrect');
+        opts.forEach(function(o) {
+          if (o.textContent.trim().toLowerCase() === correction.toLowerCase()) o.classList.add('correct');
+        });
+      }
+    } else {
+      const selectedLetter = String.fromCharCode(65 + optIndex);
+      isCorrect = selectedLetter === correction.toUpperCase();
+      opts.forEach(function(o) { o.classList.add('disabled'); });
+      if (isCorrect) {
+        opts[optIndex].classList.add('correct');
+        totalScore += points;
+      } else {
+        opts[optIndex].classList.add('incorrect');
+        opts.forEach(function(o, i) {
+          if (String.fromCharCode(65 + i) === correction.toUpperCase()) o.classList.add('correct');
+        });
+      }
+    }
+
+    const feedbackDiv = q.querySelector('.feedback');
+    if (feedbackDiv) {
+      const fdText = q.dataset.feedback || '';
+      if (fdText) {
+        feedbackDiv.innerHTML = '<div class="correction-inner"><strong>Feedback :</strong> ' + fdText + '</div>';
+        feedbackDiv.style.display = 'block';
+      }
+    }
+
+    updateScore();
+    updateProgress();
+    q.querySelectorAll('.option').forEach(function(o) {
+      o.style.cursor = 'default';
+    });
+  };
+
+  window.toggleCorrection = function(qIndex) {
+    const el = document.querySelector('.correction-content[data-q="' + qIndex + '"]');
+    if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    const btn = document.querySelector('.show-correction[data-q="' + qIndex + '"]');
+    if (btn) btn.textContent = el.style.display === 'block' ? 'Masquer la correction' : 'Voir la correction';
+  };
+
+  window.resetEvaluation = function() {
+    totalScore = 0;
+    document.querySelectorAll('.question').forEach(function(q) {
+      q.dataset.answered = 'false';
+      q.querySelectorAll('.option').forEach(function(o) {
+        o.classList.remove('correct', 'incorrect', 'disabled');
+        o.style.cursor = 'pointer';
+      });
+      const feedbackDiv = q.querySelector('.feedback');
+      if (feedbackDiv) {
+        feedbackDiv.innerHTML = '';
+        feedbackDiv.style.display = 'none';
+      }
+      const textarea = q.querySelector('.open-input');
+      if (textarea) {
+        textarea.value = '';
+      }
+      const corrContent = q.querySelector('.correction-content');
+      if (corrContent) {
+        corrContent.style.display = 'none';
+      }
+      const showCorrBtn = q.querySelector('.show-correction');
+      if (showCorrBtn) {
+        showCorrBtn.textContent = 'Voir la correction';
+      }
+    });
+
+    if (results) {
+      results.style.display = 'none';
+    }
+
+    updateScore();
+    updateProgress();
+  };
+
+  window.showAllScores = function() {
+    showFinalScore();
+    document.querySelectorAll('.question').forEach(function(q) {
+      q.dataset.answered = 'true';
+      const opts = q.querySelectorAll('.option');
+      opts.forEach(function(o) { o.classList.add('disabled'); o.style.cursor = 'default'; });
+
+      const details = q.querySelector('details.correction');
+      if (details) details.open = true;
+
+      const corrContent = q.querySelector('.correction-content');
+      if (corrContent) {
+        corrContent.style.display = 'block';
+      }
+      const showCorrBtn = q.querySelector('.show-correction');
+      if (showCorrBtn) {
+        showCorrBtn.textContent = 'Masquer la correction';
+      }
+
+      const feedbackDiv = q.querySelector('.feedback');
+      if (feedbackDiv) {
+        const fdText = q.dataset.feedback || '';
+        if (fdText) {
+          feedbackDiv.innerHTML = '<div class="correction-inner"><strong>Feedback :</strong> ' + fdText + '</div>';
+          feedbackDiv.style.display = 'block';
+        }
+      }
+    });
+    updateProgress();
+  };
+
+  // Compute static maxScore based on existing questions
+  document.querySelectorAll('.question[data-type="qcm"], .question[data-type="vrai_faux"]').forEach(function(q) {
+    maxScore += parseFloat(q.dataset.points) || 0;
+  });
+  updateScore();
+  updateProgress();
+
+  document.querySelectorAll('.show-correction').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var qIdx = btn.dataset.q;
+      if (!qIdx) return;
+      window.toggleCorrection(qIdx);
+    });
+  });
+})();
+</script>
+  <script>
+  (function() {
+    const dureeStr = "60";
+    const TOTAL_MINUTES = parseInt(dureeStr.replace(/\D/g, '')) || 45;
+    let seconds = TOTAL_MINUTES * 60;
+    let isPaused = false;
+    let intervalId = null;
+    const timerEl = document.getElementById('timer-display');
+
+    function updateDisplay() {
+      if (!timerEl) return;
+      if (seconds <= 0) {
+        timerEl.textContent = "Temps écoulé !";
+        timerEl.style.color = "#dc2626";
+        return;
+      }
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      timerEl.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+    }
+
+    function startTimer() {
+      if (intervalId) clearInterval(intervalId);
+      intervalId = setInterval(function() {
+        if (isPaused) return;
+        if (seconds <= 0) {
+          clearInterval(intervalId);
+          intervalId = null;
+          timerEl.textContent = "Temps écoulé !";
+          timerEl.style.color = "#dc2626";
+          return;
+        }
+        seconds--;
+        updateDisplay();
+      }, 1000);
+    }
+
+    window.toggleTimerPause = function() {
+      isPaused = !isPaused;
+      const btn = document.getElementById('timer-pause-btn');
+      if (btn) btn.textContent = isPaused ? '▶️' : '⏸️';
+    };
+
+    window.resetTimer = function() {
+      isPaused = false;
+      seconds = TOTAL_MINUTES * 60;
+      const btn = document.getElementById('timer-pause-btn');
+      if (btn) btn.textContent = '⏸️';
+      if (timerEl) timerEl.style.color = '';
+      updateDisplay();
+      if (!intervalId) startTimer();
+    };
+
+    updateDisplay();
+    startTimer();
+  })();
+  </script>
+</body>
+</html>

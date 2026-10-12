@@ -13,6 +13,8 @@ interface TeacherProfile {
   matiere: string;
   etablissement: string;
   telephone: string;
+  aref?: string;
+  direction_provinciale?: string;
   avatar_url: string | null;
   created_at: string;
   updated_at: string;

@@ -34,6 +34,7 @@ export interface GenerateWithToolsRequest {
   opencodeModel?: string;
   tools?: ToolDefinition[];
   signal?: AbortSignal;
+  debugMode?: boolean;
 }
 
 export interface AIProvider {

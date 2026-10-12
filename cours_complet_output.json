@@ -1,0 +1,93 @@
+{
+  "titre_seance": "Système informatique : information, logiciels et connectivité",
+  "timing_consistency_check": "Séance de 60 min : Mise en situation 10 min (rappel 5 min + SP 5 min) → Analyse 40 min (Analyse SP 10 min + Investigation 10 min + Généralisation 10 min + Entraînement 10 min) → Synthèse 10 min (Quiz). Total = 10+40+10 = 60 min. Cohérent avec la fiche pédagogique et la planification.",
+  "variantes_pedagogiques": "Si les élèves confondent logiciel et matériel : utiliser des objets physiques (souris, CD de jeu, clé USB) en les faisant classer dans deux boîtes étiquetées 'MATÉRIEL' et 'LOGICIEL'. Si le concept d'information est trop abstrait : remplacer par 'message' ou 'renseignement' et faire mimer un message qui passe d'un élève à l'autre (transmission d'information).",
+  "gestion_erreurs_frequentes": "Erreur : 'L'écran, c'est le cerveau de l'ordinateur' → Relance : 'Non, l'écran montre ce que l'ordinateur fait, mais ce n'est pas lui qui réfléchit. Qui est le chef qui commande ?' (la carte mère/l'unité centrale). Erreur : 'WhatsApp est un appareil' → Reprendre : 'WhatsApp s'utilise sur un appareil, mais c'est un logiciel. Comme un jeu de cartes : les cartes sont le matériel, les règles du jeu sont le logiciel.'",
+  "conseils_surlignage": "Surligner au tableau : 'Ordinateur = MATÉRIEL + LOGICIEL + UTILISATEUR'. Souligner : information = données utiles. Encadrer : 'Logiciel = programme qui donne des instructions au matériel'.",
+  "script_enseignant": {
+    "Mise_en_situation": {
+      "rappel": "« Bonjour à tous. Qui peut me rappeler ce qu'on a vu la dernière fois ? » (Q1) « Qu'est-ce qu'un ordinateur pour vous ? » (Q2) « À quoi sert-il dans la vie de tous les jours ? » (Q3). Attendre les réponses : R1 'On a vu comment allumer l'ordinateur', R2 'C'est une machine', R3 'À faire des devoirs, regarder des vidéos...'. « Très bien. Aujourd'hui, nous allons découvrir ce qui se cache derrière le mot 'informatique'. »",
+      "situation_problème": "« Voici l'histoire du jour. Ahmed, élève de 1AC comme vous, a reçu une mission de son professeur : il doit préparer un petit exposé sur les animaux de la forêt marocaine et l'imprimer pour l'afficher au tableau. Sa sœur aînée lui dit : 'Utilise l'ordinateur familial, ouvre un logiciel de traitement de texte, tape ton texte, enregistre-le sur une clé USB, puis imprime-le au dar chabab.' Ahmed se gratte la tête : 'Logiciel ? Traitement de texte ? Clé USB ? C'est quoi tout ça ? Et comment l'ordinateur fait-il pour imprimer ?' Aujourd'hui, nous allons aider Ahmed à comprendre comment fonctionne son système informatique. »"
+    },
+    "Analyse": {
+      "Analyse_SP": "« Que doit comprendre Ahmed pour réussir sa mission ? » (Q1) Laisser les élèves proposer des hypothèses. H1 'Il doit savoir allumer l'ordinateur.' H2 'Il doit savoir quel logiciel utiliser.' H3 'Il faut brancher l'imprimante.' H4 'Il faut que l'ordinateur fonctionne.' H5 'Il faut une clé USB.' Noter toutes les hypothèses au tableau. « Qu'est-ce que tous ces éléments ont en commun ? » (Q2)",
+      "Investigation": "« Reprenons les hypothèses une par une. » Filtrer : H1 et H3 parlent d'objets physiques → ce sont du MATÉRIEL. H2 parle d'un logiciel → c'est un PROGRAMME. H5 parle d'un support de stockage → c'est du MATÉRIEL aussi. « Ahmed lui-même, où se situe-t-il dans tout ça ? » (Q3) « Il est l'utilisateur ! Sans lui, l'ordinateur ne fait rien tout seul. » Valider l'hypothèse centrale : un système informatique, c'est un utilisateur qui utilise des logiciels sur du matériel pour traiter des informations.",
+      "Généralisation": "« Notez bien dans vos cahiers. » L'enseignant dicte les définitions: '1. L'INFORMATION : c'est un renseignement, une donnée ou un message qui a du sens. Exemple : ton nom, ton âge, le texte de ton exposé. 2. L'INFORMATIQUE : c'est la science qui permet de traiter l'information avec des machines. 3. LE SYSTÈME INFORMATIQUE : c'est l'ensemble composé du matériel (la partie physique), des logiciels (la partie intelligente) et de l'utilisateur (la personne qui s'en sert). 4. LA CONNECTIVITÉ : c'est la capacité d'un système à se connecter à d'autres systèmes (via un câble, le Wi-Fi...). Exemple : le Wi-Fi du dar chabab pour imprimer sans fil. 5. UN LOGICIEL : c'est un programme qui donne des instructions à l'ordinateur pour réaliser une tâche. Exemple : Word pour écrire, WhatsApp pour discuter, un navigateur pour aller sur Internet.'",
+      "ENTRAINEMENT": "« Ouvrez vos cahiers d'activités. » Exercice 1 : Classez les mots suivants dans le tableau (Matériel / Logiciel / Information) : souris, Windows, texte de l'exposé, clavier, WhatsApp, photo de vacances, imprimante, jeu Minecraft, clé USB, facture d'eau REDAL. Exercice 2 : Vrai ou Faux ? a) Le Wi-Fi permet de connecter un ordinateur à Internet sans fil. b) Une imprimante est un logiciel. c) L'information peut être stockée sur une clé USB. Exercice 3 : Relie chaque mot à sa définition (connectivité, logiciel, information, matériel). « Correction orale collective. Levez la main pour donner vos réponses. » Corriger et faire noter la trace écrite."
+    },
+    "Synthèse": {
+      "Quiz": "« Quiz oral ! Je pose la question, vous réfléchissez, je compte jusqu'à 3, vous montrez la réponse avec vos doigts (1, 2 ou 3). » Q1 : Qu'est-ce qu'un logiciel ? 1- Un objet physique 2- Un programme qui donne des instructions 3- Un câble (réponse : 2). Q2 : La clé USB, c'est du... ? 1- Logiciel 2- Information 3- Matériel (réponse : 3). Q3 : Le texte tapé dans Word est une... ? 1- Information 2- Machine 3- Connexion (réponse : 1). Q4 : Le Wi-Fi du dar chabab permet de... ? 1- Jouer sans manette 2- Se connecter sans fil 3- Imprimer sans papier (réponse : 2). « Bravo ! Vous avez tous bien compris. N'oubliez pas : un système informatique, c'est matériel + logiciel + utilisateur + information. »"
+    }
+  },
+  "savoir": {
+    "definitions": [
+      {
+        "terme": "Information",
+        "definition": "C'est un renseignement, un message ou une donnée qui a du sens. Exemple : le texte de ton exposé, le nom de ton ami, le prix d'un article."
+      },
+      {
+        "terme": "Informatique",
+        "definition": "C'est la science qui étudie le traitement de l'information à l'aide de machines comme l'ordinateur."
+      },
+      {
+        "terme": "Système informatique",
+        "definition": "C'est l'ensemble qui comprend le matériel (ce qui se touche), les logiciels (les programmes) et l'utilisateur (la personne)."
+      },
+      {
+        "terme": "Connectivité",
+        "definition": "C'est la capacité d'un système à se connecter à d'autres systèmes ou à Internet, avec ou sans fil (Wi-Fi, câble, Bluetooth)."
+      },
+      {
+        "terme": "Logiciel",
+        "definition": "Un programme qui donne des instructions au matériel pour réaliser une tâche. Exemple : un traitement de texte pour écrire, un jeu pour jouer."
+      }
+    ],
+    "schema_reseau": "Au tableau, dessiner un schéma avec 4 blocs reliés par des flèches :\n\n┌──────────────┐\n│ UTILISATEUR  │ ← Personne (Ahmed)\n│   (Ahmed)    │\n└──────┬───────┘\n       │ utilise\n       ▼\n┌──────────────┐     ┌──────────────┐\n│  LOGICIELS   │◄───►│   MATÉRIEL   │\n│ (Word,       │     │ (clavier,    │\n│  WhatsApp,   │     │  écran,      │\n│  navigateur) │     │  souris, clé │\n└──────────────┘     │  USB, impr.) │\n                     └──────┬───────┘\n                            │ traite\n                            ▼\n                    ┌──────────────┐\n                    │ INFORMATION  │\n                    │ (texte,      │\n                    │  photo,      │\n                    │  vidéo)      │\n                    └──────────────┘\n\nAjouter une flèche 'Connectivité' entre le système et Internet :\n[Système informatique] ───Wi-Fi/Câble───→ [Internet / Autres systèmes]",
+    "exemples_concrets": [
+      "Ahmed utilise Word (logiciel de traitement de texte) sur l'ordinateur du dar chabab pour taper son exposé, puis l'imprime sur l'imprimante partagée via le Wi-Fi du dar chabab.",
+      "La facture d'eau de la REDAL ou LYDEC arrive par email ou SMS : c'est une information numérique que l'on peut consulter sur son téléphone ou son ordinateur.",
+      "Au cybercafé du quartier, l'élève insère sa clé USB pour récupérer son devoir tapé chez lui et l'imprimer.",
+      "Un groupe WhatsApp de la classe sert à partager des photos de cours et des informations entre élèves.",
+      "Le jeu éducatif installé sur la tablette du frère aîné : la tablette est le matériel, le jeu est le logiciel."
+    ]
+  },
+  "plan_tableau": {
+    "zone_titre": "LEÇON : SYSTÈME INFORMATIQUE (Informatique - 1AC)",
+    "zone_problème": "SITUATION PROBLÈME :\nAhmed doit préparer un exposé sur les animaux de la forêt marocaine et l'imprimer.\nIl ne comprend pas comment fonctionne son ordinateur.\n\nHYPOTHÈSES DES ÉLÈVES :\nH1. Il faut allumer l'ordinateur\nH2. Il faut un logiciel pour écrire\nH3. Il faut brancher l'imprimante\nH4. Il faut une clé USB\nH5. Il faut que l'ordinateur marche",
+    "zone_cours": "1. INFORMATION : renseignement ou message qui a du sens.\n   Ex : texte, photo, numéro de téléphone.\n\n2. INFORMATIQUE : science du traitement de l'information.\n\n3. SYSTÈME INFORMATIQUE = MATÉRIEL + LOGICIEL + UTILISATEUR\n   - Matériel : ce qui se touche (clavier, souris, écran)\n   - Logiciel : programme (Word, navigateur, jeu)\n   - Utilisateur : la personne\n\n4. CONNECTIVITÉ : capacité à se connecter (Wi-Fi, câble)\n\n5. LOGICIEL : programme qui commande le matériel\n\n(Schéma : voir schéma au centre du tableau)",
+    "zone_exercices": "EXERCICES :\n\nEx1 : Tableau - Matériel / Logiciel / Information\nMots : souris, Windows, texte exposé, clavier, WhatsApp, imprimante, clé USB, facture REDAL\n\nEx2 : Vrai ou Faux\n a) Le Wi-Fi connecte sans fil → V\n b) Une imprimante est un logiciel → F\n c) L'info se stocke sur clé USB → V\n\nEx3 : Relier (Connectivité, Logiciel, Information, Matériel)"
+  },
+  "activites_eleves": [
+    {
+      "etape": "1. Écoute et compréhension de la situation problème",
+      "consigne": "« Écoutez l'histoire d'Ahmed et dites-moi quel est son problème. »",
+      "production_attendue": "L'élève reformule : 'Ahmed ne comprend pas comment utiliser l'ordinateur pour faire son exposé et l'imprimer.'"
+    },
+    {
+      "etape": "2. Émission d'hypothèses",
+      "consigne": "« Par groupe de deux, proposez au moins deux choses qu'Ahmed doit savoir ou avoir pour réussir. »",
+      "production_attendue": "Les élèves écrivent 2-3 hypothèses simples dans leur cahier de brouillon (ex: 'Il faut un logiciel pour écrire', 'Il faut une imprimante')."
+    },
+    {
+      "etape": "3. Classification des hypothèses",
+      "consigne": "« Maintenant, classez vos hypothèses en deux colonnes : ce qui se touche (matériel) et ce qui ne se touche pas (logiciel/information). »",
+      "production_attendue": "Les élèves distinguent correctement les objets physiques (ordinateur, clé USB, imprimante) des éléments non physiques (logiciel, texte, information)."
+    },
+    {
+      "etape": "4. Prise de notes - Définitions",
+      "consigne": "« Recopiez les définitions et le schéma au propre dans votre cahier de cours. »",
+      "production_attendue": "Cahier complété avec les 5 définitions et le schéma du système informatique (utilisateur → logiciel ↔ matériel → information)."
+    },
+    {
+      "etape": "5. Exercices d'application",
+      "consigne": "« Faites les exercices 1, 2 et 3 sur votre cahier d'activités. Vous avez 10 minutes. »",
+      "production_attendue": "Exercice 1 : classement correct des mots dans le tableau. Exercice 2 : V/F correct. Exercice 3 : liaisons correctes."
+    },
+    {
+      "etape": "6. Participation au quiz oral",
+      "consigne": "« Je pose une question, vous réfléchissez et vous montrez la réponse avec vos doigts (1, 2 ou 3). »",
+      "production_attendue": "L'élève montre le bon nombre de doigts correspondant à la réponse correcte."
+    }
+  ],
+  "annotations": "Point de vigilance : certains élèves de 1AC n'ont jamais utilisé d'ordinateur. Insister sur la manipulation concrète (montrer une souris, un clavier, une clé USB réels). Éviter tout terme technique non défini. Faire répéter les définitions par plusieurs élèves. Pour la connectivité, ne pas entrer dans les détails techniques (IP, routeur...) ; rester au niveau 'ça permet de se connecter sans fil ou avec un câble'. Privilégier les exemples de la vie quotidienne marocaine (dar chabab, cybercafé, téléphone portable familial)."
+}

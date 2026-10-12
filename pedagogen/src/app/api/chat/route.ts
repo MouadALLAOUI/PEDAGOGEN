@@ -1,5 +1,7 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { estimateTokens } from '@/lib/utils/tokenEstimator';
+import { getDbSetting as getSetting } from '@/lib/db/settings';
+import { checkRateLimit } from '@/lib/utils/rateLimit';
 
 const HF_API_URL = 'https://router.huggingface.co/v1/chat/completions';
 
@@ -9,13 +11,23 @@ function sseEvent(event: Record<string, unknown>): string {
 
 export async function POST(request: NextRequest) {
   const encoder = new TextEncoder();
+  const userId = request.headers.get('x-user-id') || undefined;
+
+  const rateKey = userId ? `chat:user:${userId}` : `chat:ip:${request.headers.get('x-forwarded-for') || 'anon'}`;
+  const rateCheck = await checkRateLimit(rateKey, 40, 60 * 1000);
+  if (!rateCheck.allowed) {
+    return NextResponse.json(
+      { error: 'Limite de messages atteinte. Veuillez patienter un instant.' },
+      { status: 429 }
+    );
+  }
 
   const [provider, hfToken, lmstudioUrl, lmstudioModel, opencodeModel] = await Promise.all([
-    getSetting('provider'),
-    getSetting('huggingface_token'),
-    getSetting('lmstudio_url'),
-    getSetting('lmstudio_model'),
-    getSetting('opencode_model'),
+    getSetting('provider', userId),
+    getSetting('huggingface_token', userId),
+    getSetting('lmstudio_url', userId),
+    getSetting('lmstudio_model', userId),
+    getSetting('opencode_model', userId),
   ]);
 
   const activeProvider = (provider || 'none') as string;
@@ -45,7 +57,7 @@ export async function POST(request: NextRequest) {
         const fullPrompt = apiMessages.map((m: any) => m.content).join('\n');
 
         if (activeProvider === 'opencode') {
-          const modelId = opencodeModel || 'opencode/kimi-k2.5-free';
+          const modelId = opencodeModel || 'opencode/big-pickle';
           const { opencode } = await import('ai-sdk-provider-opencode-sdk');
           const { streamText } = await import('ai');
 
@@ -75,7 +87,7 @@ export async function POST(request: NextRequest) {
           const localResponse = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ model, messages: apiMessages, max_tokens: 4096, temperature: 0.7, stream: true }),
+            body: JSON.stringify({ model, messages: apiMessages, max_tokens: 4096, temperature: 0.7, stream: false }),
           });
 
           if (!localResponse.ok) {
@@ -93,7 +105,7 @@ export async function POST(request: NextRequest) {
             while (true) {
               const { done, value } = await reader.read();
               if (done) break;
-              buffer += decoder.decode(value, { stream: true });
+              buffer += decoder.decode(value, { stream: false });
               const lines = buffer.split('\n');
               buffer = lines.pop() || '';
               for (const line of lines) {
@@ -136,7 +148,7 @@ export async function POST(request: NextRequest) {
           const response = await fetch(HF_API_URL, {
             method: 'POST',
             headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ model: 'deepseek-ai/DeepSeek-R1', messages: apiMessages, max_tokens: 4096, temperature: 0.7, stream: true }),
+            body: JSON.stringify({ model: 'deepseek-ai/DeepSeek-R1', messages: apiMessages, max_tokens: 4096, temperature: 0.7, stream: false }),
           });
 
           if (!response.ok) {
@@ -155,7 +167,7 @@ export async function POST(request: NextRequest) {
             while (true) {
               const { done, value } = await reader.read();
               if (done) break;
-              buffer += decoder.decode(value, { stream: true });
+              buffer += decoder.decode(value, { stream: false });
               const lines = buffer.split('\n');
               buffer = lines.pop() || '';
               for (const line of lines) {
@@ -194,17 +206,4 @@ export async function POST(request: NextRequest) {
   return new Response(stream, {
     headers: { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', Connection: 'keep-alive' },
   });
-}
-
-async function getSetting(key: string): Promise<string | undefined> {
-  try {
-    const { getDb } = await import('@/lib/db');
-    const db = getDb();
-    const row = db
-      .prepare("SELECT value FROM settings WHERE key = ? AND user_id = 'default'")
-      .get(key) as { value: string } | undefined;
-    return row?.value;
-  } catch {
-    return undefined;
-  }
 }

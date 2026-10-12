@@ -16,11 +16,20 @@ import {
   Trash,
   LayoutList,
   LayoutGrid,
+  Package,
+  Edit,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
+import { Pagination } from '@/components/ui/Pagination';
 import { PageTransition } from '@/components/layout/PageTransition';
 import { FilePreviewModal } from '@/components/ui/FilePreviewModal';
+import { SplitMarkdownEditor } from '@/components/editor/SplitMarkdownEditor';
+
+function formatDate(d: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getDate()}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
 
 const DOC_LABELS: Record<string, string> = {
   fiche_pedagogique: 'Fiche Pédagogique',
@@ -60,10 +69,15 @@ export default function FilesPage() {
   const [search, setSearch] = useState('');
   const [filterFormat, setFilterFormat] = useState<string>('all');
   const [previewFile, setPreviewFile] = useState<DbFile | null>(null);
+  const [editingFile, setEditingFile] = useState<{ id: string; name: string; content: string } | null>(null);
+  const [loadingEditId, setLoadingEditId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [batchDeleting, setBatchDeleting] = useState(false);
+  const [batchZipping, setBatchZipping] = useState(false);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(20);
 
   const loadFiles = useCallback(async () => {
     try {
@@ -85,6 +99,12 @@ export default function FilesPage() {
     return matchSearch && matchFormat;
   });
 
+  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
+  const safePage = Math.min(page, totalPages);
+  const paginated = filtered.slice((safePage - 1) * perPage, safePage * perPage);
+
+  useEffect(() => { setPage(1); }, [search, filterFormat]);
+
   const formats = [...new Set(files.map((f) => f.format))];
   const allSelected = filtered.length > 0 && filtered.every((f) => selected.has(f.id));
   const someSelected = filtered.some((f) => selected.has(f.id));
@@ -100,6 +120,24 @@ export default function FilesPage() {
       if (next.has(id)) next.delete(id); else next.add(id);
       return next;
     });
+  };
+
+  const handleOpenEditor = async (file: DbFile) => {
+    setLoadingEditId(file.id);
+    try {
+      const res = await fetch(`/api/generated/preview?id=${file.id}`);
+      if (!res.ok) throw new Error('Échec du chargement du contenu');
+      const data = await res.json();
+      if (data.type === 'text' && data.content) {
+        setEditingFile({ id: file.id, name: file.name, content: data.content });
+      } else {
+        toast.error('Seuls les documents au format markdown / texte peuvent être édités directement.');
+      }
+    } catch {
+      toast.error('Erreur lors du chargement du fichier pour modification');
+    } finally {
+      setLoadingEditId(null);
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -140,6 +178,32 @@ export default function FilesPage() {
       toast.error('Erreur lors de la suppression');
     } finally {
       setBatchDeleting(false);
+    }
+  };
+
+  const handleBatchZip = async () => {
+    const ids = [...selected];
+    if (ids.length === 0) return;
+    setBatchZipping(true);
+    try {
+      const res = await fetch('/api/generated/zip', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids }),
+      });
+      if (!res.ok) throw new Error('Failed');
+      const data = await res.json();
+      const a = document.createElement('a');
+      a.href = data.zipUrl;
+      a.download = data.zipUrl.split('/').pop() || 'selection.zip';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      toast.success('Fichiers téléchargés en ZIP');
+    } catch {
+      toast.error('Erreur lors de la création du ZIP');
+    } finally {
+      setBatchZipping(false);
     }
   };
 
@@ -213,10 +277,16 @@ export default function FilesPage() {
               </button>
             </div>
             {someSelected && (
-              <Button variant="danger" size="sm" onClick={handleBatchDelete} disabled={batchDeleting}>
-                {batchDeleting ? <Loader2 size={14} className="animate-spin" /> : <Trash size={14} />}
-                Supprimer ({selected.size})
-              </Button>
+              <>
+                <Button variant="secondary" size="sm" onClick={handleBatchZip} disabled={batchZipping}>
+                  {batchZipping ? <Loader2 size={14} className="animate-spin" /> : <Package size={14} />}
+                  Télécharger ({selected.size})
+                </Button>
+                <Button variant="danger" size="sm" onClick={handleBatchDelete} disabled={batchDeleting}>
+                  {batchDeleting ? <Loader2 size={14} className="animate-spin" /> : <Trash size={14} />}
+                  Supprimer ({selected.size})
+                </Button>
+              </>
             )}
           </div>
         )}
@@ -243,7 +313,7 @@ export default function FilesPage() {
               </button>
               <span>{someSelected ? `${selected.size} sélectionné(s)` : 'Tout sélectionner'}</span>
             </div>
-            {filtered.map((file) => (
+            {paginated.map((file) => (
               <div
                 key={file.id}
                 className={`flex items-center gap-4 px-4 py-3 border-b border-border/50 last:border-0 transition-colors ${
@@ -264,10 +334,20 @@ export default function FilesPage() {
                     <span className="text-xs text-muted">·</span>
                     <span className="text-xs text-muted">{file.size_kb} KB</span>
                     <span className="text-xs text-muted">·</span>
-                    <span className="text-xs text-muted">{new Date(file.created_at).toLocaleDateString('fr-FR')}</span>
+                    <span className="text-xs text-muted">{formatDate(new Date(file.created_at))}</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-1 flex-shrink-0">
+                  {file.format === 'md' && (
+                    <button
+                      onClick={() => handleOpenEditor(file)}
+                      disabled={loadingEditId === file.id}
+                      className="p-2 rounded-lg hover:bg-teal-50 text-muted hover:text-teal transition-colors disabled:opacity-50"
+                      title="Éditer en direct"
+                    >
+                      {loadingEditId === file.id ? <Loader2 size={15} className="animate-spin" /> : <Edit size={15} />}
+                    </button>
+                  )}
                   <button onClick={() => setPreviewFile(file)} className="p-2 rounded-lg hover:bg-teal-50 text-muted hover:text-teal transition-colors" title="Aperçu">
                     <Eye size={15} />
                   </button>
@@ -283,7 +363,7 @@ export default function FilesPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filtered.map((file) => (
+            {paginated.map((file) => (
               <div
                 key={file.id}
                 className={`rounded-xl border bg-white overflow-hidden transition-all hover:shadow-md ${
@@ -306,10 +386,19 @@ export default function FilesPage() {
                   </div>
                   <div className="flex items-center gap-3 text-xs text-muted">
                     <span>{file.size_kb} KB</span>
-                    <span>{new Date(file.created_at).toLocaleDateString('fr-FR')}</span>
+                    <span>{formatDate(new Date(file.created_at))}</span>
                   </div>
                 </div>
                 <div className="flex items-center border-t border-border divide-x divide-border">
+                  {file.format === 'md' && (
+                    <button
+                      onClick={() => handleOpenEditor(file)}
+                      disabled={loadingEditId === file.id}
+                      className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium text-muted hover:text-teal hover:bg-teal/5 transition-colors disabled:opacity-50"
+                    >
+                      {loadingEditId === file.id ? <Loader2 size={14} className="animate-spin" /> : <Edit size={14} />} Éditer
+                    </button>
+                  )}
                   <button onClick={() => setPreviewFile(file)} className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium text-muted hover:text-teal hover:bg-teal/5 transition-colors">
                     <Eye size={14} /> Aperçu
                   </button>
@@ -324,6 +413,17 @@ export default function FilesPage() {
             ))}
           </div>
         )}
+
+        {!loading && filtered.length > 0 && (
+          <Pagination
+            page={safePage}
+            totalPages={totalPages}
+            totalItems={filtered.length}
+            perPage={perPage}
+            onPageChange={setPage}
+            onPerPageChange={(n) => { setPerPage(n); setPage(1); }}
+          />
+        )}
       </div>
 
       {previewFile && (
@@ -333,6 +433,18 @@ export default function FilesPage() {
           fileFormat={previewFile.format}
           fileUrl={previewFile.url}
           onClose={() => setPreviewFile(null)}
+        />
+      )}
+
+      {editingFile && (
+        <SplitMarkdownEditor
+          fileId={editingFile.id}
+          title={editingFile.name}
+          initialContent={editingFile.content}
+          onClose={() => {
+            setEditingFile(null);
+            loadFiles();
+          }}
         />
       )}
     </PageTransition>

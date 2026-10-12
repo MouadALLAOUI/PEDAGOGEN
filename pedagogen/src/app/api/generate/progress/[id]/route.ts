@@ -18,11 +18,40 @@ export async function GET(
   const encoder = new TextEncoder();
   const stream = new ReadableStream({
     start(controller) {
+      let closed = false;
+
       const sendEvent = (event: unknown) => {
         try {
           controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
         } catch {
           // stream closed
+        }
+      };
+
+      // SSE comment lines keep proxies/CDNs from idle-closing the connection
+      // during silent stretches of long model calls. EventSource ignores them.
+      const heartbeat = setInterval(() => {
+        if (closed) return;
+        try {
+          controller.enqueue(encoder.encode(': hb\n\n'));
+        } catch {
+          closed = true;
+        }
+      }, 15000);
+
+      const closeStream = () => {
+        if (closed) return;
+        closed = true;
+        clearInterval(heartbeat);
+        gen.listeners.delete(listener);
+        try { controller.close(); } catch { /* already closed */ }
+      };
+
+      // Listen for new events
+      const listener = (step: unknown) => {
+        sendEvent(step);
+        if ((step as any)?.type === 'done' || (step as any)?.type === 'error') {
+          closeStream();
         }
       };
 
@@ -32,26 +61,14 @@ export async function GET(
       }
 
       if (gen.isCompleted) {
-        sendEvent({ type: 'done', message: 'Generation completed' });
-        controller.close();
+        closeStream();
         return;
       }
-
-      // Listen for new events
-      const listener = (step: unknown) => {
-        sendEvent(step);
-        if ((step as any)?.type === 'done' || (step as any)?.type === 'error') {
-          gen.listeners.delete(listener);
-          controller.close();
-        }
-      };
 
       gen.listeners.add(listener);
 
       // Cleanup on client disconnect
-      (controller as any).__cleanup = () => {
-        gen.listeners.delete(listener);
-      };
+      (controller as any).__cleanup = closeStream;
     },
     cancel() {
       if ((this as any).__cleanup) {

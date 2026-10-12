@@ -34,6 +34,8 @@ export async function PUT(request: NextRequest) {
       matiere: data.matiere,
       etablissement: data.etablissement,
       telephone: data.telephone,
+      aref: data.aref,
+      direction_provinciale: data.direction_provinciale,
     });
 
     const updated = getUserFromDb(user.id);

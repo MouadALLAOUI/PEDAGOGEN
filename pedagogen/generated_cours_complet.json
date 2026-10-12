@@ -1,0 +1,106 @@
+{
+  "titre_seance": "Les bases du système informatique : information, connectivité et logiciels",
+  "script_enseignant": {
+    "Mise_en_situation": {
+      "rappel": "Bonjour à tous ! Je vais commencer par quelques questions pour nous rappeler ce que nous avons vu précédemment. Q1 : Qu'est-ce qu'un ordinateur pour vous ? Q2 : Quels sont les éléments que vous voyez sur un bureau d'ordinateur ? Q3 : Avez-vous déjà utilisé une imprimante ou un scanner ? Q4 : Comment allumez-vous votre ordinateur ? Laissez les élèves répondre et notez quelques mots-clés au tableau (écran, clavier, souris, imprimante…).",
+      "situation_probleme": "Je vais vous raconter une petite histoire. Ahmed est un élève de 1AC comme vous. Son professeur lui a demandé de préparer un exposé sur 'Les animaux de la forêt' et de l'imprimer pour le présenter devant la classe. Ahmed a un ordinateur chez lui, mais il ne sait pas par où commencer. Il a des questions : 'Comment faire pour écrire mon texte ?', 'Comment chercher des images sur Internet ?', 'Comment imprimer mon travail ?'. Aujourd'hui, nous allons aider Ahmed à comprendre comment fonctionne un système informatique, de l'information de départ jusqu'au résultat imprimé."
+    },
+    "Analyse": {
+      "Analyse_SP": "Maintenant que nous avons le problème d'Ahmed, je vais vous poser quelques questions pour l'analyser ensemble. Q1 : Qu'est-ce qu'Ahmed veut produire à la fin ? (Un exposé imprimé). Q2 : De quels outils a-t-il besoin ? (Un ordinateur, une imprimante, un logiciel…). Q3 : Où peut-il trouver des informations sur les animaux de la forêt ? (Internet, livres, encyclopédies…). Q4 : Comment va-t-il saisir son texte ? (Avec le clavier, dans un logiciel de traitement de texte). Q5 : Comment l'ordinateur va-t-il communiquer avec l'imprimante ? (Par un câble ou sans fil). Q6 : Qu'est-ce qui permet à l'ordinateur de fonctionner ? (L'électricité, le système d'exploitation).",
+      "Investigation": "Très bien, vous avez proposé plusieurs idées ! Maintenant, nous allons les examiner ensemble. Vous avez mentionné qu'Ahmed a besoin d'un ordinateur et d'une imprimante — ce sont des composants matériels, on les appelle le 'matériel' ou le 'hardware'. Vous avez aussi parlé d'un logiciel pour écrire — exactement, c'est un 'logiciel' ou 'software'. Et pour aller sur Internet, il a besoin d'une 'connexion'. Regardons chaque idée : H1 : 'Il faut un ordinateur' — oui, c'est l'unité centrale qui traite les informations. H2 : 'Il faut Internet pour chercher des images' — oui, Internet est un réseau qui relie les ordinateurs entre eux. H3 : 'Il faut un logiciel pour taper le texte' — oui, comme Word ou un traitement de texte gratuit. H4 : 'Il faut une imprimante' — oui, c'est un périphérique de sortie. H5 : 'Il faut savoir allumer l'ordinateur' — oui, le système d'exploitation (Windows par exemple) permet de démarrer et d'utiliser l'ordinateur. Je valide toutes ces hypothèses, elles sont correctes !",
+      "Generalisation": "À partir de notre analyse, nous allons maintenant dégager ensemble les notions importantes. Écoutez bien et notez dans vos cahiers ce que j'écris au tableau. Première notion : L'information — c'est ce qu'Ahmed veut partager (son texte, ses images). L'informatique est la science qui traite l'information de manière automatique à l'aide d'un ordinateur. Un système informatique est un ensemble d'éléments qui travaillent ensemble pour traiter l'information : le matériel (partie physique), le logiciel (programmes), et le connectivité (réseaux, Internet). Un logiciel est un programme qui donne des instructions à l'ordinateur. La connectivité est la capacité d'un ordinateur à se connecter à d'autres appareils ou à Internet.",
+      "ENTRAINEMENT": "Maintenant, nous allons vérifier que vous avez bien compris. Prenez votre cahier d'exercices. Exercice 1 : Reliez chaque terme à sa définition. Je vous donne 5 minutes. [Liste au tableau : 'Ordinateur', 'Logiciel', 'Connectivité', 'Information'] avec les définitions mélangées. Ensuite, nous corrigerons ensemble. Exercice 2 : Vrai ou Faux — 'L'imprimante est un logiciel' (Faux, c'est un matériel). 'Internet permet de connecter des ordinateurs' (Vrai). 'Le clavier permet d'afficher des images' (Faux, c'est l'écran). Exercice 3 : Citez deux périphériques d'entrée et deux périphériques de sortie. Après 10 minutes, nous corrigeons oralement. Pour la trace écrite, recopiez le cours proprement dans votre cahier."
+    },
+    "Synthese": {
+      "Quiz": "Nous allons terminer la séance par un petit quiz oral pour voir ce que vous avez retenu. Question 1 : Qu'est-ce qu'un système informatique ? (Réponse : C'est l'ensemble du matériel, des logiciels et de la connectivité qui travaillent ensemble). Question 2 : Citez un logiciel qui permet d'écrire un texte. (Réponse : Word, LibreOffice Writer, Bloc-Notes…). Question 3 : Vrai ou Faux : 'L'écran est un périphérique d'entrée' ? (Faux, c'est un périphérique de sortie). Question 4 : Comment appelle-t-on la partie physique de l'ordinateur ? (Le matériel ou le hardware). Question 5 : Qu'est-ce qui permet à Ahmed d'envoyer son document à l'imprimante ? (Le câble USB ou le Wi-Fi — la connectivité). Bravo à ceux qui ont participé ! Pour la prochaine séance, essayez de regarder autour de chez vous et de noter trois exemples de systèmes informatiques que vous utilisez au quotidien."
+    }
+  },
+  "savoir": {
+    "definitions": [
+      {
+        "terme": "Information",
+        "definition": "L'information est une donnée, un renseignement ou une connaissance qui peut être transmis ou partagé (texte, image, son, vidéo)."
+      },
+      {
+        "terme": "Informatique",
+        "definition": "L'informatique est la science du traitement automatique de l'information à l'aide d'ordinateurs."
+      },
+      {
+        "terme": "Système informatique",
+        "definition": "Un système informatique est un ensemble composé de matériel (partie physique), de logiciels (programmes) et de la connectivité (réseaux) qui travaillent ensemble pour traiter l'information."
+      },
+      {
+        "terme": "Matériel (Hardware)",
+        "definition": "Le matériel désigne tous les composants physiques d'un ordinateur : l'unité centrale, l'écran, le clavier, la souris, l'imprimante, etc."
+      },
+      {
+        "terme": "Logiciel (Software)",
+        "definition": "Un logiciel est un ensemble de programmes et d'instructions qui indiquent à l'ordinateur ce qu'il doit faire (exemples : Windows, Word, jeux, navigateur Internet)."
+      },
+      {
+        "terme": "Connectivité",
+        "definition": "La connectivité est la capacité d'un ordinateur ou d'un appareil à se connecter à d'autres appareils ou à Internet, par câble ou sans fil (Wi-Fi)."
+      },
+      {
+        "terme": "Périphérique d'entrée",
+        "definition": "Un périphérique d'entrée permet d'introduire des données dans l'ordinateur (exemples : clavier, souris, scanner, microphone)."
+      },
+      {
+        "terme": "Périphérique de sortie",
+        "definition": "Un périphérique de sortie permet à l'ordinateur de restituer des informations à l'utilisateur (exemples : écran, imprimante, haut-parleurs)."
+      }
+    ],
+    "schema_reseau": "Au tableau, dessiner le schéma suivant :\n\n                    ┌─────────────────────────────┐\n                    │    SYSTÈME INFORMATIQUE      │\n                    └─────────────────────────────┘\n                              │\n        ┌─────────────────────┼─────────────────────┐\n        │                     │                     │\n        ▼                     ▼                     ▼\n┌───────────────┐    ┌───────────────┐    ┌───────────────┐\n│   MATÉRIEL    │    │   LOGICIELS   │    │ CONNECTIVITÉ  │\n│   (Hardware)  │    │   (Software)  │    │   (Réseaux)   │\n│ ───────────── │    │ ───────────── │    │ ───────────── │\n│ • Unité cent. │    │ • Windows     │    │ • Câble USB   │\n│ • Écran       │    │ • Word        │    │ • Wi-Fi       │\n│ • Clavier     │    │ • Navigateur  │    │ • Internet    │\n│ • Souris      │    │ • Jeux        │    │ • Bluetooth   │\n│ • Imprimante  │    │               │    │               │\n└───────────────┘    └───────────────┘    └───────────────┘\n\nAjouter en dessous :\n\n INFORMATION ──→ TRAITEMENT (ordinateur) ──→ RÉSULTAT\n (données)         (système informatique)     (affichage/impression)",
+    "exemples_concrets": [
+      "Un élève utilise Word (logiciel) sur un ordinateur (matériel) pour écrire un exposé, puis l'imprime via une connexion USB (connectivité).",
+      "Un professeur utilise Internet (connectivité) et un navigateur (logiciel) pour chercher des images sur son ordinateur portable (matériel).",
+      "Au cybercafé, plusieurs ordinateurs sont connectés entre eux et à Internet pour partager une imprimante (réseau local).",
+      "Un smartphone est aussi un système informatique : il a du matériel (écran tactile, processeur), des logiciels (applications) et une connectivité (4G, Wi-Fi).",
+      "À la maison, la console de jeux est connectée à la télévision et à Internet pour jouer en ligne avec d'autres joueurs."
+    ]
+  },
+  "plan_tableau": {
+    "zone_titre": "SÉANCE : Les bases du système informatique | 1AC | Informatique | 50 min\n\nTitre au centre en haut, souligné :\n'QU'EST-CE QU'UN SYSTÈME INFORMATIQUE ?'",
+    "zone_probleme": "PROBLÈME : Ahmed doit préparer et imprimer un exposé sur 'Les animaux de la forêt'.\n\nQuestions posées par Ahmed :\n1. Comment écrire mon texte ?\n2. Comment chercher des images ?\n3. Comment imprimer ?\n\n➡ De quoi a-t-il besoin ?",
+    "zone_cours": "I. DÉFINITIONS IMPORTANTES\n\n1. Information : donnée, renseignement (texte, image, son)\n2. Informatique : science du traitement automatique de l'information\n3. Système informatique = Matériel + Logiciels + Connectivité\n   → Ils travaillent ENSEMBLE pour traiter l'information\n\nII. LES 3 PARTIES D'UN SYSTÈME INFORMATIQUE\n\nA. MATÉRIEL (Hardware) : partie physique\n   • Unité centrale (UC) : le cerveau\n   • Périphériques d'entrée : clavier, souris, scanner\n   • Périphériques de sortie : écran, imprimante, haut-parleurs\n\nB. LOGICIELS (Software) : programmes\n   • Système d'exploitation : Windows, macOS, Linux\n   • Logiciels d'application : Word, jeux, navigateur\n\nC. CONNECTIVITÉ : liaisons, réseaux\n   • Câbles : USB, HDMI, Ethernet\n   • Sans fil : Wi-Fi, Bluetooth, 4G\n\nSCHÉMA (voir schema_reseau)",
+    "zone_exercices": "EXERCICES\n\nExercice 1 : Relie chaque terme à sa définition\n  Ordinateur → Machine électronique qui traite des informations\n  Logiciel → Programme qui donne des instructions\n  Connectivité → Capacité à se connecter à d'autres appareils\n  Information → Donnée ou renseignement\n\nExercice 2 : Vrai ou Faux\n  1. L'imprimante est un logiciel (F)\n  2. Internet permet de connecter des ordinateurs (V)\n  3. Le clavier permet d'afficher des images (F)\n  4. Windows est un système d'exploitation (V)\n\nExercice 3 : Cite deux périphériques d'entrée et deux de sortie\n  Entrée : ______, ______ | Sortie : ______, ______"
+  },
+  "activites_eleves": [
+    {
+      "etape": "Rappel (5 min)",
+      "consigne": "Répondez aux questions du professeur sur les éléments de l'ordinateur que vous connaissez déjà.",
+      "production_attendue": "Participation orale : l'élève nomme les éléments (écran, clavier, souris, imprimante…)."
+    },
+    {
+      "etape": "Situation problème (5 min)",
+      "consigne": "Écoutez attentivement l'histoire d'Ahmed. Réfléchissez à ce dont il a besoin pour faire son exposé.",
+      "production_attendue": "L'élève écoute et commence à imaginer les outils nécessaires (ordinateur, logiciel, Internet…)."
+    },
+    {
+      "etape": "Analyse de la situation problème (5 min)",
+      "consigne": "Répondez aux questions du professeur pour identifier les besoins d'Ahmed.",
+      "production_attendue": "L'élève propose des hypothèses oralement : 'Il faut un ordinateur, Internet, un logiciel pour écrire, une imprimante…'"
+    },
+    {
+      "etape": "Investigation (5 min)",
+      "consigne": "Discutez avec le professeur et vos camarades pour valider ou corriger chaque hypothèse proposée.",
+      "production_attendue": "L'élève participe à la validation des hypothèses et comprend pourquoi chaque élément est important."
+    },
+    {
+      "etape": "Généralisation / Cours (10 min)",
+      "consigne": "Écoutez les explications du professeur et notez dans votre cahier les définitions et le schéma présentés au tableau.",
+      "production_attendue": "L'élève recopie le cours : définitions de l'information, informatique, système informatique, matériel, logiciel, connectivité."
+    },
+    {
+      "etape": "Entraînement (15 min)",
+      "consigne": "Réalisez les exercices donnés par le professeur dans votre cahier d'exercices. Corrigez avec la classe.",
+      "production_attendue": "L'élève complète les exercices de relié, vrai/faux et de classification, puis corrige et note la correction."
+    },
+    {
+      "etape": "Quiz de synthèse (5 min)",
+      "consigne": "Répondez oralement aux questions du quiz pour vérifier votre compréhension.",
+      "production_attendue": "L'élève répond aux questions du quiz : définition du système informatique, exemples de logiciels, distinction entrée/sortie."
+    }
+  ],
+  "annotations": "Conseils pédagogiques : (1) Veiller à utiliser des exemples très concrets et familiers pour les élèves (téléphone, console, ordinateur du cyber). (2) Ne pas hésiter à montrer des vrais objets (clavier, souris, câble USB) si disponibles. (3) Pour les élèves en difficulté, donner une fiche avec les définitions pré-remplies à trous à compléter. (4) Pour les élèves rapides, demander de dessiner leur propre système informatique idéal avec des légendes. (5) Attention au vocabulaire : éviter les termes trop complexes comme 'processeur', 'RAM', 'carte mère' — rester au niveau 'unité centrale', 'ordinateur'. (6) Le schéma au tableau est essentiel, le faire progressivement en expliquant chaque partie. (7) Prévoir 2-3 minutes de marge pour d'éventuelles questions imprévues. (8) Si la séance est trop courte, réduire les exercices ou déplacer le quiz à la séance suivante."
+}

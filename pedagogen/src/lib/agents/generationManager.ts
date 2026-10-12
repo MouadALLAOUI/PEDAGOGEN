@@ -1,6 +1,6 @@
 
 export interface GenerationProgressStep {
-  type: 'progress' | 'reasoning' | 'build' | 'tokens' | 'done' | 'error';
+  type: 'progress' | 'reasoning' | 'build' | 'tokens' | 'done' | 'error' | 'review';
   step?: string;
   label?: string;
   status?: 'active' | 'done' | 'error';
@@ -20,6 +20,9 @@ export interface ActiveGeneration {
   controller: AbortController;
   listeners: Set<(step: GenerationProgressStep) => void>;
   isCompleted: boolean;
+  jsonResults?: Record<string, unknown>;
+  messages?: any[];
+  totalTokens?: number;
 }
 
 // Persistent across hot-reloads in Next.js development
@@ -95,4 +98,67 @@ export function cancelGeneration(id: string): boolean {
   }
   activeGenerations.delete(id);
   return true;
+}
+
+// ─── R6: File d'attente de générations (évite de saturer le fournisseur IA) ───
+
+const globalForQueue = global as unknown as {
+  generationQueue?: Array<{ id: string; run: () => Promise<void> }>;
+  generationRunning?: number;
+};
+
+const queue = (globalForQueue.generationQueue ||= []);
+let running = (globalForQueue.generationRunning ||= 0);
+const syncRunning = () => { globalForQueue.generationRunning = running; };
+
+export const MAX_CONCURRENT_GENERATIONS = 2;
+
+/**
+ * Exécute le corps d'une génération via une file (max 2 simultanées).
+ * Les générations en attente voient un événement de progression "En file d'attente".
+ */
+export function enqueueGeneration(
+  id: string,
+  position: number,
+  run: () => Promise<void>
+): void {
+  const gen = activeGenerations.get(id);
+  queue.push({ id, run });
+
+  const pump = () => {
+    while (running < MAX_CONCURRENT_GENERATIONS && queue.length > 0) {
+      const item = queue.shift()!;
+      const g = activeGenerations.get(item.id);
+      if (!g || g.isCompleted) continue; // annulée pendant l'attente
+      if (position > 0) {
+        addProgress(item.id, {
+          type: 'progress',
+          step: 'queue',
+          label: `Démarrage (position ${position})...`,
+          status: 'active',
+        });
+      }
+      running++;
+      syncRunning();
+      item.run().finally(() => {
+        running--;
+        syncRunning();
+        pump();
+      });
+    }
+  };
+  if (position > 0 && gen) {
+    addProgress(id, {
+      type: 'progress',
+      step: 'queue',
+      label: `En file d'attente (position ${position})...`,
+      status: 'active',
+    });
+  }
+  pump();
+}
+
+/** Position dans la file (0 = démarrage immédiat). */
+export function queuePosition(): number {
+  return running >= MAX_CONCURRENT_GENERATIONS ? queue.length + 1 : 0;
 }

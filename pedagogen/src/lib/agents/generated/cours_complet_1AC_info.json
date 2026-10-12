@@ -1,0 +1,104 @@
+{
+  "titre_seance": "Système informatique : Information, Informatique et Connectivité",
+  "timing_consistency_check": "La séance dure 60 minutes. Répartition proportionnelle (facteur 1.2 par rapport au modèle 50 min) : Mise_en_situation 12 min (rappel 4 min + situation problème 8 min), Analyse 32 min (Analyse_SP 7 min + Investigation 7 min + Généralisation 12 min + Entraînement 6 min), Synthèse 16 min (Quiz 8 min + marge/rangement 8 min). Total : 12 + 32 + 16 = 60 min.",
+  "variantes_pedagogiques": "Si les élèves confondent matériel et logiciel, utiliser l'analogie du corps humain : le matériel est le corps (on peut le toucher), le logiciel est l'intelligence qui fait bouger le corps (on ne la voit pas). Si la connectivité est difficile à comprendre, comparer avec le téléphone portable : pour appeler quelqu'un, il faut un réseau ; de même, l'ordinateur a besoin d'une connexion (Wi-Fi ou câble) pour communiquer avec d'autres ordinateurs. Variante pour les élèves visuels : dessiner collectivement au tableau le schéma du système informatique en demandant aux élèves de proposer les éléments.",
+  "gestion_erreurs_frequentes": "Erreur 1 : L'élève pense que l'écran est l'ordinateur. Relance : montrer l'unité centrale du doigt et dire 'Le cerveau est ici, l'écran montre seulement ce que le cerveau calcule'. Erreur 2 : L'élève confond logiciel et fichier (ex : une photo est un logiciel). Relance : 'Avec quel programme ouvres-tu ta photo ?' → réponse : le logiciel de visualisation. La photo est l'information, pas le logiciel. Erreur 3 : L'élève pense que le Wi-Fi et Internet sont la même chose. Relance : 'Le Wi-Fi, c'est comme la route devant chez toi. Internet, c'est toutes les routes du Maroc ensemble.'",
+  "conseils_surlignage": "Surligner en vert : Informatique, Système informatique, Matériel, Logiciel, Connectivité, Information. Surligner en rouge les règles de sécurité numérique : 'Ne pas partager son mot de passe' et 'Éteindre correctement l'ordinateur (Démarrer → Arrêter)'. Souligner la phrase-clé : 'Un système informatique = Matériel + Logiciel'.",
+  "script_enseignant": {
+    "Mise_en_situation": {
+      "rappel": "Bonjour à tous ! Ouvrez vos cahiers, nous allons commencer la leçon d'informatique. Question 1 : Qu'est-ce qu'un ordinateur pour vous ? (Laisser répondre 3-4 élèves). Très bien ! Certains disent 'une machine', d'autres 'un outil pour travailler'. Question 2 : Où trouve-t-on des ordinateurs dans votre quartier ou à l'école ? (Laisser répondre : au cybercafé, au collège, à la maison, au dar chabab, à l'administration). Excellent ! Question 3 : Qui utilise un ordinateur dans votre famille et pour quoi faire ? (Papa pour le travail, maman pour les courses, mon grand frère pour les jeux, ma sœur pour les devoirs). Parfait ! Aujourd'hui, nous allons découvrir ce qui se cache derrière le mot 'informatique' et comprendre comment fonctionne un système informatique. Écoutez bien l'histoire suivante.",
+      "situation_probleme": "Voici une situation : Achraf est un élève de 1AC au collège Ibn Rochd à Fès. Il doit préparer un exposé sur les monuments historiques de sa ville pour le projet de l'école. Il veut chercher des informations sur Internet, écrire un texte dans un document, et imprimer des photos des monuments comme la porte Bab Boujloud et la médina. Problème : Achraf ne sait pas par où commencer. Il a entendu parler d'« informatique », de « système informatique », de « logiciels », mais il ne comprend pas bien ce que ces mots signifient ni comment les utiliser pour réaliser son projet. Question que je vous pose : Aidez Achraf à comprendre comment fonctionne un système informatique et quels outils il doit utiliser pour préparer son exposé."
+    },
+    "Analyse": {
+      "Analyse_SP": "Maintenant, réfléchissons ensemble pour aider Achraf. Question 1 : Quels sont les éléments matériels (ce qu'on peut toucher) dont Achraf a besoin ? (H1 : un ordinateur, une imprimante, une clé USB, un câble). Question 2 : Quels sont les programmes informatiques (logiciels) qu'il va utiliser pour écrire son texte ? (H2 : un traitement de texte comme Word ou un logiciel gratuit). Question 3 : Où va-t-il chercher les informations sur les monuments de Fès ? (H3 : sur Internet avec un navigateur comme Google Chrome, ou sur YouTube). Question 4 : Peut-il faire tout cela si l'ordinateur n'est pas branché à l'électricité ? Pourquoi ? (H4 : Non, l'ordinateur a besoin de courant électrique pour fonctionner). Question 5 : Et peut-il imprimer sans imprimante ? (H5 : Non, l'imprimante est un matériel nécessaire).",
+      "Investigation": "Validons ensemble vos hypothèses. H1 est vraie : Achraf a besoin d'un ordinateur (avec son écran, son clavier, sa souris et l'unité centrale) et d'une imprimante pour imprimer les photos. H2 est vraie : il a besoin d'un logiciel de traitement de texte pour écrire son exposé, par exemple Word ou un logiciel gratuit comme ceux du collège. H3 est vraie : il a besoin d'une connexion Internet (Wi-Fi du collège, du dar chabab ou du cybercafé du quartier) et d'un navigateur Web pour chercher des informations. H4 est vraie : tout ce matériel fonctionne avec l'électricité. H5 est vraie : l'imprimante est un matériel spécifique. Maintenant, posons-nous une question importante : l'ordinateur peut-il fonctionner tout seul, sans les programmes ? (Non). Et les programmes tout seuls, sans l'ordinateur ? (Non plus). Donc retenez bien : matériel et logiciel sont complémentaires, comme le corps et l'esprit.",
+      "Generalisation": "Très bien, notons ensemble les définitions dans le cahier. Écrivez le titre : 'Système informatique'. Définition 1 - L'informatique : c'est la science qui permet de traiter des informations avec un ordinateur. Le mot 'informatique' vient de 'information' et 'automatique'. Exemple : quand tu écris un texte, que tu fais un calcul ou que tu regardes une vidéo, tu utilises l'informatique. Définition 2 - Un système informatique : c'est l'ensemble composé du matériel (la partie physique qu'on peut toucher) et des logiciels (les programmes qu'on ne peut pas toucher). Analogie : le matériel est comme le corps humain, les logiciels sont comme l'intelligence qui fait bouger et agir le corps. Définition 3 - Le matériel (hardware) : c'est la partie physique de l'ordinateur qu'on peut toucher. Exemples : l'écran, le clavier, la souris, l'unité centrale, l'imprimante. Le processeur est comme le cerveau qui calcule très vite à l'intérieur de l'unité centrale. Définition 4 - Un logiciel (software) : c'est un programme qui donne des instructions au matériel pour qu'il fasse quelque chose. Exemples : Word pour écrire, Google Chrome pour naviguer sur Internet, Windows pour faire fonctionner l'ordinateur. Définition 5 - L'information : ce sont des données que l'ordinateur peut traiter comme un texte, une image, un son ou une vidéo. Exemple : les photos de Bab Boujloud qu'Achraf va télécharger sont des informations. Définition 6 - La connectivité : c'est la capacité d'un ordinateur à communiquer avec d'autres appareils ou à accéder à Internet, par exemple avec le Wi-Fi ou un câble réseau. Exemple : le Wi-Fi du dar chabab permet à l'ordinateur de se connecter à Internet. Règles importantes de sécurité numérique (à écrire en rouge) : Règle 1 : Ne jamais partager son mot de passe avec qui que ce soit, même avec son meilleur ami. Règle 2 : Toujours éteindre correctement l'ordinateur en cliquant sur Démarrer → Arrêter, ne jamais débrancher la prise directement.",
+      "ENTRAINEMENT": "Maintenant, prenez votre cahier d'exercices. Nous allons faire trois petits exercices pour vérifier que vous avez bien compris. Exercice 1 : Relie chaque mot à sa définition. Au tableau, vous avez deux colonnes. À gauche : 'Matériel', 'Logiciel', 'Informatique', 'Connectivité'. À droite : 'Science du traitement de l'information', 'Partie physique qu'on peut toucher', 'Programme qui donne des instructions', 'Capacité à communiquer avec d'autres appareils'. Faites les flèches dans votre cahier. (Laisser 3 min). Correction : 'Informatique' → 'Science du traitement de l'information', 'Matériel' → 'Partie physique qu'on peut toucher', 'Logiciel' → 'Programme qui donne des instructions', 'Connectivité' → 'Capacité à communiquer avec d'autres appareils'. Levez la main si vous avez tout juste. Exercice 2 : Classe les éléments suivants dans un tableau à deux colonnes : Matériel / Logiciel. Éléments : 'souris', 'Word', 'écran', 'Windows', 'clavier', 'Google Chrome', 'imprimante', 'jeu Minecraft'. (Laisser 4 min). Correction collective : Matériel → souris, écran, clavier, imprimante. Logiciel → Word, Windows, Google Chrome, Minecraft. Exercice 3 : Vrai ou Faux ? 1 - L'ordinateur peut fonctionner sans logiciel. (Faux) 2 - La souris est un logiciel. (Faux, c'est du matériel) 3 - Internet permet de connecter des ordinateurs entre eux. (Vrai) 4 - Le mot de passe doit être partagé avec ses camarades. (Faux) 5 - On peut éteindre l'ordinateur en débranchant la prise. (Faux) BONUS : Qui peut me donner un exemple d'utilisation de l'informatique dans la vie de tous les jours ?"
+    },
+    "Synthese": {
+      "Quiz": "C'est l'heure du quiz ! Je vais poser des questions, levez la main pour répondre. Question 1 : Qu'est-ce que l'informatique ? (Réponse attendue : c'est la science qui traite les informations avec un ordinateur). Très bien ! Question 2 : Citez deux éléments de matériel que vous voyez dans cette classe. (Réponse attendue : écran, clavier, souris, imprimante, unité centrale). Excellent ! Question 3 : Citez deux logiciels que vous connaissez. (Réponse attendue : Word, Windows, Google Chrome, Minecraft, etc.). Parfait ! Question 4 : Pourquoi Achraf a-t-il besoin d'une imprimante pour son exposé ? (Réponse attendue : pour imprimer les photos des monuments de Fès). Bien vu ! Question 5 : Quelle est la première chose à faire avant d'utiliser un ordinateur au collège ? (Réponse attendue : vérifier qu'il est branché et l'allumer correctement via le bouton Démarrer). Question 6 : Quelle est la règle numéro 1 pour protéger ton compte informatique ? (Réponse attendue : ne jamais partager son mot de passe). Bravo à tous ! Vous avez bien compris la leçon."
+    }
+  },
+  "savoir": {
+    "definitions": [
+      {
+        "terme": "Informatique",
+        "definition": "Science qui permet de traiter des informations avec un ordinateur. Le mot vient de 'information' et 'automatique'."
+      },
+      {
+        "terme": "Système informatique",
+        "definition": "Ensemble composé du matériel (partie physique qu'on peut toucher) et des logiciels (programmes qu'on ne peut pas toucher). Comme une équipe de foot : les joueurs sont le matériel, les tactiques sont les logiciels."
+      },
+      {
+        "terme": "Matériel (hardware)",
+        "definition": "Partie physique de l'ordinateur qu'on peut toucher : écran, clavier, souris, unité centrale, imprimante. Le processeur, à l'intérieur, est le cerveau qui calcule très vite."
+      },
+      {
+        "terme": "Logiciel (software)",
+        "definition": "Programme qui donne des instructions au matériel pour qu'il fasse quelque chose. Exemples : Word (écrire un texte), Google Chrome (naviguer sur Internet), Windows (faire fonctionner l'ordinateur)."
+      },
+      {
+        "terme": "Connectivité",
+        "definition": "Capacité d'un ordinateur à communiquer avec d'autres appareils ou à accéder à Internet, par exemple avec le Wi-Fi ou un câble réseau."
+      },
+      {
+        "terme": "Information",
+        "definition": "Donnée que l'ordinateur peut traiter : texte, image, son ou vidéo. Exemple : une photo de la mosquée Hassan II téléchargée depuis Internet."
+      }
+    ],
+    "schema_reseau": "Dessiner au tableau :\n    [NUAGE] au centre avec l'étiquette 'INTERNET'\n        |\n    [ROUTEUR WI-FI] avec l'étiquette 'Wi-Fi du dar chabab / du collège'\n       /|\\\n      / | \\\n[ORDINATEUR 1] [ORDINATEUR 2] [IMPRIMANTE]\n    |            |\n[ECRAN + UC]  [LAPTOP]\n    |            |\n[CLAVIER]    [SOURIS]\n\nAjouter une légende en bas :\n- Matériel (en bleu) : tout ce qui est dans les cadres\n- Logiciels (en vert) : Word, Chrome, Windows (écrire à côté de chaque ordinateur)\n- Connectivité (en rouge) : les flèches et le Wi-Fi",
+    "exemples_concrets": [
+      "Imprimer une photo de Bab Boujloud pour le projet de l'école sur les monuments de Fès",
+      "Utiliser le Wi-Fi du dar chabab pour faire une recherche sur les monuments historiques du Maroc",
+      "Consulter sa facture d'eau de la REDAL sur le site Web depuis l'ordinateur du père",
+      "Aller au cybercafé du quartier pour imprimer un document et le rendre à l'école",
+      "Utiliser Word au collège pour rédiger un exposé sur les monuments de Fès",
+      "Regarder une vidéo éducative sur YouTube depuis l'ordinateur du collège",
+      "Créer un dossier sur le bureau de l'ordinateur pour ranger les photos de famille"
+    ]
+  },
+  "plan_tableau": {
+    "zone_titre": "Système informatique (Informatique - 1AC)",
+    "zone_probleme": "PROBLÈME : Achraf (collège Ibn Rochd, Fès) veut préparer un exposé sur les monuments historiques de Fès avec photos imprimées. Que doit-il utiliser ? Comment ça s'appelle ?",
+    "zone_cours": "I. INFORMATIQUE = science qui traite les informations avec un ordinateur\nII. SYSTÈME INFORMATIQUE = MATÉRIEL + LOGICIEL\n    A. Matériel (hardware) = partie physique qu'on touche\n       → écran, clavier, souris, unité centrale, imprimante\n    B. Logiciel (software) = programme qui donne des instructions\n       → Word (texte), Chrome (Internet), Windows (système)\nIII. CONNECTIVITÉ = capacité à communiquer (Wi-Fi, câble)\nIV. INFORMATION = texte, image, son, vidéo\n\n⚠ SÉCURITÉ NUMÉRIQUE :\n1. Ne pas partager son mot de passe\n2. Éteindre : Démarrer → Arrêter",
+    "zone_exercices": "EXERCICES :\n1. Relier mot → définition (4 flèches)\n2. Tableau : Classer Matériel / Logiciel (8 éléments)\n3. Vrai ou Faux (5 questions)\nBONUS : Donner un exemple d'informatique au quotidien"
+  },
+  "activites_eleves": [
+    {
+      "etape": "Rappel (4 min)",
+      "consigne": "Répondre aux trois questions de l'enseignant sur ce qu'est un ordinateur, où on en trouve et qui les utilise dans la famille.",
+      "production_attendue": "Participation orale : au moins 5 élèves donnent des exemples d'utilisation de l'ordinateur dans leur vie quotidienne."
+    },
+    {
+      "etape": "Situation problème (8 min)",
+      "consigne": "Écouter attentivement l'histoire d'Achraf et réfléchir à la question posée : de quoi a-t-il besoin pour préparer son exposé ?",
+      "production_attendue": "Compréhension du problème : les élèves identifient qu'il faut un ordinateur, des logiciels et Internet."
+    },
+    {
+      "etape": "Analyse de la SP (7 min)",
+      "consigne": "Proposer des hypothèses pour aider Achraf : quels matériels et quels logiciels doit-il utiliser ?",
+      "production_attendue": "Hypothèses orales : ordinateur, imprimante, clé USB, traitement de texte, navigateur Internet, connexion Wi-Fi."
+    },
+    {
+      "etape": "Investigation (7 min)",
+      "consigne": "Discuter collectivement chaque hypothèse avec l'enseignant : est-elle vraie ou fausse ? Pourquoi ?",
+      "production_attendue": "Validation des 5 hypothèses et compréhension que matériel et logiciel sont complémentaires (l'un ne va pas sans l'autre)."
+    },
+    {
+      "etape": "Généralisation (12 min)",
+      "consigne": "Écouter les explications de l'enseignant et recopier les définitions dans le cahier. Noter les règles de sécurité numérique en rouge.",
+      "production_attendue": "Cours noté dans le cahier : définitions de l'informatique, système informatique, matériel (hardware), logiciel (software), connectivité, information + 2 règles de sécurité."
+    },
+    {
+      "etape": "Entraînement (6 min)",
+      "consigne": "Faire les trois exercices (relier, classer, vrai/faux) individuellement dans le cahier, puis correction collective au tableau.",
+      "production_attendue": "Exercices corrigés dans le cahier : 4 flèches correctes, tableau à 2 colonnes rempli, 5 réponses V/F justifiées."
+    },
+    {
+      "etape": "Quiz (8 min)",
+      "consigne": "Répondre aux 6 questions du quiz oral en levant la main.",
+      "production_attendue": "Participation orale : au moins 80% des élèves répondent correctement aux questions de synthèse."
+    }
+  ],
+  "annotations": "Points de vigilance : (1) Ne jamais accumuler les termes techniques sans les définir immédiatement. Chaque nouveau mot (processeur, unité centrale, navigateur) doit être accompagné d'une analogie simple de la vie quotidienne marocaine. (2) Garder l'histoire d'Achraf comme fil conducteur tout au long de la séance pour maintenir l'attention. (3) Si possible, montrer du vrai matériel (souris, clavier, clé USB, câble réseau) pour que les élèves manipulent et touchent. (4) Insister lourdement sur les deux règles de sécurité numérique : les faire répéter par 2-3 élèves. (5) Pour les élèves rapides : demander de citer d'autres exemples de matériel et de logiciel présents dans la classe. (6) Pour les élèves en difficulté : les faire dessiner le schéma du système informatique étape par étape avec l'aide du voisin. (7) Prévoir une alternative en cas de panne : décrire le matériel avec des images dans le manuel ou dessiner au tableau."
+}

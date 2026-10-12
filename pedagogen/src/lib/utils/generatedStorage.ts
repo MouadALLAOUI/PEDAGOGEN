@@ -51,6 +51,15 @@ export async function saveGeneratedFile(
   };
 }
 
+export function getGeneratedFileByStoragePath(storagePath: string): { name: string; path: string } | null {
+  const db = getDb();
+  const row = db.prepare('SELECT name, storage_path FROM generated_files WHERE storage_path = ?').get(storagePath) as
+    | { name: string; storage_path: string }
+    | undefined;
+  if (!row) return null;
+  return { name: row.name, path: row.storage_path };
+}
+
 export function getDynamicFilename(label: string, metadata: CourseMetadata, fmt: string): string {
   const sanitize = (str: string) =>
     str

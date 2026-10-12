@@ -1,15 +1,20 @@
 'use client';
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useState, useEffect, useMemo, Suspense } from 'react';
+import { useState, useEffect, useMemo, Suspense, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
-import { ArrowLeft, Loader2, Play, Square, Check, X, AlertTriangle, Clock, Activity, Brain, FileCode, ChevronDown, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Loader2, Play, Square, Check, X, AlertTriangle, Clock, Activity, Brain, FileCode, ChevronDown, ChevronRight, Pencil, Send, Columns2, Award } from 'lucide-react';
 import { Card, CardHeader, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { PageTransition } from '@/components/layout/PageTransition';
 import { OutputPreview } from '@/components/generate/OutputPreview';
-import type { GenerationResult } from '@/types/generation';
+import { DocPreview } from '@/components/generate/DocPreview';
+import { SplitMarkdownEditor } from '@/components/editor/SplitMarkdownEditor';
+import { InspectorModal } from '@/components/audit/InspectorModal';
+import { auditFichePedagogique, type InspectionAuditReport } from '@/lib/audit/pedagogicalInspector';
+import { buildMarkdown } from '@/lib/builders/mdBuilder';
+import type { GenerationResult, CourseMetadata } from '@/types/generation';
 
 const FORMAT_LABELS: Record<string, string> = {
   pdf: 'PDF',
@@ -30,6 +35,17 @@ const FORMAT_COLORS: Record<string, string> = {
   png: 'bg-green/10 text-green',
 };
 
+const DOC_TYPE_LABELS: Record<string, string> = {
+  fiche_pedagogique: 'Fiche Pédagogique',
+  planification: 'Planification',
+  plan_gestion_classe: 'Plan Gestion Classe',
+  evaluation: 'Évaluation',
+  cours_complet: 'Cours Complet',
+  resume_eleve: 'Résumé Élève',
+  presentation_pptx: 'Présentation PPTX',
+  images_illustratives: 'Images',
+};
+
 function StatusContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -47,6 +63,38 @@ function StatusContent() {
   const [reasoningOpen, setReasoningOpen] = useState(true);
   const [activeGenerations, setActiveGenerations] = useState<any[]>([]);
   const [loadingActive, setLoadingActive] = useState<boolean>(true);
+  const [reviewData, setReviewData] = useState<{ id: string; metadata: Record<string, unknown>; jsonResults: Record<string, string>; documentsToGenerate: string[]; tokensUsed: number } | null>(null);
+  const [editedJsons, setEditedJsons] = useState<Record<string, string>>({});
+  const [isBuilding, setIsBuilding] = useState<boolean>(false);
+  const [activeJsonTab, setActiveJsonTab] = useState<string>('');
+  const [jsonEdit, setJsonEdit] = useState<boolean>(false);
+  const [regeneratingField, setRegeneratingField] = useState<string | null>(null);
+  const [splitEditorState, setSplitEditorState] = useState<{ content: string; title: string; docType: string } | null>(null);
+  const [statusInspectorReport, setStatusInspectorReport] = useState<InspectionAuditReport | null>(null);
+
+  const checkHistory = useCallback(async () => {
+    if (!id) return false;
+    try {
+      const res = await fetch(`/api/history?id=${id}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.entry) {
+          setResult(data.entry);
+          setIsCompleted(true);
+          return true;
+        }
+      }
+    } catch (e) {
+      console.error('Failed to check history:', e);
+    }
+    return false;
+  }, [id]);
+
+  useEffect(() => {
+    if (id) {
+      checkHistory();
+    }
+  }, [id, checkHistory]);
 
   const orderedSteps = useMemo(() => {
     const order = ['init', 'references', 'docs', 'fiche', 'planification', 'cours', 'gestion', 'evaluation', 'resume', 'pptx', 'images', 'build'];
@@ -76,11 +124,22 @@ function StatusContent() {
     return () => clearInterval(interval);
   }, [id]);
 
-  // Request notification permission on mount
+  const resultRef = useRef(result);
+  const errorRef = useRef(error);
+  resultRef.current = result;
+  errorRef.current = error;
+
+  // Request notification permission on mount only if notifications enabled in settings
   useEffect(() => {
-    if ('Notification' in window && Notification.permission === 'default') {
-      Notification.requestPermission().catch(() => {});
-    }
+    fetch('/api/settings')
+      .then((r) => r.json())
+      .then((data) => {
+        const notifEnabled = data.settings?.notifications_enabled !== 'false';
+        if (notifEnabled && 'Notification' in window && Notification.permission === 'default') {
+          Notification.requestPermission().catch(() => {});
+        }
+      })
+      .catch(() => {});
   }, []);
 
   const notify = (title: string, body: string) => {
@@ -91,19 +150,21 @@ function StatusContent() {
 
   // Timer
   useEffect(() => {
-    if (!id || isCompleted || error) return;
+    if (!id || result || error) return;
     const interval = setInterval(() => {
       setElapsedTime((prev) => prev + 1);
     }, 1000);
     return () => clearInterval(interval);
-  }, [id, isCompleted, error]);
+  }, [id, result, error]);
 
   // Connect to progress SSE
   useEffect(() => {
-    if (!id || isCompleted || result || error) return;
+    if (!id || result || error) return;
 
     let eventSource: EventSource;
     let reconnectTimer: ReturnType<typeof setTimeout>;
+    let retryCount = 0;
+    const maxRetries = 5;
 
     const connect = () => {
       try {
@@ -164,15 +225,39 @@ function StatusContent() {
               setIsCompleted(true);
               toast.error(data.message);
               eventSource.close();
+            } else if (data.type === 'review') {
+              const jsonResults: Record<string, string> = {};
+              for (const [k, v] of Object.entries(data.result.jsonResults || {})) {
+                jsonResults[k] = JSON.stringify(v, null, 2);
+              }
+              setReviewData({ ...data.result, jsonResults });
+              setEditedJsons(jsonResults);
+              setActiveJsonTab(Object.keys(jsonResults)[0] || '');
+              // Do NOT close EventSource — keep open for build phase 'done' event
             }
           } catch (e) {
             console.error('Failed to parse SSE event', e);
           }
         };
 
-        eventSource.onerror = () => {
-          if (!isCompleted && !result && !error) {
-            reconnectTimer = setTimeout(connect, 3000);
+        eventSource.onerror = async () => {
+          if (!resultRef.current && !errorRef.current) {
+            // Check history in case it just completed and the connection dropped
+            const foundInHistory = await checkHistory();
+            if (foundInHistory) {
+              try { eventSource.close(); } catch {}
+              return;
+            }
+
+            if (retryCount < maxRetries) {
+              retryCount++;
+              reconnectTimer = setTimeout(connect, 3000);
+            } else {
+              setError("La connexion avec le serveur de génération a été perdue ou le serveur a redémarré.");
+              setIsCompleted(true);
+              toast.error("Impossible de reconnecter au serveur de génération.");
+              try { eventSource.close(); } catch {}
+            }
           }
         };
       } catch (e) {
@@ -187,7 +272,7 @@ function StatusContent() {
       if (eventSource) eventSource.close();
       clearTimeout(reconnectTimer);
     };
-  }, [id, isCompleted, result, error]);
+  }, [id, checkHistory]);
 
   const handleStop = async () => {
     if (!id) return;
@@ -206,6 +291,97 @@ function StatusContent() {
       toast.error(err instanceof Error ? err.message : 'Erreur lors de l\'arrêt');
     } finally {
       setIsStopping(false);
+    }
+  };
+
+  const handleBuild = async () => {
+    if (!reviewData) return;
+    setIsBuilding(true);
+    try {
+      // Parse edited JSONs back to objects
+      const jsonResults: Record<string, unknown> = {};
+      for (const [docType, jsonStr] of Object.entries(editedJsons)) {
+        try {
+          jsonResults[docType] = JSON.parse(jsonStr);
+        } catch {
+          toast.error(`JSON invalide pour ${docType}. Vérifiez la syntaxe.`);
+          setIsBuilding(false);
+          return;
+        }
+      }
+
+      // Clear review UI — SSE connection stays open for 'done' event
+      setReviewData(null);
+
+      const res = await fetch('/api/generate/heavy/build', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          generationId: reviewData.id,
+          jsonResults,
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Build failed');
+      }
+      // SSE connection will receive progress + done events from the build phase
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Erreur lors de la compilation');
+    } finally {
+      setIsBuilding(false);
+    }
+  };
+
+  const handleFieldChange = (docType: string, path: string, value: unknown) => {
+    setEditedJsons(prev => {
+      const current = prev[docType];
+      if (!current) return prev;
+      try {
+        const obj = JSON.parse(current);
+        const parts = path.split('.');
+        let cur: any = obj;
+        for (let i = 0; i < parts.length - 1; i++) {
+          const key = parts[i]!;
+          if (cur[key] == null) cur[key] = {};
+          cur = cur[key];
+        }
+        cur[parts[parts.length - 1]!] = value;
+        return { ...prev, [docType]: JSON.stringify(obj, null, 2) };
+      } catch {
+        return prev;
+      }
+    });
+  };
+
+  const handleRegenField = async (docType: string, path: string) => {
+    if (!reviewData) return;
+    setRegeneratingField(`${docType}.${path}`);
+    try {
+      const currentJson = JSON.parse(editedJsons[docType] || '{}');
+      const res = await fetch('/api/generate/regen-field', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          metadata: reviewData.metadata || {},
+          currentJson,
+          fieldPath: path,
+          docType,
+          provider: (reviewData.metadata.provider as string) || 'huggingface',
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Regeneration failed');
+      }
+      const { updatedJson } = await res.json();
+      setEditedJsons(prev => ({ ...prev, [docType]: JSON.stringify(updatedJson, null, 2) }));
+      toast.success('Champ régénéré');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Erreur de régénération');
+    } finally {
+      setRegeneratingField(null);
     }
   };
 
@@ -502,6 +678,170 @@ function StatusContent() {
           </Card>
         )}
 
+        {/* Review Mode — JSON Editor */}
+        {reviewData && !result && (
+          <Card className="border-amber/20">
+            <CardHeader className="bg-navy text-parchment py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Pencil size={18} className="text-teal-light" />
+                  <div>
+                    <span className="font-medium">Révision du Contenu Généré</span>
+                    <p className="text-xs text-white/50 mt-0.5">Vérifiez et modifiez le JSON avant la compilation finale</p>
+                  </div>
+                </div>
+                <span className="text-xs text-white/40">{reviewData.tokensUsed?.toLocaleString()} tokens</span>
+              </div>
+            </CardHeader>
+            <CardContent className="py-4">
+              {/* Doc tabs */}
+              <div className="flex flex-wrap items-center gap-1.5 mb-4">
+                {reviewData.documentsToGenerate.filter(d => d !== 'images_illustratives').map(docType => (
+                  <button
+                    key={docType}
+                    onClick={() => setActiveJsonTab(docType)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                      activeJsonTab === docType
+                        ? 'bg-navy text-parchment'
+                        : 'bg-parchment-dark/50 text-muted hover:bg-parchment-dark'
+                    }`}
+                  >
+                    {DOC_TYPE_LABELS[docType] || docType}
+                  </button>
+                ))}
+                <div className="ml-auto flex items-center gap-1 bg-parchment-dark/50 rounded-lg p-0.5">
+                  <button
+                    onClick={() => setJsonEdit(false)}
+                    className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${!jsonEdit ? 'bg-white text-navy shadow-sm' : 'text-muted hover:text-navy'}`}
+                  >
+                    Aperçu
+                  </button>
+                  <button
+                    onClick={() => setJsonEdit(true)}
+                    className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${jsonEdit ? 'bg-white text-navy shadow-sm' : 'text-muted hover:text-navy'}`}
+                  >
+                    JSON
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (!activeJsonTab || !editedJsons[activeJsonTab]) return;
+                      try {
+                        const parsed = JSON.parse(editedJsons[activeJsonTab]);
+                        const md = buildMarkdown((reviewData?.metadata || {}) as unknown as CourseMetadata, parsed, DOC_TYPE_LABELS[activeJsonTab] || activeJsonTab);
+                        setSplitEditorState({
+                          content: md,
+                          title: `${DOC_TYPE_LABELS[activeJsonTab] || activeJsonTab} — ${(reviewData?.metadata?.lecon as string) || 'Leçon'}`,
+                          docType: activeJsonTab,
+                        });
+                      } catch {
+                        toast.error('JSON non valide pour la conversion markdown');
+                      }
+                    }}
+                    className="px-2.5 py-1 rounded-md text-xs font-medium transition-colors text-teal hover:bg-white/80 flex items-center gap-1"
+                    title="Édition interactive plein écran avec export direct"
+                  >
+                    <Columns2 size={13} />
+                    <span>Split Markdown</span>
+                  </button>
+                  {activeJsonTab === 'fiche_pedagogique' && (
+                    <button
+                      onClick={() => {
+                        if (!editedJsons['fiche_pedagogique']) return;
+                        try {
+                          const parsed = JSON.parse(editedJsons['fiche_pedagogique']);
+                          const rep = auditFichePedagogique(parsed);
+                          setStatusInspectorReport(rep);
+                        } catch {
+                          toast.error('JSON non valide pour l\'audit');
+                        }
+                      }}
+                      className="px-2.5 py-1 rounded-md text-xs font-semibold text-teal hover:bg-white/80 transition-colors flex items-center gap-1"
+                      title="Auditer la fiche selon les directives MEN"
+                    >
+                      <Award size={13} />
+                      <span>Auditer Séance</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Content: preview or raw JSON */}
+              {activeJsonTab && editedJsons[activeJsonTab] !== undefined && (
+                <div className="space-y-2">
+                  {!jsonEdit ? (
+                    <div className="border border-border rounded-xl overflow-hidden max-h-[60vh] overflow-y-auto">
+                      <DocPreview
+                        docType={activeJsonTab}
+                        jsonStr={editedJsons[activeJsonTab]}
+                        onChange={(path, value) => handleFieldChange(activeJsonTab, path, value)}
+                        onRegen={(path) => handleRegenField(activeJsonTab, path)}
+                        regenerating={regeneratingField}
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-navy uppercase tracking-wider">
+                          {DOC_TYPE_LABELS[activeJsonTab] || activeJsonTab}
+                        </span>
+                        <button
+                          onClick={() => {
+                            const raw = editedJsons[activeJsonTab];
+                            if (!raw) return;
+                            try {
+                              const pretty = JSON.stringify(JSON.parse(raw), null, 2);
+                              setEditedJsons(prev => ({ ...prev, [activeJsonTab]: pretty }));
+                              toast.success('JSON reformatté');
+                            } catch {
+                              toast.error('JSON invalide — impossible de reformater');
+                            }
+                          }}
+                          className="text-xs text-teal hover:text-teal-dark font-medium"
+                        >
+                          Reformater
+                        </button>
+                      </div>
+                      <textarea
+                        value={editedJsons[activeJsonTab]}
+                        onChange={(e) => setEditedJsons(prev => ({ ...prev, [activeJsonTab]: e.target.value }))}
+                        className="w-full h-[50vh] rounded-xl border border-border bg-navy text-parchment font-mono text-xs p-4 focus:outline-none focus:ring-2 focus:ring-teal/30 resize-none"
+                        spellCheck={false}
+                      />
+                    </>
+                  )}
+                </div>
+              )}
+
+              {/* Build button */}
+              <div className="flex items-center justify-between mt-6 pt-4 border-t border-border">
+                <Button
+                  onClick={() => {
+                    setReviewData(null);
+                    router.push('/generate');
+                  }}
+                  variant="ghost"
+                >
+                  <ArrowLeft size={16} className="mr-1" />
+                  Annuler
+                </Button>
+                <Button onClick={handleBuild} disabled={isBuilding} size="lg" className="min-w-[220px]">
+                  {isBuilding ? (
+                    <>
+                      <Loader2 size={16} className="animate-spin mr-2" />
+                      Compilation...
+                    </>
+                  ) : (
+                    <>
+                      <Send size={16} className="mr-2" />
+                      Confirmer &amp; Générer
+                    </>
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Debug Prompt (provider = aucun) */}
         {result && result.debugPrompt && (
           <Card className="border-amber/20 bg-amber/5">
@@ -524,6 +864,64 @@ function StatusContent() {
             result={result}
             onReset={() => {
               router.push('/generate');
+            }}
+          />
+        )}
+
+        {splitEditorState && (
+          <SplitMarkdownEditor
+            title={splitEditorState.title}
+            initialContent={splitEditorState.content}
+            onClose={() => setSplitEditorState(null)}
+          />
+        )}
+
+        {statusInspectorReport && (
+          <InspectorModal
+            isOpen={!!statusInspectorReport}
+            onClose={() => setStatusInspectorReport(null)}
+            report={statusInspectorReport}
+            ficheTitle={(() => {
+              try {
+                const parsed = JSON.parse(editedJsons['fiche_pedagogique'] || '{}');
+                return parsed.titre_seance || (reviewData?.metadata?.lecon as string);
+              } catch {
+                return reviewData?.metadata?.lecon as string;
+              }
+            })()}
+            onApplyFix={(path, value) => {
+              handleFieldChange('fiche_pedagogique', path, value);
+              try {
+                const currentStr = editedJsons['fiche_pedagogique'];
+                if (currentStr) {
+                  const parsed = JSON.parse(currentStr);
+                  const parts = path.split('.');
+                  let cur: any = parsed;
+                  for (let i = 0; i < parts.length - 1; i++) {
+                    const key = parts[i]!;
+                    if (cur[key] == null) cur[key] = {};
+                    cur = cur[key];
+                  }
+                  const lastKey = parts[parts.length - 1]!;
+                  cur[lastKey] = value;
+                  setStatusInspectorReport(auditFichePedagogique(parsed));
+                }
+              } catch {}
+            }}
+            onRequestAiInspection={async () => {
+              try {
+                const parsed = JSON.parse(editedJsons['fiche_pedagogique'] || '{}');
+                const res = await fetch('/api/audit', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ fiche: parsed, metadata: reviewData?.metadata, deepAiInspection: true }),
+                });
+                const d = await res.json();
+                return d.aiInspectorFeedback;
+              } catch {
+                toast.error('Erreur lors de l\'audit IA');
+                return undefined;
+              }
             }}
           />
         )}

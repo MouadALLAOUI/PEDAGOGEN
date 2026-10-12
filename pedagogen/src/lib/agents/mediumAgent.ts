@@ -5,11 +5,11 @@ const DOC_TOOL_MAP: Record<DocumentType, string> = {
   fiche_pedagogique: 'generate_fiche_pedagogique',
   planification: 'generate_planification',
   plan_gestion_classe: 'generate_gestion_classe',
-  evaluation: 'generate_fiche_pedagogique',
+  evaluation: 'generate_evaluation',
   cours_complet: 'generate_cours_complet',
   resume_eleve: 'generate_resume_eleve',
   presentation_pptx: 'generate_pptx_outline',
-  images_illustratives: 'generate_fiche_pedagogique',
+  images_illustratives: 'generate_images_illustratives',
 };
 
 export async function runMediumAgent(
@@ -45,7 +45,7 @@ export async function runMediumAgent(
 
   const selectedTools = pedagogicalTools.filter((t) => toolNames.includes(t.function.name));
 
-  const modelToUse = documentsToGenerate.includes('cours_complet') ? 'deepseek-ai/DeepSeek-R1' : 'openai/gpt-oss-120b:fastest';
+  const modelToUse = 'openai/gpt-oss-120b:fastest';
   const result = await callHuggingFace(
     systemPrompt,
     `Generate the following documents for this lesson: ${documentsToGenerate.join(', ')}. Use the appropriate tools for each document.`,

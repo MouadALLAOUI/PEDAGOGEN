@@ -10,5 +10,5 @@ export { Input, type InputProps } from "./Input";
 export { Textarea, type TextareaProps } from "./Textarea";
 export { Select, type SelectProps } from "./Select";
 export { Modal } from "./Modal";
-export { ToastProvider, notify } from "./Toast";
 export { Tabs } from "./Tabs";
+export { Pagination } from "./Pagination";

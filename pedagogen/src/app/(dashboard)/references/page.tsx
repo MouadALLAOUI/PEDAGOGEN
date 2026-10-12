@@ -23,6 +23,7 @@ import {
 import { Card, CardHeader, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
+import toast from 'react-hot-toast';
 import { PageTransition } from '@/components/layout/PageTransition';
 import { SkeletonFileList } from '@/components/ui/Skeleton';
 import {
@@ -127,9 +128,14 @@ export default function ReferencesPage() {
         if (res.ok) {
           const data = await res.json();
           setFiles((prev) => [data.file, ...prev]);
+          toast.success(`${file.name} ajouté aux références`);
+        } else {
+          const errData = await res.json().catch(() => ({}));
+          toast.error(errData.error || `Erreur d'envoi pour ${file.name}`);
         }
       } catch (err) {
         console.error('Upload failed:', err);
+        toast.error(`Échec du téléversement pour ${file.name}`);
       }
     }
     setUploading(false);
@@ -150,24 +156,34 @@ export default function ReferencesPage() {
       const res = await fetch(`/api/references?id=${id}`, { method: 'DELETE' });
       if (res.ok) {
         setFiles((prev) => prev.filter((f) => f.id !== id));
+        toast.success('Fichier supprimé');
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        toast.error(errData.error || 'Erreur lors de la suppression');
       }
     } catch (err) {
       console.error('Delete failed:', err);
+      toast.error('Erreur lors de la suppression');
     }
   };
 
   const handleToggle = async (id: string, enabled: boolean) => {
     try {
-      await fetch('/api/references', {
+      const res = await fetch('/api/references', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, enabled }),
       });
-      setFiles((prev) =>
-        prev.map((f) => (f.id === id ? { ...f, enabled } : f))
-      );
+      if (res.ok) {
+        setFiles((prev) =>
+          prev.map((f) => (f.id === id ? { ...f, enabled } : f))
+        );
+      } else {
+        toast.error('Impossible de modifier le statut');
+      }
     } catch (err) {
       console.error('Toggle failed:', err);
+      toast.error('Impossible de modifier le statut');
     }
   };
 

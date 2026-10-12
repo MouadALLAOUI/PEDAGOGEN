@@ -11,13 +11,17 @@ import {
   FolderOpen,
   History,
   Globe,
+  Sun,
+  Moon,
   User,
   LogOut,
+  Search,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils/cn';
 import { useLanguage } from '@/components/layout/LanguageProvider';
 import { useAuth } from '@/components/auth/AuthProvider';
+import { GlobalSearchModal } from '@/components/layout/GlobalSearchModal';
 
 const MOBILE_NAV_ITEMS = [
   { href: '/', label: 'Accueil', labelAr: 'الرئيسية', icon: LayoutDashboard },
@@ -28,12 +32,37 @@ const MOBILE_NAV_ITEMS = [
 
 export function TopBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [isDark, setIsDark] = useState(false);
   const pathname = usePathname();
   const { lang, toggle } = useLanguage();
   const { user, profile, signOut } = useAuth();
 
+  useEffect(() => {
+    const stored = localStorage.getItem('pedagogen_theme');
+    const dark = stored === 'dark';
+    setIsDark(dark);
+    document.documentElement.classList.toggle('dark', dark);
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setSearchOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const toggleTheme = () => {
+    const next = !isDark;
+    setIsDark(next);
+    localStorage.setItem('pedagogen_theme', next ? 'dark' : 'light');
+    document.documentElement.classList.toggle('dark', next);
+  };
+
   return (
-    <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-border">
+    <header className="no-print sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-border">
       <div className="flex items-center justify-between h-14 px-4 lg:px-8">
         <div className="flex items-center gap-3 lg:hidden">
           <div className="w-8 h-8 rounded-lg bg-teal flex items-center justify-center">
@@ -41,6 +70,20 @@ export function TopBar() {
           </div>
           <span className="font-display font-bold text-navy">PEDAGOGEN</span>
         </div>
+
+        {/* Global Search Bar Trigger */}
+        <button
+          onClick={() => setSearchOpen(true)}
+          className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200/80 text-muted hover:text-navy transition-all text-xs font-medium border border-border/40 shadow-2xs"
+          title="Recherche unifiée (Ctrl + K)"
+        >
+          <Search size={14} className="text-teal" />
+          <span className="hidden sm:inline">Rechercher leçons, carnet, ressources...</span>
+          <span className="inline sm:hidden">Rechercher...</span>
+          <kbd className="hidden md:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono font-semibold rounded bg-white border border-border text-slate-500 shadow-2xs">
+            Ctrl K
+          </kbd>
+        </button>
 
         <div className="hidden lg:block">
           <h2 className="text-sm font-medium text-muted">
@@ -60,6 +103,15 @@ export function TopBar() {
             <span className="sr-only">
               {lang === 'fr' ? 'العربية' : 'Français'}
             </span>
+          </button>
+
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-lg hover:bg-navy-light/5 text-muted hover:text-navy transition-colors"
+            title={isDark ? 'Mode clair' : 'Mode sombre'}
+          >
+            {isDark ? <Sun size={18} /> : <Moon size={18} />}
+            <span className="sr-only">{isDark ? 'Mode clair' : 'Mode sombre'}</span>
           </button>
 
           {user ? (
@@ -123,6 +175,11 @@ export function TopBar() {
           </nav>
         </div>
       )}
+
+      <GlobalSearchModal
+        isOpen={searchOpen}
+        onClose={() => setSearchOpen(false)}
+      />
     </header>
   );
 }

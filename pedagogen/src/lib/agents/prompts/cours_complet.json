@@ -1,0 +1,103 @@
+{
+  "titre_seance": "Les bases de l'informatique : Information, système informatique et logiciels",
+  "timing_consistency_check": "Séance de 60 min. Mise en situation (10 min : rappel 3 min + SP 7 min), Analyse (40 min : Analyse SP 8 min + Investigation 10 min + Généralisation 12 min + Entraînement 10 min), Synthèse (10 min : Quiz 10 min). Total 60 min conforme à la planification et à la fiche pédagogique.",
+  "variantes_pedagogiques": "Si les élèves confondent « information » et « matériel », remplacer l'exemple de l'ordinateur par une analogie simple : \"Une recette de cuisine (l'information) se prépare avec des ustensiles (le matériel) et la méthode de cuisson (le logiciel).\" Si la classe bloque sur la connectivité, utiliser uniquement l'exemple du Wi-Fi du dar chabab en demandant : \"Comment votre téléphone se connecte-t-il ici ?\" et partir de leurs réponses.",
+  "gestion_erreurs_frequentes": "Erreur 1 : « L'information c'est l'ordinateur. » → Relance : « L'ordinateur est la machine. Que contient-elle ? Des photos, des jeux… tout ça c'est quoi ? » Erreur 2 : « Logiciel = la tour. » → Montrer une clé USB ou un CD en disant : « Le logiciel, c'est comme une application sur un téléphone. La tour, c'est un appareil. » Erreur 3 : « Connectivité = le câble uniquement. » → Demander : « Et le Wi-Fi ? Et le Bluetooth ? » pour ouvrir la notion au sans-fil.",
+  "conseils_surlignage": "Surligner au tableau : « Information = donnée utile », « Système informatique = matériel + logiciel + utilisateur », « Connectivité = liaison entre appareils ». Insister sur les mots : donner, recevoir, échanger, traiter, stocker. Les écrire en couleur.",
+  "script_enseignant": {
+    "Mise_en_situation": {
+      "rappel": "« Bonjour à tous. La dernière fois, nous avons parlé de l'ordinateur et de ses parties. Qui peut me rappeler comment on allume un ordinateur ? (R1 : On appuie sur le bouton de la tour.) Très bien. Et que faut-il faire avant d'éteindre ? (R2 : Fermer les programmes.) Parfait. Aujourd'hui, nous allons découvrir ce qu'est vraiment l'informatique et comment fonctionne un système informatique. »",
+      "situation_probleme": "« Écoutez bien cette histoire : Ahmed doit préparer une photo pour le projet de l'école. Il prend la photo avec son téléphone, puis il veut l'imprimer chez lui. Mais son ordinateur n'a pas de logiciel pour ouvrir la photo, et il n'a pas de câble pour relier son téléphone à l'ordinateur. Que doit faire Ahmed ? A-t-il besoin d'outils ? D'un programme ? D'un moyen de relier ses appareils ? Réfléchissez… »"
+    },
+    "Analyse": {
+      "Analyse_SP": "« Alors, que manque-t-il à Ahmed pour imprimer sa photo ? (H1 : Un logiciel pour ouvrir la photo.) Bien. Quoi d'autre ? (H2 : Un câble ou le Wi-Fi pour relier le téléphone à l'ordinateur.) Excellent. Et qu'a-t-il déjà ? (H3 : Son téléphone, son ordinateur, une imprimante.) Oui, c'est le matériel. Finalement, qu'est-ce qui est nécessaire pour qu'Ahmed réussisse ? (H4 : Il faut un appareil, un programme ET une liaison.) »",
+      "Investigation": "« Reprenons vos hypothèses une par une. H1 : un logiciel — en effet, sans programme, l'ordinateur ne sait pas ouvrir la photo. H2 : un câble ou Wi-Fi — oui, il faut relier les appareils pour transférer la photo. H3 : il a déjà le matériel — donc ce n'est pas le problème. H4 : très bien, il faut les trois ensemble. Regardons autour de nous : quels appareils avez-vous chez vous qui communiquent entre eux ? (Ex : téléphone et TV, tablette et imprimante.) Et comment communiquent-ils ? (Par câble, Wi-Fi, Bluetooth.) »",
+      "Generalisation": "« Notons tout cela dans le cours. L'informatique, c'est l'ensemble des techniques qui permettent de traiter l'information avec une machine. Un système informatique est composé de trois éléments : 1) le matériel — les parties physiques qu'on peut toucher (écran, clavier, souris, tour) ; 2) le logiciel — les programmes qui donnent des instructions à la machine (Windows, jeu, traitement de texte) ; 3) l'utilisateur — la personne qui utilise l'ordinateur. L'information, c'est tout ce que l'ordinateur peut recevoir, traiter, stocker et donner : texte, image, son, vidéo. La connectivité, c'est la capacité des appareils à communiquer entre eux, avec ou sans fil. Dictez : L'information est une donnée utile (texte, image, son, vidéo). Le système informatique = matériel + logiciel + utilisateur. La connectivité permet aux appareils d'échanger des informations (câble USB, Wi-Fi, Bluetooth). »",
+      "ENTRAINEMENT": "« Ouvrez votre cahier d'exercices. Exercice 1 : Classez ces mots dans le tableau — Matériel, Logiciel, Information : écran, Windows, photo de classe, clavier, jeu de foot, son de la chorale, souris, Paint, vidéo de l'école. (Correction collective au tableau.) Exercice 2 : Vrai ou Faux ? — 'Le Wi-Fi permet de relier deux appareils sans fil' (Vrai). 'Un logiciel est une pièce de l'ordinateur qu'on peut toucher' (Faux). 'Une photo est une information' (Vrai). Levez la main pour répondre. Notez la trace écrite : recopiez le cadre vert du tableau sur votre cahier. »"
+    },
+    "Synthese": {
+      "Quiz": "« Quiz rapide ! Pas de cahier, juste votre réflexion. Question 1 : Quels sont les trois éléments d'un système informatique ? (Réponse : matériel, logiciel, utilisateur). Question 2 : Donnez un exemple d'information. (Photo, texte, son, vidéo). Question 3 : Comment s'appelle le moyen de relier deux appareils sans fil ? (Wi-Fi ou Bluetooth). Question 4 : Donnez un exemple de logiciel que vous utilisez à l'école ou à la maison. (Paint, Word, jeu éducatif…). Levez la main, je choisis quelqu'un pour répondre. »"
+    }
+  },
+  "savoir": {
+    "definitions": [
+      {
+        "terme": "Information",
+        "definition": "C'est une donnée utile : un texte, une image, un son ou une vidéo. Par exemple, une photo de classe, une chanson ou un message."
+      },
+      {
+        "terme": "Système informatique",
+        "definition": "C'est l'ensemble composé du matériel (les parties qu'on touche), du logiciel (les programmes) et de l'utilisateur (la personne qui s'en sert)."
+      },
+      {
+        "terme": "Matériel",
+        "definition": "Ce sont les parties physiques de l'ordinateur : l'écran, le clavier, la souris, la tour, l'imprimante."
+      },
+      {
+        "terme": "Logiciel",
+        "definition": "C'est un programme qui donne des ordres à la machine. Exemples : Paint pour dessiner, Word pour écrire, un jeu vidéo."
+      },
+      {
+        "terme": "Connectivité",
+        "definition": "C'est la capacité des appareils à communiquer entre eux pour échanger des informations, avec un câble (USB) ou sans fil (Wi-Fi, Bluetooth)."
+      },
+      {
+        "terme": "Utilisateur",
+        "definition": "C'est la personne qui utilise un système informatique. Sans utilisateur, l'ordinateur ne fait rien tout seul."
+      }
+    ],
+    "schema_reseau": "Dessiner au tableau :\n\n  [Téléphone d'Ahmed]  ---- (câble USB ou Wi-Fi) ---->  [Ordinateur]\n                                                               |\n                                                     (logiciel d'impression)\n                                                               |\n                                                               v\n                                                         [Imprimante]\n                                                               |\n                                                        (photo imprimée)\n\nLégende : Les appareils (matériel) sont reliés par un moyen de connexion (câble ou Wi-Fi). Le logiciel permet à l'ordinateur de commander l'imprimante.",
+    "exemples_concrets": [
+      "Imprimer une photo pour le projet de l'école : il faut un téléphone (matériel), un câble ou Wi-Fi (connectivité) et un logiciel pour ouvrir la photo.",
+      "Le Wi-Fi du dar chabab permet aux jeunes de connecter leur téléphone à Internet pour faire des recherches ou envoyer des messages.",
+      "La facture d'eau de la REDAL/LYDEC est une information (un document texte) que l'on peut consulter sur l'ordinateur ou le téléphone.",
+      "Au cybercafé du quartier, on utilise un logiciel de navigation (Firefox, Chrome) pour chercher des informations sur Internet.",
+      "À l'école, le professeur utilise un vidéoprojecteur relié à son ordinateur par un câble pour montrer une vidéo éducative à la classe.",
+      "Un élève envoie son devoir par e-mail à son professeur en utilisant le Wi-Fi de la maison pour connecter son ordinateur à Internet."
+    ]
+  },
+  "plan_tableau": {
+    "zone_titre": "Les bases de l'informatique — 1AC | Unité : Système informatique",
+    "zone_probleme": "Ahmed veut imprimer une photo pour l'école. Matériel ? Logiciel ? Connectivité ?",
+    "zone_cours": "I. DÉFINITIONS\n• Information : donnée utile (texte, image, son, vidéo) → Ex : photo de classe\n• Système informatique = Matériel + Logiciel + Utilisateur\n  - Matériel : parties qu'on touche (écran, clavier, souris, tour)\n  - Logiciel : programme qui donne des ordres (Windows, Paint, Word)\n  - Utilisateur : la personne qui utilise\n• Connectivité : liaison entre appareils (câble USB, Wi-Fi, Bluetooth)\n\nII. SCHÉMA du système informatique (voir schéma réseau ci-dessus)",
+    "zone_exercices": "Exercice 1 : Tableau Matériel / Logiciel / Information\nExercice 2 : Vrai / Faux (4 questions)\nTrace écrite : recopier le cadre vert"
+  },
+  "activites_eleves": [
+    {
+      "etape": "1. Rappel oral",
+      "consigne": "Répondre aux questions du professeur sur les parties de l'ordinateur et les règles d'utilisation.",
+      "production_attendue": "Participation orale : allumer/éteindre l'ordinateur, fermer les programmes."
+    },
+    {
+      "etape": "2. Écoute de la situation-problème",
+      "consigne": "Écouter l'histoire d'Ahmed et réfléchir à ce qui lui manque pour imprimer sa photo.",
+      "production_attendue": "Hypothèses orales sur les besoins d'Ahmed (logiciel, câble, Wi-Fi…)."
+    },
+    {
+      "etape": "3. Analyse et investigation",
+      "consigne": "Discuter collectivement des hypothèses. Donner des exemples d'appareils qui communiquent chez soi.",
+      "production_attendue": "Validation des hypothèses correctes, exemples concrets de la vie quotidienne."
+    },
+    {
+      "etape": "4. Prise de notes (généralisation)",
+      "consigne": "Recopier les définitions et le schéma notés au tableau dans le cahier de cours.",
+      "production_attendue": "Trace écrite : définitions de l'information, du système informatique, du matériel, du logiciel, de la connectivité."
+    },
+    {
+      "etape": "5. Exercice d'application 1",
+      "consigne": "Classer les mots donnés par le professeur dans un tableau à trois colonnes : Matériel, Logiciel, Information.",
+      "production_attendue": "Tableau correctement rempli : écran (Matériel), Windows (Logiciel), photo de classe (Information), etc."
+    },
+    {
+      "etape": "6. Exercice d'application 2",
+      "consigne": "Répondre par Vrai ou Faux aux affirmations lues par le professeur. Justifier oralement.",
+      "production_attendue": "4 réponses correctes avec justification (V/F)."
+    },
+    {
+      "etape": "7. Quiz de synthèse",
+      "consigne": "Répondre aux 4 questions du quiz oral sans utiliser le cahier.",
+      "production_attendue": "Réponses correctes : les trois éléments d'un système informatique, exemple d'information, moyen de connectivité sans fil, exemple de logiciel."
+    }
+  ],
+  "annotations": "Veiller à circuler entre les rangs pendant l'exercice de classement pour vérifier que chaque élève a compris la différence entre matériel et logiciel. Utiliser des objets réels (clé USB, câble) comme supports visuels. Pour les élèves en difficulté, proposer un tableau pré-rempli à compléter avec des étiquettes à découper. Rappeler systématiquement les consignes de sécurité numérique : ne pas partager ses mots de passe, éteindre correctement l'ordinateur en passant par le menu Démarrer. Pour les élèves rapides, ajouter un exercice : « Cite deux appareils de ta maison qui utilisent le Wi-Fi et explique à quoi ça sert. »"
+}

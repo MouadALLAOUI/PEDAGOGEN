@@ -1,0 +1,117 @@
+{
+  "titre": "Le Web, le navigateur et le moteur de recherche — résumé pour toi !",
+  "qrcode_externe": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  "illustration_ascii": "╔══════════════════════════════════════════════════╗\n║           NAVIGUER SUR LE WEB                      ║\n╠════════════════════════════════════════════════════╣\n║                                                     ║\n║    ORDINATEUR  ────  NAVIGATEUR  ────  INTERNET    ║\n║        │              (Chrome)            │         ║\n║        │              ┌─────────┐         │         ║\n║        └──────────────┤ MOTEUR  ├─────────┘         ║\n║                       │  DE     │                   ║\n║                       │RECHERCHE│                   ║\n║                       │(Google) │                   ║\n║                       └────┬────┘                   ║\n║                            │                        ║\n║                     ┌──────┴──────┐                 ║\n║                     │  RÉSULTATS  │                 ║\n║                     │  (liens)    │                 ║\n║                     └─────────────┘                 ║\n║                                                     ║\n║    Exemple : Chercher « monuments de Fès »          ║\n║    1. Ouvrir Chrome (navigateur)                    ║\n║    2. Aller sur Google (moteur de recherche)        ║\n║    3. Taper les mots-clés → résultats !             ║\n╚══════════════════════════════════════════════════════╝",
+  "auto_evaluation": [
+    "Je sais expliquer ce qu'est le Web avec un exemple",
+    "Je sais ce qu'est un navigateur et je peux en citer un",
+    "Je sais ce qu'est un moteur de recherche et je peux en citer un",
+    "Je sais faire la différence entre navigateur et moteur de recherche",
+    "Je sais ouvrir un navigateur et taper une adresse Web",
+    "Je sais lancer une recherche avec des mots-clés",
+    "Je sais qu'il ne faut pas partager mon mot de passe",
+    "Je sais éteindre correctement l'ordinateur (Démarrer → Arrêter)"
+  ],
+  "introduction": "Tu as sûrement déjà cherché des informations sur Internet pour un exposé ou pour voir une vidéo. Mais sais-tu comment cela fonctionne ? Ce résumé va t'expliquer simplement ce qu'est le Web, le navigateur et le moteur de recherche — les trois outils essentiels pour trouver des informations en ligne.",
+  "resume": "Le Web, c'est un énorme ensemble de pages et de sites que l'on peut voir sur Internet — comme une grande bibliothèque mondiale. Pour accéder au Web, on utilise un navigateur (comme Google Chrome, Firefox ou Safari). Le navigateur est comme une voiture qui permet de se déplacer sur le Web. Ensuite, pour trouver une information précise, on utilise un moteur de recherche comme Google. Le moteur de recherche est comme un bibliothécaire qui cherche les meilleures réponses à ta question quand tu tapes des mots-clés. Par exemple, pour préparer un exposé sur les monuments de Fès, tu ouvres le navigateur Chrome, tu tapes « monuments de Fès » dans Google, et le moteur de recherche te montre des liens vers des sites utiles. Il faut toujours éteindre correctement l'ordinateur après utilisation (Démarrer → Arrêter) et ne jamais donner ton mot de passe.",
+  "notions_cles": [
+    {
+      "terme": "Web",
+      "definition_simple": "C'est l'ensemble de toutes les pages et de tous les sites que tu peux visiter sur Internet. C'est comme une grande bibliothèque qui contient des milliards de pages du monde entier.",
+      "exemple": "Quand tu regardes le site de ton collège ou que tu lis un article sur les monuments de Fès, tu es sur le Web."
+    },
+    {
+      "terme": "Navigateur",
+      "definition_simple": "C'est un logiciel (un programme) qui permet de voir et de naviguer sur le Web. C'est comme une voiture qui te permet de te déplacer sur les routes du Web.",
+      "exemple": "Google Chrome, Mozilla Firefox, Safari. Quand tu ouvres Chrome au cybercafé du quartier pour aller sur Internet, tu utilises un navigateur."
+    },
+    {
+      "terme": "Moteur de recherche",
+      "definition_simple": "C'est un outil qui cherche des informations sur le Web pour toi. Tu tapes des mots-clés, et il te donne une liste de sites qui correspondent. C'est comme un bibliothécaire qui trouve les livres que tu cherches.",
+      "exemple": "Google, Bing, Yahoo. Quand tu tapes « recette de couscous » dans la barre Google, le moteur de recherche te montre les meilleurs sites de recettes."
+    },
+    {
+      "terme": "URL ou adresse Web",
+      "definition_simple": "C'est l'adresse unique d'une page sur le Web. Chaque page a sa propre adresse, comme chaque maison a son adresse dans la ville.",
+      "exemple": "www.men.gov.ma est l'adresse du site du ministère de l'Éducation nationale au Maroc."
+    },
+    {
+      "terme": "Mots-clés",
+      "definition_simple": "Ce sont les mots importants que tu tapes dans un moteur de recherche pour trouver ce que tu cherches. Il faut choisir les bons mots.",
+      "exemple": "Au lieu de dire « Je veux des informations sur le roi Hassan II », tu tapes les mots-clés : « roi Hassan II Maroc histoire »."
+    },
+    {
+      "terme": "Lien hypertexte",
+      "definition_simple": "C'est un mot ou une image sur lequel tu peux cliquer pour aller vers une autre page Web. On le reconnaît souvent parce qu'il est souligné et en bleu.",
+      "exemple": "Dans un article sur le Wi-Fi du dar chabab, le mot « Wi-Fi » peut être un lien qui t'emmène vers une explication détaillée."
+    }
+  ],
+  "schema_simplifie": "Dessine dans ton cahier ce schéma simple :\n\n ┌─────────────────────────────────────────────────┐\n │          COMMENT NAVIGUER SUR LE WEB            │\n ├─────────────────────────────────────────────────┤\n │                                                   │\n │ 1. Allume l'ordinateur (Démarrer → Arrêter)      │\n │    ↓                                              │\n │ 2. Ouvre le NAVIGATEUR (Chrome, Firefox...)       │\n │    ↓                                              │\n │ 3. Va sur le MOTEUR DE RECHERCHE (Google)         │\n │    ↓                                              │\n │ 4. Tape des MOTS-CLÉS (ex: monuments Fès)        │\n │    ↓                                              │\n │ 5. Clique sur un RÉSULTAT (lien)                  │\n │    ↓                                              │\n │ 6. Lis la page Web trouvée !                      │\n │                                                   │\n │ Rappel : Ne donne jamais ton mot de passe !       │\n └─────────────────────────────────────────────────┘",
+  "points_cles": [
+    "Le Web = une grande bibliothèque de pages sur Internet",
+    "Le navigateur = le logiciel pour voyager sur le Web (Chrome, Firefox)",
+    "Le moteur de recherche = l'outil pour trouver des pages (Google)",
+    "Il faut taper des mots-clés pour chercher efficacement",
+    "Un lien hypertexte = un mot ou une image qui mène vers une autre page",
+    "Une URL = l'adresse d'une page Web (ex: www.men.gov.ma)",
+    "Ne jamais donner son mot de passe, même à un ami",
+    "Éteindre l'ordinateur correctement : Démarrer → Arrêter"
+  ],
+  "a_retenir": "Pour trouver une information sur Internet, il faut trois choses : un navigateur (Chrome) pour aller sur le Web, un moteur de recherche (Google) pour chercher, et des mots-clés pour préciser ta recherche.",
+  "exercices": [
+    {
+      "numero": 1,
+      "type": "qcm",
+      "enonce": "Qu'est-ce qu'un navigateur ?",
+      "options": [
+        "Un site Web qui donne des informations",
+        "Un logiciel qui permet de voir et naviguer sur le Web",
+        "Un moteur de recherche comme Google"
+      ],
+      "correction": "B. Un logiciel qui permet de voir et naviguer sur le Web (ex : Chrome, Firefox)"
+    },
+    {
+      "numero": 2,
+      "type": "qcm",
+      "enonce": "Lequel de ces outils est un MOTEUR DE RECHERCHE ?",
+      "options": [
+        "Google Chrome",
+        "Mozilla Firefox",
+        "Google (moteur de recherche)"
+      ],
+      "correction": "C. Google est un moteur de recherche (Chrome et Firefox sont des navigateurs)"
+    },
+    {
+      "numero": 3,
+      "type": "vrai_faux",
+      "enonce": "On peut chercher des informations sur le Web sans utiliser de navigateur.",
+      "options": ["Vrai", "Faux"],
+      "correction": "Faux. Il faut obligatoirement un navigateur (Chrome, Firefox, Safari) pour accéder au Web."
+    },
+    {
+      "numero": 4,
+      "type": "vrai_faux",
+      "enonce": "Le moteur de recherche et le navigateur, c'est la même chose.",
+      "options": ["Vrai", "Faux"],
+      "correction": "Faux. Le navigateur permet d'afficher les pages Web (Chrome), le moteur de recherche permet de trouver des pages (Google)."
+    },
+    {
+      "numero": 5,
+      "type": "relie",
+      "enonce": "Relie chaque mot à sa définition :",
+      "options": [
+        "Navigateur → Logiciel pour naviguer sur le Web",
+        "Moteur de recherche → Outil pour trouver des pages Web",
+        "URL → Adresse d'une page Web"
+      ],
+      "correction": "Navigateur ↔ Logiciel pour naviguer sur le Web | Moteur de recherche ↔ Outil pour trouver des pages Web | URL ↔ Adresse d'une page Web"
+    },
+    {
+      "numero": 6,
+      "type": "trou",
+      "enonce": "Complète la phrase : Pour chercher une information sur le Web, j'ouvre d'abord le ________ (Chrome), puis je vais sur un ________ de ________ (Google) et je tape des ________-________.",
+      "options": [],
+      "correction": "navigateur, moteur, recherche, mots-clés"
+    }
+  ]
+}
