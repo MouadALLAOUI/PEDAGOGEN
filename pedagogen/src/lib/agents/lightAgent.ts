@@ -13,7 +13,8 @@ export async function runLightAgent(
   localApiType?: 'openai' | 'custom',
   signal?: AbortSignal,
   customPrompts?: Record<string, string>,
-  debugMode?: boolean
+  debugMode?: boolean,
+  apiKey?: string
 ) {
   const systemPrompt = buildSystemPrompt(metadata, metadata.langue, useReferences, referenceContents, includePrompt, excludePrompt, customPrompts);
 
@@ -30,7 +31,7 @@ Use clear Markdown formatting with headers, bullet points, and bold text. Return
     undefined,
     2000,
     undefined,
-    { useLocalModel, localModelName, localModelUrl, localApiType, signal, debugMode }
+    { useLocalModel, localModelName, localModelUrl, localApiType, signal, debugMode, apiKey }
   );
 
   // Extract markdown from text content

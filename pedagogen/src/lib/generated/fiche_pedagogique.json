@@ -1,0 +1,107 @@
+{
+  "titre_seance": "Découverte du système informatique : matériel, logiciel et connectivité",
+  "timing_consistency_check": "La séance dure 60 minutes au total. Répartition : Mise_en_situation (12 min : rappel 4 min + situation-problème 8 min), Analyse (30 min : Analyse_SP 7 min + Investigation 6 min + Généralisation 11 min + Entraînement 6 min), Synthèse (12 min : Quiz 6 min + marge 6 min), transitions et gestion (6 min). Soit 12 + 30 + 12 + 6 = 60 min.",
+  "liens_avec_autres_disciplines": [
+    "Mathématiques (logique, algorithmique de base)",
+    "Français (lecture et compréhension de consignes, vocabulaire technique)",
+    "Arts Plastiques (création de documents numériques pour un projet d'école)"
+  ],
+  "modalités_évaluation_formative": [
+    "Observation des manipulations par l'enseignant",
+    "Questionnement oral individuel",
+    "Quiz de synthèse en groupe",
+    "Exercices d'application écrits avec correction collective"
+  ],
+  "préparation_antérieure": "L'enseignant prépare un ordinateur fonctionnel connecté à un vidéoprojecteur, des images de composants matériels (unité centrale, écran, clavier, souris, imprimante) et une clé USB. Il prépare également un diaporama de 5 diapositives et des fiches d'exercices photocopiées (classement matériel/logiciel, vrai/faux).",
+  "competences_visees": [
+    "Maîtriser les technologies de base relatives au fonctionnement d'un système informatique",
+    "Distinguer le matériel (hardware) du logiciel (software)",
+    "Comprendre la notion de connectivité et de réseau"
+  ],
+  "objectifs": [
+    "L'élève sait allumer et éteindre correctement un ordinateur (menu Démarrer → Arrêter) et utiliser les périphériques de base (souris, clavier) — Objectif TICE",
+    "L'élève applique la distinction entre matériel et logiciel en classant des exemples concrets de la vie quotidienne (taxonomie de Bloom : Appliquer)",
+    "L'élève identifie les éléments essentiels d'un système informatique (unité centrale, écran, clavier, souris, imprimante)"
+  ],
+  "prerequis": [
+    "Avoir déjà vu un ordinateur (à la maison, au cybercafé du quartier ou au dar chabab)",
+    "Savoir utiliser une souris et un clavier de manière basique"
+  ],
+  "savoir_faire": [
+    "Allumer et éteindre correctement un ordinateur",
+    "Distinguer un élément matériel d'un logiciel",
+    "Classer les composants d'un système informatique",
+    "Brancher une clé USB sur un port de l'unité centrale"
+  ],
+  "savoir_etre": [
+    "Ne pas partager son mot de passe",
+    "Éteindre correctement l'ordinateur (menu Démarrer → Arrêter)",
+    "Respecter le matériel informatique en classe",
+    "Travailler en collaboration avec ses camarades lors des exercices"
+  ],
+  "deroulement": {
+    "Mise_en_situation": {
+      "rappel": {
+        "enseignant": "Q1 : Qui a déjà utilisé un ordinateur ? Où l'avez-vous utilisé ? (au cybercafé du quartier, à dar chabab, chez vous)\nQ2 : À quoi sert un ordinateur selon vous ?\nQ3 : Quelles parties de l'ordinateur voyez-vous devant vous ?",
+        "apprenent": "R1 : Moi ! Au cybercafé du quartier / à dar chabab / chez moi.\nR2 : À jouer, à faire des devoirs, à regarder des vidéos, à naviguer sur Internet.\nR3 : Un écran, une souris, un clavier, une grande boîte (l'unité centrale)."
+      },
+      "situation_probleme": {
+        "enseignant": "Sofia, une élève de 1AC comme vous, doit imprimer une photo pour le projet d'école sur le quartier. Elle va au cybercafé du quartier, allume l'ordinateur mais ne comprend pas ce qu'elle voit à l'écran. Elle ne sait pas quel programme utiliser pour ouvrir sa photo ni comment brancher sa clé USB. Le gérant du cybercafé lui parle de « matériel » et de « logiciel ». Sofia est perdue. Comment pouvons-nous aider Sofia à comprendre ce qu'est un système informatique et comment il fonctionne ?",
+        "apprenent": "Écoute et assimile le contexte de la situation-problème. Les élèves sont invités à se mettre à la place de Sofia."
+      },
+      "outils_didactiques": [
+        "Vidéoprojecteur",
+        "Ordinateur fonctionnel",
+        "Images des composants matériels",
+        "Diaporama (5 diapositives)"
+      ]
+    },
+    "Analyse": {
+      "Analyse_SP": {
+        "enseignant": "Q1 : De quoi Sofia a-t-elle besoin pour imprimer sa photo ?\nQ2 : Quels éléments Sofia utilise-t-elle au cybercafé ? (montrer les vrais composants)\nQ3 : Quels programmes (logiciels) pourrait-elle utiliser pour ouvrir sa photo ?\nQ4 : Où brancher la clé USB sur l'ordinateur ?",
+        "apprenent": "H1 : Sofia a besoin d'un ordinateur, d'une imprimante et de la clé USB.\nH2 : Elle utilise l'écran, la souris, le clavier et l'unité centrale.\nH3 : Il faut un programme pour voir les photos.\nH4 : La clé USB se branche sur un port devant ou derrière l'unité centrale."
+      },
+      "Investigation": {
+        "enseignant": "L'enseignant montre les vrais composants un par un. Il explique : « L'écran, la souris, le clavier, l'imprimante et l'unité centrale, ce sont des éléments que l'on peut toucher. On appelle tout cela le MATÉRIEL — en anglais on dit hardware. » Il branche une clé USB sur un port et montre l'emplacement. Il demande : « Maintenant, pour ouvrir la photo, est-ce que la souris suffit toute seule ? Non, il faut aussi un LOGICIEL — un programme qui donne des ordres à l'ordinateur. En anglais on dit software. » Il ouvre un dossier de photos pour montrer le logiciel en action.",
+        "apprenent": "Les élèves observent, posent des questions, manipulent si possible la souris et le clavier. Ils comprennent que la souris ne suffit pas : un logiciel (programme) est nécessaire pour ouvrir et travailler avec des fichiers."
+      },
+      "Generalisation": {
+        "enseignant": "L'enseignant présente et écrit au tableau les notions une par une :\n\n1. Système informatique : C'est un ensemble d'éléments (matériels et logiciels) qui travaillent ensemble pour traiter des informations. Comme une équipe de foot : chaque joueur a son rôle.\n\n2. Matériel (hardware) : C'est la partie physique de l'ordinateur, ce que l'on peut toucher. Exemples : écran (affiche les images), clavier (permet d'écrire), souris (permet de pointer et cliquer), unité centrale (le « cerveau » qui contient les pièces importantes), imprimante (imprime sur papier).\n\n3. Logiciel (software) : C'est un programme qui donne des instructions à l'ordinateur. On ne peut pas le toucher. Exemples : Windows (le programme qui lance l'ordinateur), un navigateur Internet (pour aller sur le Web), un traitement de texte (pour écrire des lettres), un jeu éducatif.\n\n4. Connectivité : C'est la capacité de l'ordinateur à communiquer avec d'autres appareils ou à se connecter à Internet. Cela peut se faire par un câble ou sans fil, comme le Wi-Fi du dar chabab.\n\n5. Périphérique : C'est un élément matériel qui se branche à l'unité centrale. Exemples : clavier, souris, imprimante, écran, clé USB.\n\n6. Port USB : C'est une prise sur l'ordinateur qui permet de brancher des périphériques comme une clé USB.",
+        "apprenent": "Les élèves écoutent, comprennent et notent les définitions dans leur cahier au fur et à mesure.",
+        "savoir": "1. Système informatique : Ensemble d'éléments (matériels et logiciels) qui travaillent ensemble pour traiter des informations.\n2. Matériel (hardware) : Partie physique de l'ordinateur que l'on peut toucher (ex : écran, clavier, souris, unité centrale, imprimante).\n3. Logiciel (software) : Programme qui donne des instructions à l'ordinateur (ex : Windows, navigateur Internet, traitement de texte).\n4. Connectivité : Capacité de l'ordinateur à communiquer avec d'autres appareils ou à se connecter à Internet (ex : Wi-Fi du dar chabab, câble Ethernet).\n5. Périphérique : Élément matériel qui se branche à l'unité centrale pour ajouter une fonction (ex : clavier pour écrire, imprimante pour imprimer).\n6. Port USB : Prise sur l'ordinateur pour brancher des périphériques comme une clé USB."
+      },
+      "ENTRAINEMENT": {
+        "enseignant": "Exercice 1 — Classement : Classez les éléments suivants en deux colonnes « Matériel » et « Logiciel » : écran, Windows, souris, Word (traitement de texte), clavier, imprimante, navigateur Internet, unité centrale.\n\nExercice 2 — Vrai ou Faux : a) Un logiciel est une partie physique que l'on peut toucher. b) La souris permet de pointer et cliquer à l'écran. c) Le Wi-Fi permet de se connecter à Internet sans fil. d) L'unité centrale est un logiciel.\n\nExercice 3 — Relie chaque mot à sa définition (fiche préparée) : Matériel → Ce que l'on peut toucher / Logiciel → Programme / Connectivité → Capacité à se connecter.\n\nCorrection collective au tableau. Un élève par question vient écrire sa réponse. L'enseignant valide, corrige et explique chaque erreur.",
+        "apprenent": "Les élèves réalisent les exercices sur leur cahier individuellement puis participent à la correction collective au tableau."
+      },
+      "outils_didactiques": [
+        "Tableau Velleda / Craie",
+        "Exercices photocopiés",
+        "Images des composants",
+        "Ordinateur pour démonstration",
+        "Clé USB"
+      ]
+    },
+    "Synthese": {
+      "Quiz": {
+        "enseignant": "Q1 : Qu'est-ce qu'un système informatique ? (Un ensemble d'éléments matériels et logiciels qui travaillent ensemble.)\nQ2 : Donne deux exemples de matériel que tu peux toucher. (Écran, clavier, souris, unité centrale, imprimante…)\nQ3 : Donne deux exemples de logiciel (programme). (Windows, Word, navigateur Internet, jeu éducatif…)\nQ4 : Comment s'appelle la capacité d'un ordinateur à se connecter à Internet ? (La connectivité.)\nQ5 : Vrai ou Faux ? La souris est un logiciel. (Faux, c'est un matériel.)\nQ6 : Que dois-tu faire avant d'éteindre l'ordinateur ? (Utiliser le menu Démarrer → Arrêter pour éteindre correctement.)\nQ7 : Pourquoi ne dois-tu jamais partager ton mot de passe ? (Pour protéger tes informations personnelles.)",
+        "apprenent": "Les élèves répondent aux questions du quiz à l'oral, en levant la main ou en utilisant des ardoises."
+      },
+      "outils_didactiques_materiel": [
+        "Tableau",
+        "Ardoises et feutres effaçables (optionnel)",
+        "Questions préparées"
+      ]
+    }
+  },
+  "evaluation_type": "formative",
+  "materiel": [
+    "Ordinateur avec vidéoprojecteur",
+    "Diaporama (5 diapositives)",
+    "Tableau Velleda / Craie",
+    "Images de composants matériels",
+    "Exercices photocopiés (classement, vrai/faux, relier)",
+    "Clé USB",
+    "Ardoises pour le quiz (optionnel)"
+  ]
+}

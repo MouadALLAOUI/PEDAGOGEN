@@ -3,14 +3,17 @@ import { getDb } from '@/lib/db';
 import { unlinkSync, existsSync } from 'fs';
 import { join } from 'path';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const userId = request.headers.get('x-user-id') || 'default';
     const db = getDb();
     const files = db.prepare(`
-      SELECT id, generation_id, name, doc_type, format, storage_path, url, size_kb, created_at
-      FROM generated_files
-      ORDER BY created_at DESC
-    `).all();
+      SELECT f.id, f.generation_id, f.name, f.doc_type, f.format, f.storage_path, f.url, f.size_kb, f.created_at
+      FROM generated_files f
+      LEFT JOIN generations g ON f.generation_id = g.id
+      WHERE g.user_id = ? OR g.user_id IS NULL OR ? = 'default'
+      ORDER BY f.created_at DESC
+    `).all(userId, userId);
 
     return NextResponse.json({ files });
   } catch {
@@ -20,6 +23,7 @@ export async function GET() {
 
 export async function DELETE(request: NextRequest) {
   try {
+    const userId = request.headers.get('x-user-id') || 'default';
     const body = await request.json();
 
     // Support both single id and batch ids
@@ -36,8 +40,10 @@ export async function DELETE(request: NextRequest) {
     const db = getDb();
     const placeholders = ids.map(() => '?').join(',');
     const fileRows = db.prepare(
-      `SELECT id, storage_path FROM generated_files WHERE id IN (${placeholders})`
-    ).all(...ids) as any[];
+      `SELECT f.id, f.storage_path FROM generated_files f
+       LEFT JOIN generations g ON f.generation_id = g.id
+       WHERE f.id IN (${placeholders}) AND (g.user_id = ? OR g.user_id IS NULL OR ? = 'default')`
+    ).all(...ids, userId, userId) as any[];
 
     for (const file of fileRows) {
       const filePath = join(process.cwd(), 'data', 'generated', file.storage_path);
@@ -46,9 +52,13 @@ export async function DELETE(request: NextRequest) {
       }
     }
 
-    db.prepare(`DELETE FROM generated_files WHERE id IN (${placeholders})`).run(...ids);
+    const validIds = fileRows.map((f: any) => f.id);
+    if (validIds.length > 0) {
+      const validPlaceholders = validIds.map(() => '?').join(',');
+      db.prepare(`DELETE FROM generated_files WHERE id IN (${validPlaceholders})`).run(...validIds);
+    }
 
-    return NextResponse.json({ ok: true, deleted: fileRows.length });
+    return NextResponse.json({ ok: true, deleted: validIds.length });
   } catch {
     return NextResponse.json({ error: 'Failed to delete files' }, { status: 500 });
   }

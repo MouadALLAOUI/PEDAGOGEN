@@ -1,0 +1,99 @@
+{
+  "titre_seance": "Typologie des réseaux : LAN, MAN, WAN",
+  "timing_consistency_check": "Séance de 50 min. Mise_en_situation (10 min : rappel 3 min + situation problème 7 min), Analyse (25 min : Analyse_SP 5 min + Investigation 5 min + Généralisation 10 min + Entraînement 5 min), Synthèse (10 min : Quiz 5 min + marge 5 min). Total 50 min conforme à la fiche pédagogique et à la planification.",
+  "variantes_pedagogiques": "Si les élèves confondent LAN et MAN, remplacer par une analogie simple : 'Le LAN, c'est comme la cour de notre école (petit espace). Le MAN, c'est comme tout le quartier de votre maison (plus grand). Le WAN, c'est comme tout le Maroc (très grand).' Si la notion de 'réseau' est trop abstraite, demander : 'Qui a déjà joué à un jeu en ligne avec des copains dans la même pièce ?' (LAN). 'Et avec quelqu'un d'une autre ville ?' (WAN). Partir de leurs expériences.",
+  "gestion_erreurs_frequentes": "Erreur 1 : 'LAN = Internet.' → Relance : 'Internet est un très grand réseau. Le LAN est plus petit, comme le réseau de notre salle informatique. Est-ce que notre labo couvre tout le Maroc ? Non, juste cette pièce.' Erreur 2 : 'MAN et WAN c'est pareil.' → Montrer une carte du Maroc : 'MAN = une seule ville (ex: Casablanca). WAN = plusieurs villes ou plusieurs pays (ex: Casablanca et Rabat reliées, ou le Maroc et la France).' Erreur 3 : 'Un réseau a besoin de câbles partout.' → Demander : 'Et le Wi-Fi du dar chabab, comment les jeunes se connectent-ils sans câble ?' pour introduire le sans-fil.",
+  "conseils_surlignage": "Surligner au tableau : 'LAN = Réseau Local (petite zone)', 'MAN = Réseau Métropolitain (une ville)', 'WAN = Réseau Étendu (pays, monde)'. Insister sur les mots : portée, taille, zone géographique. Dessiner trois cercles emboîtés : le plus petit = LAN, moyen = MAN, grand = WAN. Utiliser des couleurs différentes pour chaque type.",
+  "script_enseignant": {
+    "Mise_en_situation": {
+      "rappel": "« Bonjour à tous. La dernière fois, nous avons appris ce qu'est un système informatique. Qui peut me rappeler les trois éléments d'un système informatique ? (R1 : Le matériel, le logiciel et l'utilisateur.) Très bien. Et quel est le rôle de la connectivité ? (R2 : Permettre aux appareils de communiquer entre eux.) Parfait. Aujourd'hui, nous allons découvrir les différents types de réseaux selon leur taille. »",
+      "situation_probleme": "« Écoutez bien cette histoire : Le collège Ibn Sina organise une compétition de quiz en ligne entre les élèves. D'abord, les élèves de la même classe veulent jouer ensemble depuis le labo informatique. Ensuite, le directeur veut organiser une finale entre tous les collèges de la ville de Fès. Enfin, le ministère de l'Éducation à Rabat veut connecter tous les collèges du Maroc pour une grande compétition nationale ! Chaque situation a-t-elle besoin du même type de réseau ? Quelle est la différence entre ces trois situations ? Réfléchissez… »"
+    },
+    "Analyse": {
+      "Analyse_SP": "« Alors, est-ce que les trois situations sont identiques ? (H1 : Non, la taille est différente.) Exact ! La première : les élèves dans le même labo — c'est quelle zone ? (H2 : Une petite zone, une seule salle.) La deuxième : tous les collèges de Fès — c'est quelle zone ? (H3 : Toute la ville de Fès.) La troisième : tous les collèges du Maroc — c'est quelle zone ? (H4 : Tout le pays.) Donc les réseaux peuvent être classés selon quoi ? (H5 : Selon leur taille, leur zone géographique.) Excellent ! »",
+      "Investigation": "« Reprenons vos hypothèses. H1 : oui, les trois situations sont différentes par la taille de la zone. H2 : le labo informatique est une petite zone — en informatique, on appelle ça un réseau local, ou LAN. H3 : toute la ville de Fès — c'est un réseau métropolitain, ou MAN. H4 : tout le Maroc — c'est un réseau étendu, ou WAN. Maintenant, regardez autour de vous : dans notre école, quel type de réseau avons-nous ? (LAN.) Et pour appeler un parent qui travaille dans une autre ville, quel réseau utilise notre téléphone ? (WAN.) »",
+      "Generalisation": "« Notons tout cela dans le cours. Un réseau informatique est un ensemble d'ordinateurs et d'appareils reliés entre eux pour échanger des informations. Il existe trois types de réseaux selon la zone géographique couverte : 1) Le LAN (Local Area Network) ou réseau local — il couvre une petite zone comme une salle, un étage ou un bâtiment. Exemple : le réseau du labo informatique du collège, le réseau du cybercafé du quartier. 2) Le MAN (Metropolitan Area Network) ou réseau métropolitain — il couvre une ville entière. Exemple : le réseau qui relie tous les collèges de Fès, la connexion entre les arrondissements de Casablanca. 3) Le WAN (Wide Area Network) ou réseau étendu — il couvre une région, un pays ou le monde entier. Internet est le plus grand WAN du monde. Dictez : Un réseau informatique relie des appareils pour échanger des données. Selon la zone géographique, on distingue : LAN (petite zone : salle, bâtiment), MAN (une ville), WAN (pays, monde). »",
+      "ENTRAINEMENT": "« Ouvrez votre cahier d'exercices. Exercice 1 : Reliez chaque type de réseau à sa description. — LAN / MAN / WAN avec : 'Couvre tout le Maroc' (WAN), 'Couvre une salle de classe' (LAN), 'Couvre la ville de Marrakech' (MAN). Exercice 2 : Vrai ou Faux ? — 'Le LAN est plus grand que le WAN' (Faux). 'Internet est un exemple de WAN' (Vrai). 'Un réseau qui relie les écoles d'une même ville est un MAN' (Vrai). 'Le réseau du labo informatique est un WAN' (Faux). Levez la main pour répondre. Notez la trace écrite : recopiez le cadre vert du tableau dans votre cahier. »"
+    },
+    "Synthese": {
+      "Quiz": "« Quiz rapide ! Pas de cahier, juste votre réflexion. Question 1 : Que signifie LAN en français ? (Réseau local.). Question 2 : Quel type de réseau couvre une ville entière ? (MAN.). Question 3 : Donnez un exemple de WAN. (Internet, le réseau qui relie le Maroc à d'autres pays.). Question 4 : Le réseau Wi-Fi du dar chabab, c'est quel type de réseau ? (LAN car il couvre un petit bâtiment.). Question 5 : Pourquoi a-t-on besoin de différents types de réseaux ? (Parce que les besoins ne sont pas les mêmes selon la distance.). Levez la main, je choisis quelqu'un pour répondre. »"
+    }
+  },
+  "savoir": {
+    "definitions": [
+      {
+        "terme": "Réseau informatique",
+        "definition": "C'est un ensemble d'ordinateurs et d'appareils reliés entre eux pour échanger des informations. Comme un groupe de téléphones qui peuvent s'envoyer des messages."
+      },
+      {
+        "terme": "LAN (Réseau Local)",
+        "definition": "C'est un réseau qui couvre une petite zone : une salle, un étage, un bâtiment. Exemple : le réseau du labo informatique du collège."
+      },
+      {
+        "terme": "MAN (Réseau Métropolitain)",
+        "definition": "C'est un réseau qui couvre toute une ville. Exemple : le réseau qui relie tous les arrondissements de Casablanca."
+      },
+      {
+        "terme": "WAN (Réseau Étendu)",
+        "definition": "C'est un réseau qui couvre une grande zone : une région, un pays, le monde entier. Internet est le plus grand WAN."
+      },
+      {
+        "terme": "Connectivité",
+        "definition": "C'est la capacité des appareils à communiquer entre eux, avec ou sans fil. Exemple : le Wi-Fi du dar chabab permet aux téléphones de se connecter à Internet."
+      }
+    ],
+    "schema_reseau": "Dessiner au tableau trois zones emboîtées :\n\n       ╔══════════════════════════════════════════════╗\n       ║              WAN (Monde entier)              ║\n       ║   ╔══════════════════════════════════════╗    ║\n       ║   ║        MAN (Ville de Fès)            ║    ║\n       ║   ║   ╔══════════════════════════╗       ║    ║\n       ║   ║   ║    LAN (Labo du collège) ║       ║    ║\n       ║   ║   ║  [PC1]---[PC2]---[PC3]   ║       ║    ║\n       ║   ║   ║         |                ║       ║    ║\n       ║   ║   ║      [Serveur]           ║       ║    ║\n       ║   ║   ╚══════════════════════════╝       ║    ║\n       ║   ║  [Collège A]----[Collège B]          ║    ║\n       ║   ║         |              |              ║    ║\n       ║   ║      [Mairie]    [Bibliothèque]       ║    ║\n       ║   ╚══════════════════════════════════════╝    ║\n       ║      [Fès]----[Rabat]----[Casablanca]         ║\n       ║           |         |           |              ║\n       ║        [Marrakech]  [Tanger]  [Oujda]         ║\n       ╚══════════════════════════════════════════════╝\n\nLégende : Les cercles s'emboîtent du plus petit (LAN) au plus grand (WAN). Chaque type correspond à une zone géographique différente.",
+    "exemples_concrets": [
+      "Le réseau du labo informatique du collège : tous les ordinateurs de la salle sont reliés entre eux pour partager une imprimante — c'est un LAN.",
+      "Le Wi-Fi du dar chabab permet aux jeunes du quartier de connecter leur téléphone à Internet — c'est un LAN (une petite zone).",
+      "La connexion entre tous les collèges de la ville de Marrakech pour une compétition scolaire — c'est un MAN.",
+      "Le réseau de la REDAL/LYDEC qui gère la distribution d'eau dans tout Casablanca — c'est un MAN car il couvre toute la ville.",
+      "Internet au Maroc : quand un élève de Fès envoie un message à un cousin à Paris, le message traverse un WAN (réseau mondial).",
+      "Au cybercafé du quartier, les ordinateurs sont en réseau local (LAN) pour partager la connexion Internet."
+    ]
+  },
+  "plan_tableau": {
+    "zone_titre": "Typologie des réseaux : LAN, MAN, WAN — 1AC | Unité : Réseaux informatiques",
+    "zone_probleme": "Le collège Ibn Sina organise un quiz : 1) entre élèves du même labo, 2) entre collèges de Fès, 3) entre collèges du Maroc entier. Même type de réseau ?",
+    "zone_cours": "I. DÉFINITIONS\n• Réseau informatique : ensemble d'appareils reliés pour échanger des informations\n• LAN (Réseau Local) : petite zone (salle, bâtiment) → Ex : labo du collège\n• MAN (Réseau Métropolitain) : une ville entière → Ex : tous les collèges de Fès\n• WAN (Réseau Étendu) : pays, monde → Ex : Internet\n\nII. SCHÉMA des trois réseaux emboîtés (voir schéma ci-dessus)\n\nIII. CARACTÉRISTIQUES\nLAN : petite portée, vitesse élevée, privé (ex: école, maison, cybercafé)\nMAN : moyenne portée, vitesse moyenne, public ou privé (ex: ville)\nWAN : très grande portée, vitesse variable, public (ex: Internet)",
+    "zone_exercices": "Exercice 1 : Relier LAN/MAN/WAN à leur description\nExercice 2 : Vrai / Faux (4 questions)\nTrace écrite : recopier le cadre vert"
+  },
+  "activites_eleves": [
+    {
+      "etape": "1. Rappel oral",
+      "consigne": "Répondre aux questions du professeur sur le système informatique et la connectivité.",
+      "production_attendue": "Participation orale : les trois éléments du système informatique, définition de la connectivité."
+    },
+    {
+      "etape": "2. Écoute de la situation-problème",
+      "consigne": "Écouter l'histoire du quiz organisé au collège Ibn Sina à trois niveaux (labo, ville, pays) et réfléchir aux différences.",
+      "production_attendue": "Hypothèses orales : les situations diffèrent par la taille de la zone géographique."
+    },
+    {
+      "etape": "3. Analyse et investigation",
+      "consigne": "Discuter collectivement des trois situations. Identifier la zone de chaque situation (salle, ville, pays).",
+      "production_attendue": "Validation des trois types : LAN pour le labo, MAN pour la ville, WAN pour le pays."
+    },
+    {
+      "etape": "4. Prise de notes (généralisation)",
+      "consigne": "Recopier les définitions et le schéma des trois réseaux emboîtés notés au tableau dans le cahier de cours.",
+      "production_attendue": "Trace écrite : définitions de réseau, LAN, MAN, WAN avec exemples marocains."
+    },
+    {
+      "etape": "5. Exercice d'application 1",
+      "consigne": "Relier chaque type de réseau (LAN, MAN, WAN) à sa description et à un exemple donné par le professeur.",
+      "production_attendue": "Correspondances correctes : LAN → petite zone / labo, MAN → ville / Casablanca, WAN → monde / Internet."
+    },
+    {
+      "etape": "6. Exercice d'application 2",
+      "consigne": "Répondre par Vrai ou Faux aux affirmations lues par le professeur. Justifier oralement.",
+      "production_attendue": "4 réponses correctes avec justification (V/F)."
+    },
+    {
+      "etape": "7. Quiz de synthèse",
+      "consigne": "Répondre aux 5 questions du quiz oral sans utiliser le cahier.",
+      "production_attendue": "Réponses correctes : signification de LAN/MAN/WAN, exemples, différences entre les types de réseaux."
+    }
+  ],
+  "annotations": "Veiller à utiliser une carte du Maroc (physique ou projetée) pour illustrer le MAN et le WAN : montrer Fès, Casablanca, Rabat. Pour les élèves en difficulté, proposer un tableau à trois colonnes pré-rempli (Type / Zone / Exemple) avec des étiquettes à découper et coller. Utiliser des images : une salle de classe (LAN), une photo aérienne d'une ville (MAN), une carte du monde (WAN). Rappeler systématiquement les consignes de sécurité numérique : ne pas partager ses mots de passe, éteindre correctement l'ordinateur en passant par le menu Démarrer → Arrêter. Pour les élèves rapides, ajouter une question : 'À ton avis, quel type de réseau utilise le Wi-Fi de ton domicile ? Pourquoi ?' (LAN car couvre la maison uniquement)."
+}

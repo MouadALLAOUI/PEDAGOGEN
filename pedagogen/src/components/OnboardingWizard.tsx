@@ -2,8 +2,35 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Sparkles, FileText, Zap, Presentation, ArrowRight, Check, GraduationCap, Settings } from 'lucide-react';
+import {
+  Sparkles, FileText, Zap, Presentation, ArrowRight, Check, GraduationCap, Settings,
+  Users, ClipboardList,
+} from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
+
+const QUICK_ACTIONS = [
+  {
+    label: 'Créer ma première classe',
+    description: 'Ajoutez une classe et vos élèves pour organiser vos documents.',
+    href: '/classes',
+    icon: Users,
+    color: 'bg-teal/10 text-teal',
+  },
+  {
+    label: 'Générer une fiche',
+    description: 'Créez une fiche pédagogique complète en quelques clics.',
+    href: '/generate',
+    icon: FileText,
+    color: 'bg-amber/10 text-amber',
+  },
+  {
+    label: 'Premier examen',
+    description: 'Composez un examen adapté à votre leçon.',
+    href: '/examens/new',
+    icon: ClipboardList,
+    color: 'bg-green/10 text-green',
+  },
+];
 
 const STEPS = [
   {
@@ -119,6 +146,31 @@ export function OnboardingWizard() {
               currentStep.description
             )}
           </div>
+
+          {/* Quick actions (final step) */}
+          {isLast && (
+            <div className="space-y-2">
+              {QUICK_ACTIONS.map((action) => (
+                <button
+                  key={action.href}
+                  onClick={() => {
+                    handleComplete();
+                    router.push(action.href);
+                  }}
+                  className="w-full flex items-center gap-3 p-3 rounded-xl bg-parchment/50 border border-border hover:border-teal/40 hover:bg-parchment-dark/50 transition-colors text-left group"
+                >
+                  <div className={`w-9 h-9 rounded-lg ${action.color} flex items-center justify-center shrink-0`}>
+                    <action.icon size={16} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-navy">{action.label}</p>
+                    <p className="text-xs text-muted">{action.description}</p>
+                  </div>
+                  <ArrowRight size={14} className="text-muted group-hover:text-teal transition-colors shrink-0" />
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* Actions */}
           <div className="flex items-center justify-between pt-2">

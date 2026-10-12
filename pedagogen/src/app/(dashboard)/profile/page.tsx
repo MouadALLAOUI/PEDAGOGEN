@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Loader2, Save, User, BookOpen, Building, Phone, Beaker } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { Loader2, Save, User, BookOpen, Building, Phone, Beaker, Landmark, MapPin } from 'lucide-react';
 import { Card, CardHeader, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { PageTransition } from '@/components/layout/PageTransition';
 import { useAuth } from '@/components/auth/AuthProvider';
+import { AREF_LIST } from '@/lib/utils/ministerialHeader';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -15,6 +17,8 @@ export default function ProfilePage() {
   const [matiere, setMatiere] = useState('');
   const [etablissement, setEtablissement] = useState('');
   const [telephone, setTelephone] = useState('');
+  const [aref, setAref] = useState('');
+  const [directionProvinciale, setDirectionProvinciale] = useState('');
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
@@ -30,6 +34,8 @@ export default function ProfilePage() {
       setMatiere(profile.matiere);
       setEtablissement(profile.etablissement);
       setTelephone(profile.telephone);
+      setAref(profile.aref || '');
+      setDirectionProvinciale(profile.direction_provinciale || '');
     }
   }, [profile]);
 
@@ -47,16 +53,27 @@ export default function ProfilePage() {
     setSaved(false);
 
     try {
-      await fetch('/api/auth/profile', {
+      const res = await fetch('/api/auth/profile', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ full_name: fullName, matiere, etablissement, telephone }),
+        body: JSON.stringify({
+          full_name: fullName,
+          matiere,
+          etablissement,
+          telephone,
+          aref,
+          direction_provinciale: directionProvinciale,
+        }),
       });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Erreur lors de la mise à jour du profil');
+      }
       await refreshProfile();
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
-    } catch {
-      // error
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Erreur lors de la sauvegarde');
     } finally {
       setSaving(false);
     }
@@ -128,6 +145,43 @@ export default function ProfilePage() {
                     type="text"
                     value={etablissement}
                     onChange={(e) => setEtablissement(e.target.value)}
+                    placeholder="ex: Collège Ibn Battouta"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-border bg-white text-navy text-sm focus:outline-none focus:ring-2 focus:ring-teal/30 focus:border-teal transition-all"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-navy mb-1.5">
+                  AREF (Académie Régionale) <span className="text-xs text-muted font-normal">(Programme officiel MEN)</span>
+                </label>
+                <div className="relative">
+                  <Landmark size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                  <input
+                    type="text"
+                    list="aref-datalist"
+                    value={aref}
+                    onChange={(e) => setAref(e.target.value)}
+                    placeholder="ex: AREF Rabat-Salé-Kénitra"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-border bg-white text-navy text-sm focus:outline-none focus:ring-2 focus:ring-teal/30 focus:border-teal transition-all"
+                  />
+                  <datalist id="aref-datalist">
+                    {AREF_LIST.map((item) => (
+                      <option key={item} value={item} />
+                    ))}
+                  </datalist>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-navy mb-1.5">Direction Provinciale</label>
+                <div className="relative">
+                  <MapPin size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                  <input
+                    type="text"
+                    value={directionProvinciale}
+                    onChange={(e) => setDirectionProvinciale(e.target.value)}
+                    placeholder="ex: Direction Skhirat-Témara"
                     className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-border bg-white text-navy text-sm focus:outline-none focus:ring-2 focus:ring-teal/30 focus:border-teal transition-all"
                   />
                 </div>

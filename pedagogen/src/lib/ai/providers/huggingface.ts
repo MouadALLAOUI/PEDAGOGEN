@@ -54,7 +54,7 @@ async function* generate(request: GenerateRequest): AsyncIterable<GenerateEvent>
       const { done, value } = await reader.read();
       if (done) break;
 
-      buffer += decoder.decode(value, { stream: true });
+      buffer += decoder.decode(value, { stream: false });
       const lines = buffer.split("\n");
       buffer = lines.pop() || "";
 
@@ -93,7 +93,11 @@ async function generateWithTools(request: GenerateWithToolsRequest): Promise<Too
     request.tools as any,
     request.maxTokens || 4096,
     request.model || MODELS[0]!.id,
-    { signal: request.signal },
+    {
+      signal: request.signal,
+      apiKey: request.apiKey,
+      debugMode: request.debugMode,
+    },
   );
 }
 

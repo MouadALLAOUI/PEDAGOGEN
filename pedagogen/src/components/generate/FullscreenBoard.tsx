@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useMemo } from 'react';
 import { X, ArrowLeft, ArrowRight, Maximize2, Edit3, Eye } from 'lucide-react';
 import { BoardDesigner } from './BoardDesigner';
+import type { GenerationResult } from '@/types/generation';
 
 interface BoardSection {
   title: string;
@@ -54,9 +55,114 @@ const DEFAULT_LAYOUTS: BoardLayout[] = [
 interface FullscreenBoardProps {
   onClose: () => void;
   layouts?: BoardLayout[];
+  result?: GenerationResult;
 }
 
-export function FullscreenBoard({ onClose, layouts = DEFAULT_LAYOUTS }: FullscreenBoardProps) {
+function buildLayoutsFromResult(result: GenerationResult): BoardLayout[] {
+  const layouts: BoardLayout[] = [];
+
+  // Extract text content from markdown if available
+  const markdown = (result.markdown as string) || '';
+
+  // Try to derive sections from markdown headings
+  const sections: BoardSection[] = [];
+  if (markdown) {
+    const lines = markdown.split('\n');
+    let currentHeadings: string[] = [];
+    let currentContent: string[] = [];
+    for (const line of lines) {
+      const headingMatch = line.match(/^#{1,3}\s+(.+)/);
+      if (headingMatch) {
+        if (currentHeadings.length > 0 && currentContent.length > 0) {
+          sections.push({
+            title: currentHeadings.join(' — '),
+            content: currentContent.join('\n').trim(),
+          });
+        }
+        currentHeadings = [headingMatch[1] ?? ''];
+        currentContent = [];
+      } else if (line.match(/^\s*[-*]\s+(.+)/) && currentHeadings.length > 0) {
+        currentContent.push(line);
+      } else if (currentHeadings.length > 0) {
+        currentContent.push(line);
+      }
+    }
+    if (currentHeadings.length > 0 && currentContent.length > 0) {
+      sections.push({
+        title: currentHeadings.join(' — '),
+        content: currentContent.join('\n').trim(),
+      });
+    }
+  }
+
+  // If we got sections from markdown, build a layout
+  if (sections.length > 0) {
+    const mid = Math.ceil(sections.length / 2);
+    layouts.push({
+      title: result.metadata?.lecon || 'Contenu Généré',
+      columns: sections.length >= 4 ? 2 : sections.length,
+      sections,
+    });
+    if (sections.length > 3) {
+      layouts.push({
+        title: `${result.metadata?.lecon || 'Contenu'} (suite)`,
+        columns: Math.min(sections.length - mid, 3),
+        sections: sections.slice(mid),
+      });
+    }
+  }
+
+  // Files layout
+  if (result.files.length > 0) {
+    const fileSections: BoardSection[] = result.files.map((f) => ({
+      title: f.name,
+      content: `Format: ${f.format}\nTaille: ${f.sizeKb} KB\nType: ${f.type}\n${f.url ? `URL: ${f.url}` : ''}`,
+    }));
+
+    // Group files into chunks for columns
+    const chunkSize = Math.max(1, Math.floor(fileSections.length / 3) || 1);
+    const groups: BoardSection[] = [];
+    for (let i = 0; i < fileSections.length; i += chunkSize) {
+      const chunk = fileSections.slice(i, i + chunkSize);
+      groups.push({
+        title: `Fichiers ${i + 1}–${Math.min(i + chunkSize, fileSections.length)}`,
+        content: chunk.map((s) => `• ${s.title}\n  ${s.content}`).join('\n\n'),
+      });
+    }
+    layouts.push({
+      title: 'Fichiers Générés',
+      columns: Math.min(groups.length, 3),
+      sections: groups,
+    });
+  }
+
+  // Stats summary layout
+  layouts.push({
+    title: 'Récapitulatif',
+    columns: 1,
+    sections: [
+      {
+        title: 'Statistiques',
+        content: [
+          `Fichiers : ${result.files.length}`,
+          `Tokens utilisés : ${result.tokensUsed.toLocaleString()}`,
+          `Durée : ${(result.durationMs / 1000).toFixed(1)}s`,
+          result.metadata?.niveau ? `Niveau : ${result.metadata.niveau}` : '',
+          result.metadata?.matiere ? `Matière : ${result.metadata.matiere}` : '',
+          result.metadata?.lecon ? `Leçon : ${result.metadata.lecon}` : '',
+        ]
+          .filter(Boolean)
+          .join('\n'),
+      },
+    ],
+  });
+
+  return layouts.length > 0 ? layouts : DEFAULT_LAYOUTS;
+}
+
+export function FullscreenBoard({ onClose, layouts: propLayouts, result }: FullscreenBoardProps) {
+  const dynamicLayouts = useMemo(() => (result ? buildLayoutsFromResult(result) : null), [result]);
+  const layouts = propLayouts || dynamicLayouts || DEFAULT_LAYOUTS;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [editMode, setEditMode] = useState(false);
   const [editableLayouts, setEditableLayouts] = useState<BoardLayout[]>(layouts);

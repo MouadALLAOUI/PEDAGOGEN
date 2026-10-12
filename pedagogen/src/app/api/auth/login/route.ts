@@ -1,8 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { signToken, authenticateUser } from '@/lib/db/auth';
+import { checkRateLimit } from '@/lib/utils/rateLimit';
 
 export async function POST(request: NextRequest) {
   try {
+    const ip = request.headers.get('x-forwarded-for') || 'auth-client';
+    const rateCheck = await checkRateLimit(`login:${ip}`, 10, 60 * 1000);
+    if (!rateCheck.allowed) {
+      return NextResponse.json(
+        { error: 'Trop de tentatives de connexion. Veuillez réessayer dans une minute.' },
+        { status: 429 }
+      );
+    }
+
     const { email, password } = await request.json();
 
     if (!email || !password) {
@@ -23,7 +33,7 @@ export async function POST(request: NextRequest) {
 
     response.cookies.set('auth-token', token, {
       httpOnly: true,
-      secure: false,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60,
       path: '/',

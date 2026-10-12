@@ -1,0 +1,317 @@
+{
+  "titre_presentation": "Le Web, le navigateur et le moteur de recherche",
+  "timing_consistency_check": "La séance dure 50 minutes. Répartition : Mise_en_situation (10 min : Slide 1 titre 2 min + Slide 2 rappel 3 min + Slide 3 SP 5 min), Analyse (25 min : Slide 4 Analyse_SP 5 min + Slide 5 Investigation 4 min + Slide 6 Généralisation Web 4 min + Slide 7 Généralisation navigateur 3 min + Slide 8 Généralisation moteur de recherche 3 min + Slide 9 Généralisation URL/liens 2 min + Slide 10 Sécurité 1 min + Slide 11 Entraînement 3 min), Synthèse (10 min : Slide 12 Quiz 5 min + Slide 13 Récapitulatif 5 min), transitions entre phases et marge (5 min). Total : 10 + 25 + 10 + 5 = 50 min.",
+  "slides": [
+    {
+      "numero": 1,
+      "phase_pedagogique": "Mise_en_situation",
+      "layout": "titre",
+      "title": "Le Web, le navigateur et le moteur de recherche",
+      "slide_duration_minutes": 2,
+      "transition_animation": "Fondu d'ouverture, titre apparaît en zoom avant, sous-titres apparaissent progressivement",
+      "questions_audience": [],
+      "bullets": [
+        "Niveau : 3AC — Collège",
+        "Matière : Informatique",
+        "Semestre : 2",
+        "Unité : U4 — Rechercher des informations sur le Web"
+      ],
+      "visuel": "Image de fond représentant un globe terrestre avec des icônes de navigation (flèches, loupe, onglets de navigateur) — style dessin animé, fond blanc",
+      "notes": "Bonjour à tous ! Aujourd'hui, nous allons apprendre à utiliser le Web, comprendre ce qu'est un navigateur et comment fonctionne un moteur de recherche. À la fin de cette séance, vous saurez chercher des informations sur Internet efficacement."
+    },
+    {
+      "numero": 2,
+      "phase_pedagogique": "Mise_en_situation",
+      "layout": "contenu",
+      "title": "Rappel : Internet dans notre quotidien",
+      "slide_duration_minutes": 3,
+      "transition_animation": "Apparition progressive des questions une par une au clic",
+      "questions_audience": [
+        "Q1 : Qui utilise Internet à la maison, au cybercafé ou au dar chabab ?",
+        "Q2 : À quoi sert Internet pour vous ?",
+        "Q3 : Quel logiciel utilisez-vous pour aller sur Internet ?",
+        "Q4 : Comment faites-vous pour trouver une information sur Internet ?"
+      ],
+      "bullets": [
+        "Internet est partout dans notre quotidien",
+        "Au cybercafé du quartier pour imprimer des documents",
+        "Au dar chabab pour faire des recherches ou regarder des vidéos",
+        "Sur le téléphone portable pour envoyer des messages",
+        "Aujourd'hui : comment naviguer efficacement sur le Web ?"
+      ],
+      "visuel": "Montage de 3 photos : cybercafé de quartier, dar chabab avec des jeunes sur des ordinateurs, un élève sur un téléphone",
+      "notes": "Je pose les questions une par une. Laissez les élèves répondre. Attendez au moins 3-4 réponses par question. Valorisez chaque participation. Écrivez les mots-clés au tableau : Internet, navigateur, moteur de recherche."
+    },
+    {
+      "numero": 3,
+      "phase_pedagogique": "Mise_en_situation",
+      "layout": "image_texte",
+      "title": "Situation-problème : Le projet d'exposé",
+      "slide_duration_minutes": 5,
+      "transition_animation": "Image apparaît en fondu, puis texte du problème progressivement",
+      "questions_audience": [
+        "Question : Comment pouvons-nous aider Amine à trouver les bonnes informations et les bonnes images ?"
+      ],
+      "bullets": [
+        "Amine est un élève de 3AC au collège Moulay Ismail à Meknès",
+        "Il doit préparer un exposé sur les monuments historiques de Meknès",
+        "Il va au cybercafé du quartier pour chercher des informations",
+        "Problème : il ne sait pas quel programme utiliser pour aller sur Internet",
+        "Il ne sait pas non plus comment chercher efficacement les informations",
+        "À vous de l'aider !"
+      ],
+      "visuel": "Dessin d'un élève marocain assis devant un ordinateur dans un cybercafé, avec une pensée contenant des points d'interrogation, arrière-plan avec Bab Mansour de Meknès",
+      "notes": "Racontez l'histoire d'Amine avec enthousiasme. Montrez l'image de Bab Mansour. Laissez les élèves imaginer des solutions. Créez un lien émotionnel : 'Imaginez que c'est vous qui devez faire cet exposé.'"
+    },
+    {
+      "numero": 4,
+      "phase_pedagogique": "Analyse",
+      "layout": "contenu",
+      "title": "Analyse de la situation : nos hypothèses",
+      "slide_duration_minutes": 5,
+      "transition_animation": "Chaque hypothèse apparaît une par une après que les élèves aient proposé",
+      "questions_audience": [
+        "H1 : Quel programme Amine doit-il ouvrir pour aller sur Internet ?",
+        "H2 : Comment taper l'adresse du site où il veut aller ?",
+        "H3 : S'il ne connaît pas l'adresse d'un site, comment trouver des informations ?",
+        "H4 : Que doit-il taper pour chercher des photos de Meknès ?",
+        "H5 : Comment savoir si une information est fiable ?"
+      ],
+      "bullets": [
+        "H1 : Un navigateur Web — comme Google Chrome, Mozilla Firefox ou Microsoft Edge",
+        "H2 : Il tape l'adresse du site (URL) dans la barre d'adresse en haut",
+        "H3 : Il utilise un moteur de recherche comme Google",
+        "H4 : Il tape des mots-clés précis : 'monuments historiques Meknès'",
+        "H5 : Il vérifie sur plusieurs sites et regarde la source"
+      ],
+      "visuel": "Capture d'écran d'un navigateur avec la barre d'adresse et la barre de recherche mises en évidence par des flèches rouges",
+      "notes": "Laissez les élèves proposer leurs hypothèses avant d'afficher chaque puce. Notez les réponses au tableau. Valorisez même les réponses partielles."
+    },
+    {
+      "numero": 5,
+      "phase_pedagogique": "Analyse",
+      "layout": "contenu",
+      "title": "Investigation : vérifions ensemble",
+      "slide_duration_minutes": 4,
+      "transition_animation": "Validation de chaque hypothèse avec icône Vrai (✓) qui apparaît",
+      "questions_audience": [
+        "Le navigateur et le moteur de recherche, est-ce la même chose ?",
+        "Peut-on naviguer sur Internet sans navigateur ?",
+        "Peut-on chercher une information directement dans la barre d'adresse ?"
+      ],
+      "bullets": [
+        "✓ H1 VRAIE : Un navigateur (Chrome, Firefox) est le logiciel pour aller sur le Web",
+        "✓ H2 VRAIE : L'URL (adresse) se tape dans la barre d'adresse du navigateur",
+        "✓ H3 VRAIE : Le moteur de recherche (Google) trouve des sites à partir de mots-clés",
+        "✓ H4 VRAIE : Plus les mots-clés sont précis, meilleurs sont les résultats",
+        "✓ H5 VRAIE : Il faut croiser les informations sur plusieurs sites sérieux",
+        "→ Conclusion : Navigateur ≠ Moteur de recherche — ils sont complémentaires !"
+      ],
+      "visuel": "Schéma : un navigateur (fenêtre) avec deux entrées : 'Barre d'adresse' pour une URL connue et 'Barre de recherche Google' pour une recherche par mots-clés",
+      "notes": "Insistez sur la différence fondamentale : le navigateur est le logiciel (la voiture), le moteur de recherche est un service (la carte routière). Faites répéter cette différence par 2-3 élèves."
+    },
+    {
+      "numero": 6,
+      "phase_pedagogique": "Analyse",
+      "layout": "contenu",
+      "title": "Internet et le Web (WWW)",
+      "slide_duration_minutes": 4,
+      "transition_animation": "Définition apparaît après la question, chaque notion au clic",
+      "questions_audience": [
+        "Selon vous, quelle est la différence entre Internet et le Web ?"
+      ],
+      "bullets": [
+        "Internet = le réseau mondial qui relie des milliards d'ordinateurs",
+        "Web (WWW = World Wide Web) = l'ensemble des pages que l'on consulte sur Internet",
+        "Analogie : Internet est comme le réseau routier du Maroc, le Web est comme les villes et villages qu'on visite",
+        "Le Web a été inventé en 1989 par Tim Berners-Lee",
+        "Les pages Web sont reliées entre elles par des liens hypertextes (hyperliens)"
+      ],
+      "visuel": "Animation : globe terrestre avec des lignes de connexion (Internet), puis des icônes de pages Web qui apparaissent dessus (Web)",
+      "notes": "Expliquez l'analogie clairement : 'Internet = les routes. Le Web = les maisons, les écoles, les magasins qu'on visite en empruntant ces routes.' Le Web est l'application la plus connue d'Internet."
+    },
+    {
+      "numero": 7,
+      "phase_pedagogique": "Analyse",
+      "layout": "deux_colonnes",
+      "title": "Le navigateur Web",
+      "slide_duration_minutes": 3,
+      "transition_animation": "Les deux colonnes apparaissent simultanément en fondu, les icônes de navigateurs en couleur",
+      "questions_audience": [
+        "Quels navigateurs connaissez-vous ?",
+        "Lequel utilisez-vous au cybercafé ou au collège ?"
+      ],
+      "bullets": [
+        "Définition : Un navigateur Web est un logiciel qui permet d'afficher et de consulter les pages du Web",
+        "Exemples :",
+        "  Google Chrome : le plus utilisé dans le monde",
+        "  Mozilla Firefox : navigateur libre et sécurisé",
+        "  Microsoft Edge : intégré à Windows",
+        "  Safari : sur les appareils Apple (iPhone, Mac)",
+        "Fonctionnement : il interprète le code des pages Web et les affiche",
+        "Barre d'adresse : zone en haut où l'on tape l'URL"
+      ],
+      "visuel": "Colonne de gauche : logos des navigateurs (Chrome, Firefox, Edge, Safari) avec leurs noms. Colonne de droite : capture d'écran d'un navigateur avec les zones légendées (barre d'adresse, barre d'onglets, zone d'affichage)",
+      "notes": "Demandez aux élèves de regarder sur les ordinateurs de la salle quel navigateur est installé. Montrez la barre d'adresse, le menu, les onglets. 'Sans navigateur, on ne peut pas voir les pages Web.'"
+    },
+    {
+      "numero": 8,
+      "phase_pedagogique": "Analyse",
+      "layout": "deux_colonnes",
+      "title": "Le moteur de recherche",
+      "slide_duration_minutes": 3,
+      "transition_animation": "Animation de la loupe qui parcourt l'écran, puis les résultats apparaissent",
+      "questions_audience": [
+        "Quel moteur de recherche utilisez-vous ?",
+        "Comment faites-vous pour chercher une information ?"
+      ],
+      "bullets": [
+        "Définition : Un moteur de recherche est un service Web qui trouve des pages à partir de mots-clés",
+        "Exemples :",
+        "  Google : le plus connu et le plus utilisé",
+        "  Bing : le moteur de Microsoft",
+        "  Yahoo : l'un des plus anciens",
+        "Fonctionnement :",
+        "  1. L'utilisateur tape des mots-clés",
+        "  2. Le moteur parcourt sa base de données (index)",
+        "  3. Il affiche les résultats les plus pertinents",
+        "Conseil : utiliser des mots-clés précis pour de meilleurs résultats"
+      ],
+      "visuel": "Colonne de gauche : logos des moteurs de recherche (Google, Bing, Yahoo). Colonne de droite : simulation d'une page de résultats Google avec des résultats légendés (titre, description, URL)",
+      "notes": "Insistez : 'Le moteur de recherche n'est pas un logiciel qu'on installe, c'est un site Web qu'on visite avec le navigateur.' Différence clé : Navigateur = logiciel, Moteur de recherche = service en ligne."
+    },
+    {
+      "numero": 9,
+      "phase_pedagogique": "Analyse",
+      "layout": "contenu",
+      "title": "URL, liens hypertextes et onglets",
+      "slide_duration_minutes": 2,
+      "transition_animation": "Clic par clic : définition URL, puis lien, puis onglet",
+      "questions_audience": [
+        "Que voit-on dans la barre d'adresse quand on est sur un site ?",
+        "Comment passer d'une page à une autre sans retaper l'adresse ?"
+      ],
+      "bullets": [
+        "URL (Uniform Resource Locator) = l'adresse unique d'une page Web",
+        "  Exemple : https://www.men.gov.ma (site du ministère de l'Éducation)",
+        "Lien hypertexte (hyperlien) = mot ou image cliquable qui mène à une autre page",
+        "  Il est souvent souligné et de couleur bleue",
+        "Onglets = permettent d'ouvrir plusieurs pages Web dans la même fenêtre",
+        "  On clique sur le + pour ouvrir un nouvel onglet"
+      ],
+      "visuel": "Schéma d'une URL décomposée : https://www.men.gov.ma avec flèches montrant chaque partie (protocole, nom de domaine)", 
+      "notes": "Montrez une URL réelle au tableau. 'L'URL, c'est comme l'adresse de votre maison. Chaque page Web a une adresse unique.' Guidez les élèves pour qu'ils repèrent la barre d'adresse."
+    },
+    {
+      "numero": 10,
+      "phase_pedagogique": "Analyse",
+      "layout": "contenu",
+      "title": "Sécurité numérique sur le Web",
+      "slide_duration_minutes": 1,
+      "transition_animation": "Chaque règle apparaît en rouge avec une icône d'avertissement",
+      "questions_audience": [
+        "Que faut-il vérifier avant de donner ses informations sur un site ?",
+        "Pourquoi ne faut-il pas cliquer sur tous les liens qu'on reçoit ?"
+      ],
+      "bullets": [
+        "RÈGLE 1 : Ne jamais partager son mot de passe, même avec un ami",
+        "RÈGLE 2 : Éteindre correctement l'ordinateur (menu Démarrer → Arrêter)",
+        "RÈGLE 3 : Vérifier qu'un site est sécurisé (cadenas vert dans la barre d'adresse)",
+        "RÈGLE 4 : Ne pas cliquer sur des publicités ou des liens suspects",
+        "RÈGLE 5 : En cas de doute, demander l'aide d'un adulte"
+      ],
+      "visuel": "Icônes : cadenas vert (site sécurisé), cadenas rouge (site non sécurisé), panneau d'avertissement triangle jaune",
+      "notes": "Rappelez ces règles avec des gestes. 'Le cadenas vert dans la barre d'adresse, c'est comme un certificat qui dit que le site est fiable.' Faites répéter les 2 premières règles par 2-3 élèves."
+    },
+    {
+      "numero": 11,
+      "phase_pedagogique": "Analyse",
+      "layout": "contenu",
+      "title": "Entraînement : appliquons ce qu'on a appris",
+      "slide_duration_minutes": 3,
+      "transition_animation": "Les exercices apparaissent un par un — timer visuel",
+      "questions_audience": [],
+      "bullets": [
+        "Exercice 1 (1 min) — Vrai ou Faux :",
+        "  a) Le navigateur et le moteur de recherche sont la même chose → Faux",
+        "  b) Google Chrome est un navigateur → Vrai",
+        "  c) Google est un moteur de recherche → Vrai",
+        "  d) L'URL est l'adresse d'une page Web → Vrai",
+        "",
+        "Exercice 2 (2 min) — Relie chaque mot à sa définition :",
+        "  Navigateur → Logiciel pour consulter le Web",
+        "  Moteur de recherche → Service qui trouve des pages par mots-clés",
+        "  URL → Adresse unique d'une page Web",
+        "  Lien hypertexte → Texte cliquable pour naviguer entre les pages"
+      ],
+      "visuel": "Arrière-plan avec zones de réponse — colonne de gauche 'Terme' et colonne de droite 'Définition' avec des pointillés pour relier",
+      "notes": "Chronométrez 1 min par exercice. Correction orale collective. 'Levez la main pour me donner la réponse.' Les élèves qui ont fini aident leur voisin."
+    },
+    {
+      "numero": 12,
+      "phase_pedagogique": "Synthese",
+      "layout": "quiz",
+      "title": "Quiz de synthèse",
+      "slide_duration_minutes": 5,
+      "transition_animation": "Chaque question apparaît une par une, la réponse s'affiche après un clic",
+      "questions_audience": [
+        "Q1 : Quelle est la différence entre Internet et le Web ?",
+        "Q2 : Cite deux navigateurs Web.",
+        "Q3 : Cite un moteur de recherche.",
+        "Q4 : Que signifie l'abréviation URL ?",
+        "Q5 : Vrai ou Faux ? Le navigateur est un service en ligne, pas un logiciel.",
+        "Q6 : Que doit-on vérifier avant de saisir des informations personnelles sur un site ?",
+        "Q7 : Quelle est la première règle de sécurité numérique ?"
+      ],
+      "bullets": [
+        "Q1 : Internet = réseau mondial, Web = ensemble des pages qu'on y consulte",
+        "Q2 : Google Chrome, Mozilla Firefox, Microsoft Edge, Safari",
+        "Q3 : Google, Bing, Yahoo",
+        "Q4 : Uniform Resource Locator (adresse d'une page Web)",
+        "Q5 : FAUX — Le navigateur est un logiciel qu'on installe sur l'ordinateur",
+        "Q6 : La présence d'un cadenas vert dans la barre d'adresse (site sécurisé)",
+        "Q7 : Ne jamais partager son mot de passe"
+      ],
+      "visuel": "Icône d'ampoule (idée) ou de trophée en haut de la diapositive — fond sobre et neutre",
+      "notes": "Lisez chaque question à voix haute. Laissez 10 secondes de réflexion. Demandez de lever la main pour répondre ou d'écrire sur l'ardoise. Affichez la réponse et passez à la suivante. Félicitez les bonnes réponses."
+    },
+    {
+      "numero": 13,
+      "phase_pedagogique": "Synthese",
+      "layout": "recapitulatif",
+      "title": "Ce qu'il faut retenir",
+      "slide_duration_minutes": 5,
+      "transition_animation": "Éléments clés qui apparaissent en cascade avec effet de zoom",
+      "questions_audience": [
+        "Qu'avez-vous appris aujourd'hui ?",
+        "Qu'est-ce qui vous a surpris ou intéressé ?"
+      ],
+      "bullets": [
+        "Le Web (WWW) est l'ensemble des pages consultées sur Internet",
+        "Le navigateur (Chrome, Firefox, Edge) est le logiciel pour y accéder",
+        "Le moteur de recherche (Google) trouve des pages avec des mots-clés",
+        "L'URL est l'adresse unique d'une page Web",
+        "Les liens hypertextes permettent de naviguer entre les pages",
+        "Les onglets permettent d'ouvrir plusieurs pages dans la même fenêtre",
+        "Sécurité : mot de passe secret, cadenas vert, éteindre via Démarrer → Arrêter"
+      ],
+      "visuel": "Carte mentale : au centre 'LE WEB' avec 6 branches : Navigateur, Moteur de recherche, URL, Liens hypertextes, Onglets, Sécurité numérique",
+      "notes": "Faites un rapide tour de table : chaque élève dit une chose qu'il a retenue. Annoncez le prochain cours. 'La prochaine séance, nous apprendrons à faire des recherches avancées sur le Web.'"
+    }
+  ],
+  "ordre_slides": [
+    "Le Web, le navigateur et le moteur de recherche",
+    "Rappel : Internet dans notre quotidien",
+    "Situation-problème : Le projet d'exposé",
+    "Analyse de la situation : nos hypothèses",
+    "Investigation : vérifions ensemble",
+    "Internet et le Web (WWW)",
+    "Le navigateur Web",
+    "Le moteur de recherche",
+    "URL, liens hypertextes et onglets",
+    "Sécurité numérique sur le Web",
+    "Entraînement : appliquons ce qu'on a appris",
+    "Quiz de synthèse",
+    "Ce qu'il faut retenir"
+  ]
+}

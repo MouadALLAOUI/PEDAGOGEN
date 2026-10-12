@@ -71,7 +71,6 @@ export async function* runAgent(
       const gen = provider.generate({
         systemPrompt: def.systemPrompt,
         userPrompt: buildUserPrompt(request.metadata),
-        model: request.mode === "heavy" ? undefined : undefined,
         maxTokens: request.mode === "light" ? 2048 : 4096,
         temperature: 0.7,
         apiKey: extraOptions?.apiKey,
@@ -81,10 +80,12 @@ export async function* runAgent(
       });
 
       let fullText = "";
+      let hasError = false;
       for await (const event of gen) {
         if (event.type === "chunk") {
           fullText += event.text;
         } else if (event.type === "error") {
+          hasError = true;
           yield {
             type: "progress",
             step: step.id,
@@ -92,11 +93,13 @@ export async function* runAgent(
             status: "error",
             error: event.message,
           };
-          continue;
+          break;
         } else if (event.type === "done") {
           fullText = event.fullText;
         }
       }
+
+      if (hasError) continue;
 
       const content = request.debugMode
         ? buildDebugContent(def, fullText)
@@ -108,7 +111,7 @@ export async function* runAgent(
           name: `${step.docType}.md`,
           type: step.docType,
           format: "md",
-          sizeKb: Math.round(new Blob([content]).size / 1024),
+          sizeKb: Math.round(Buffer.byteLength(content, 'utf8') / 1024),
         },
       };
 

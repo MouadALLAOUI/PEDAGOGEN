@@ -1,9 +1,8 @@
-'use client';
-
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Loader2, FileText, Download } from 'lucide-react';
+import { X, Loader2, FileText, Download, Edit3 } from 'lucide-react';
 import { MarkdownRenderer } from '@/components/ui/MarkdownRenderer';
+import { SplitMarkdownEditor } from '@/components/editor/SplitMarkdownEditor';
 
 interface FilePreviewModalProps {
   fileId: string;
@@ -11,6 +10,7 @@ interface FilePreviewModalProps {
   fileFormat: string;
   fileUrl: string;
   onClose: () => void;
+  onContentUpdated?: (newContent: string) => void;
 }
 
 export function FilePreviewModal({
@@ -19,10 +19,12 @@ export function FilePreviewModal({
   fileFormat,
   fileUrl,
   onClose,
+  onContentUpdated,
 }: FilePreviewModalProps) {
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [textContent, setTextContent] = useState<string | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
   const [rawUrl, setRawUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const docxRef = useRef<HTMLDivElement>(null);
@@ -117,6 +119,16 @@ export function FilePreviewModal({
             </div>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
+            {textContent !== null && (fileFormat === 'md' || fileFormat === 'txt') && (
+              <button
+                onClick={() => setIsEditing(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-teal text-white text-xs font-semibold hover:bg-teal-dark transition-colors shadow-sm"
+                title="Modifier ce document dans l'éditeur interactif"
+              >
+                <Edit3 size={14} />
+                <span>Modifier</span>
+              </button>
+            )}
             <a
               href={fileUrl}
               download={fileName}
@@ -208,6 +220,19 @@ export function FilePreviewModal({
           )}
         </div>
       </div>
+
+      {isEditing && textContent !== null && (
+        <SplitMarkdownEditor
+          initialContent={textContent}
+          title={fileName}
+          fileId={fileId}
+          onSave={(newContent) => {
+            setTextContent(newContent);
+            if (onContentUpdated) onContentUpdated(newContent);
+          }}
+          onClose={() => setIsEditing(false)}
+        />
+      )}
     </div>,
     document.body
   );

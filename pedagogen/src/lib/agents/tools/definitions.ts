@@ -94,13 +94,13 @@ ${TOOL_SCHEMAS.presentation_pptx}`,
   }),
 
   images_illustratives: (meta) => ({
-    name: "generate_images",
+    name: "generate_images_illustratives",
     description: "images_illustratives",
     systemPrompt: `${getCoreInstruction()}
 ---
 ${baseContext(meta)}
 ---
 ${TOOL_SCHEMAS.images_illustratives}`,
-    outputFormat: "md",
+    outputFormat: "txt",
   }),
 };

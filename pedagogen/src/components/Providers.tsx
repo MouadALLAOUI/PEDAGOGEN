@@ -1,6 +1,7 @@
 'use client';
 
 import { type ReactNode } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '@/components/auth/AuthProvider';
 import { AuthGuard } from '@/components/auth/AuthGuard';
 import { LanguageProvider } from '@/components/layout/LanguageProvider';
@@ -13,6 +14,7 @@ export function Providers({ children }: { children: ReactNode }) {
         <FavoritesProvider>
           <AuthGuard>
             {children}
+            <Toaster position="bottom-right" toastOptions={{ duration: 4000 }} />
           </AuthGuard>
         </FavoritesProvider>
       </LanguageProvider>

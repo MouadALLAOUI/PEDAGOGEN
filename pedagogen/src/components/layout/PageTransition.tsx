@@ -16,26 +16,48 @@ export function PageTransition({ children }: PageTransitionProps) {
     if (!ref.current) return;
 
     const el = ref.current;
+    const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+      return;
+    }
+
     el.style.opacity = '0';
     el.style.transform = 'translateY(12px)';
 
     requestAnimationFrame(() => {
       if (!ref.current) return;
-      animate(el, {
-        opacity: [0, 1],
-        translateY: [24, 0],
-        scale: [0.98, 1],
-        ease: 'outExpo',
-        duration: 500,
-      });
+      try {
+        animate(el, {
+          opacity: [0, 1],
+          translateY: [24, 0],
+          scale: [0.98, 1],
+          ease: 'outExpo',
+          duration: 400,
+          onComplete: () => {
+            if (el) el.style.transform = 'none';
+          },
+        });
 
-      animate(el.querySelectorAll('[data-stagger]'), {
-        opacity: [0, 1],
-        translateY: [12, 0],
-        delay: stagger(60),
-        ease: 'outQuad',
-        duration: 400,
-      });
+        // Ensure transform is cleared even if onComplete doesn't trigger
+        setTimeout(() => {
+          if (el) el.style.transform = 'none';
+        }, 450);
+
+        animate(el.querySelectorAll('[data-stagger]'), {
+          opacity: [0, 1],
+          translateY: [12, 0],
+          delay: stagger(40),
+          ease: 'outQuad',
+          duration: 350,
+        });
+      } catch (err) {
+        // Fallback: guarantee visibility if animation fails
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+      }
     });
   }, [pathname]);
 

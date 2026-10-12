@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { getProvider } from "@/lib/ai/factory";
 import { runAgent } from "@/lib/agents/orchestrator";
 import { generationRequestSchema } from "@/lib/validators/generation";
+import { getDbSetting } from "@/lib/db/settings";
 import type { ProviderId } from "@/lib/ai/types";
 
 function sseEvent(event: unknown): string {
@@ -21,15 +22,16 @@ export async function POST(request: NextRequest) {
     }
 
     const req = parsed.data;
+    const userId = request.headers.get("x-user-id") || undefined;
 
-    const providerId = (await getProviderSetting("provider")) as ProviderId || "none";
+    const providerId = (await getDbSetting("provider", userId)) as ProviderId || "none";
     const provider = getProvider(providerId);
 
     const [hfToken, lmstudioUrl, lmstudioModel, opencodeModel] = await Promise.all([
-      getProviderSetting("huggingface_token"),
-      getProviderSetting("lmstudio_url"),
-      getProviderSetting("lmstudio_model"),
-      getProviderSetting("opencode_model"),
+      getDbSetting("huggingface_token", userId),
+      getDbSetting("lmstudio_url", userId),
+      getDbSetting("lmstudio_model", userId),
+      getDbSetting("opencode_model", userId),
     ]);
 
     const extraOptions = {
@@ -71,18 +73,5 @@ export async function POST(request: NextRequest) {
       JSON.stringify({ error: err instanceof Error ? err.message : "Server error" }),
       { status: 500, headers: { "Content-Type": "application/json" } },
     );
-  }
-}
-
-async function getProviderSetting(key: string): Promise<string | undefined> {
-  try {
-    const { getDb } = await import("@/lib/db");
-    const db = getDb();
-    const row = db
-      .prepare("SELECT value FROM settings WHERE key = ? AND user_id = 'default'")
-      .get(key) as { value: string } | undefined;
-    return row?.value;
-  } catch {
-    return undefined;
   }
 }

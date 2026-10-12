@@ -32,6 +32,8 @@ export const courseMetadataSchema = z.object({
   differentiationLevel: z.enum(['soutien', 'standard', 'defi']).optional(),
 });
 
+export const providerIdSchema = z.enum(["none", "huggingface", "lmstudio", "opencode"]);
+
 export const generationRequestSchema = z.object({
   mode: generationModeSchema,
   metadata: courseMetadataSchema,
@@ -41,6 +43,14 @@ export const generationRequestSchema = z.object({
   includePrompt: z.string().optional(),
   excludePrompt: z.string().optional(),
   debugMode: z.boolean().optional(),
+  provider: providerIdSchema.optional(),
+  reviewMode: z.boolean().optional(),
+  activeSkillIds: z.array(z.string()).optional(),
+  useLocalModel: z.boolean().optional(),
+  localModelName: z.string().optional(),
+  localModelUrl: z.string().optional(),
+  localApiType: z.enum(['openai', 'custom']).optional(),
+  customPrompts: z.record(z.string(), z.string()).optional(),
 });
 
 export type GenerationModeInput = z.infer<typeof generationModeSchema>;
@@ -98,5 +108,5 @@ export const BEST_FORMATS: Record<string, string> = {
   cours_complet: "pdf",
   resume_eleve: "pdf",
   presentation_pptx: "pptx",
-  images_illustratives: "md",
+  images_illustratives: "txt",
 };

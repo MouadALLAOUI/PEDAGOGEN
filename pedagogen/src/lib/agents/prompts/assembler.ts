@@ -1,4 +1,5 @@
 import type { CourseMetadata } from '@/types/generation';
+import type { Skill } from '@/types/skills';
 import { getCoreInstruction, getMetadataBlock, getOutputRule, getTeacherInstructionBlock } from './core';
 import { TOOL_SCHEMAS } from './schemas';
 
@@ -10,10 +11,11 @@ export interface AssemblyInput {
   customGlobal?: string;
   customContext?: string;
   referenceContents?: string;
+  activeSkills?: Skill[];
 }
 
 export function assembleSystemPrompt(input: AssemblyInput): string {
-  const { metadata, documentsToGenerate, includePrompt, excludePrompt, customGlobal, customContext, referenceContents } = input;
+  const { metadata, documentsToGenerate, includePrompt, excludePrompt, customGlobal, customContext, referenceContents, activeSkills } = input;
   const blocks: string[] = [];
 
   blocks.push(getCoreInstruction());
@@ -31,6 +33,22 @@ export function assembleSystemPrompt(input: AssemblyInput): string {
   blocks.push('---');
   blocks.push(getOutputRule());
 
+  // Injection of Active Skills (Directives Spécialisées & Pédagogiques)
+  if (activeSkills && activeSkills.length > 0) {
+    const skillLines: string[] = ['<active_skills description="Directives et compétences modulaires prioritaires définies pour cette génération">'];
+    for (const skill of activeSkills) {
+      skillLines.push(`### SKILL: ${skill.name} [Catégorie: ${skill.category.toUpperCase()}] (Portée: ${skill.scope_type.toUpperCase()}${skill.scope_lesson ? ` - Leçon: ${skill.scope_lesson}` : skill.scope_subject ? ` - Matière: ${skill.scope_subject}` : ''})`);
+      if (skill.description) {
+        skillLines.push(`> Description: ${skill.description}`);
+      }
+      skillLines.push(skill.prompt_instruction.trim());
+      skillLines.push('');
+    }
+    skillLines.push('</active_skills>');
+    blocks.push('---');
+    blocks.push(skillLines.join('\n'));
+  }
+
   const teacherBlock = getTeacherInstructionBlock(includePrompt, excludePrompt, customGlobal, customContext);
   if (teacherBlock) {
     blocks.push('---');
@@ -39,7 +57,7 @@ export function assembleSystemPrompt(input: AssemblyInput): string {
 
   if (referenceContents?.trim()) {
     blocks.push('---');
-    blocks.push(`refs:\n${referenceContents}`);
+    blocks.push(`<reference_documents data_only="true">\n${referenceContents.trim()}\n</reference_documents>`);
   }
 
   if (documentsToGenerate?.length) {

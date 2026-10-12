@@ -1,0 +1,65 @@
+{
+  "titre_seance": "Typologie des réseaux : LAN, MAN, WAN",
+  "gestion_retard": "L'élève arrivant en retard entre sans bruit, s'assoit à sa place, sort son cahier et attend la fin de la phase en cours. L'enseignant lui remet une fiche de rattrapage avec les trois définitions (LAN, MAN, WAN) et les exercices à faire seul. Pendant le premier exercice d'entraînement, l'enseignant vient vérifier rapidement sa compréhension.",
+  "gestion_fin_de_seance": "Les élèves rangent leur cahier et leur matériel. L'enseignant fait un bilan oral rapide (2 min) : « Qui peut me citer les trois types de réseaux ? » Annonce de la prochaine séance : « La prochaine fois, nous verrons comment les données circulent dans ces réseaux. » Les délégués vérifient que la salle est propre et que les chaises sont rangées.",
+  "alternatives_sans_materiel": "En cas de panne d'ordinateur ou de coupure d'électricité : l'enseignant utilise le tableau avec des étiquettes magnétiques représentant les ordinateurs, des ficelles de différentes couleurs (LAN = ficelle courte 30 cm, MAN = ficelle moyenne 1 m, WAN = ficelle longue 3 m) pour matérialiser les distances. Les définitions sont lues à voix haute par l'enseignant. Les exercices sont faits oralement avec des ardoises ou sur feuille. Le schéma des trois cercles concentriques est dessiné au tableau à la craie.",
+  "strategie_entree": {
+    "accueil": "L'enseignant se tient près de la porte, accueille chaque élève avec un sourire, vérifie que les élèves entrent calmement et s'installent. Le titre de la séance est déjà écrit au tableau : « Typologie des réseaux : LAN, MAN, WAN ».",
+    "mise_en_route": "Les élèves sortent leur cahier d'informatique et une ardoise. L'enseignant fait un appel visuel rapide en regardant chaque table. Les absents sont notés en 30 secondes par le délégué.",
+    "captation_attention": "L'enseignant montre une image projetée d'un dar chabab avec trois ordinateurs et une imprimante, puis pose la question : « Qui peut me dire ce que ces trois ordinateurs ont besoin pour partager l'imprimante ? » Cela crée une curiosité immédiate."
+  },
+  "organisation_espace": {
+    "disposition_tables": "Tables disposées en îlots de 4 élèves pour favoriser le travail en binôme et la discussion. Chaque îlot a une vue dégagée sur le tableau et le vidéoprojecteur. Un espace central libre permet à l'enseignant de circuler.",
+    "zones_activite": [
+      "Zone tableau/cours : face au tableau pour les phases de rappel, généralisation et quiz",
+      "Zone projection : écran blanc / mur pour le vidéoprojecteur et le diaporama",
+      "Zone manipulation : table de démonstration avec trois ordinateurs reliés (si disponible)",
+      "Zone travail en îlots : pour les exercices d'entraînement"
+    ],
+    "acces_materiel": "Les ordinateurs sont allumés avant l'arrivée des élèves. Le vidéoprojecteur est prêt. Les fiches d'exercices sont distribuées sur chaque îlot face cachée. Les feutres et ardoises sont dans un bac au centre de chaque îlot."
+  },
+  "gestion_temps": {
+    "Mise_en_situation": "10 min — Rappel 3 min + Situation-problème 7 min",
+    "Analyse": "25 min — Analyse_SP 5 min + Investigation 5 min + Généralisation 10 min + Entraînement 5 min",
+    "Synthese": "10 min — Quiz 5 min + marge 5 min",
+    "marge_imprevus": "5 min — intégrées dans la marge de synthèse et les transitions",
+    "signaux_transition": "L'enseignant utilise un signal sonore court (clochette ou « Top chrono ! ») pour indiquer la fin d'une phase. Un geste de la main (paume ouverte levée) signifie « silence et regard vers le tableau ». Les transitions durent maximum 30 secondes."
+  },
+  "gestion_comportement": {
+    "regles_rappelees": [
+      "Ne pas partager son mot de passe — c'est personnel et secret",
+      "Éteindre correctement l'ordinateur (menu Démarrer → Arrêter)",
+      "Ne pas débrancher les câbles en tirant sur la prise",
+      "Ne pas installer de logiciel sans l'autorisation d'un adulte",
+      "Respecter la parole du camarade : on lève la main avant de parler"
+    ],
+    "gestion_bavardages": "L'enseignant utilise le regard et le rapprochement physique d'abord. Si les bavardages persistent, il dit prénom de l'élève suivi d'une consigne claire : « [Prénom], regarde le tableau s'il te plaît. » En cas de trouble récurrent, l'élève change de place et reçoit une fiche individuelle supplémentaire.",
+    "gestion_eleve_bloqué": "L'enseignant s'approche, s'accroupit à hauteur de l'élève et reformule la consigne avec un exemple concret : « LAN, c'est comme le Wi-Fi du dar chabab. Est-ce que tu vois la différence avec Internet (WAN) ? » Si besoin, il donne une image mentale : « Imagine trois cercles : ta chambre (LAN), ton quartier (MAN), tout le Maroc (WAN). »"
+  },
+  "differenciation": {
+    "eleves_rapides": "Demander à l'élève de dessiner un réseau imaginaire qui combine les trois types : un collège (LAN) connecté à un autre collège dans la même ville (MAN), lui-même connecté à Internet (WAN). Ajouter une question bonus : « À ton avis, quel type de réseau utilise le Wi-Fi de ton domicile ? Explique pourquoi. »",
+    "eleves_en_difficulte": "Distribuer une fiche pré-remplie avec un tableau à trois colonnes (Type / Zone / Exemple) où l'élève doit juste coller des étiquettes. L'enseignant ou un élève-tuteur (binôme) l'accompagne. Les définitions sont écrites en gros caractères avec des pictogrammes. Le schéma des trois cercles est déjà tracé, l'élève doit juste écrire LAN, MAN, WAN dans le bon cercle."
+  },
+  "remédiation": {
+    "erreurs_frequentes_prevues": [
+      "L'élève pense que LAN et Internet sont la même chose",
+      "L'élève ne voit pas la différence de taille entre LAN, MAN et WAN",
+      "L'élève croit que tous les réseaux ont besoin de câbles/fils"
+    ],
+    "priorisation_erreurs_frequentes": [
+      {
+        "erreur": "L'élève confond LAN et Internet : il pense que tout réseau est Internet",
+        "remediation_ciblee": "Utiliser l'analogie des couloirs du collège pour le LAN vs le réseau routier du Maroc pour Internet (WAN). Faire répéter : 'LAN = bâtiment, Internet = monde entier'. Montrer un ordinateur déconnecté d'Internet qui fonctionne encore en LAN avec d'autres PC."
+      },
+      {
+        "erreur": "L'élève ne perçoit pas la différence de portée entre LAN, MAN et WAN",
+        "remediation_ciblee": "Dessiner trois cercles concentriques au tableau avec des couleurs vives : cercle vert (LAN) = la classe, cercle orange (MAN) = toute la ville de Fès, cercle rouge (WAN) = tout le Maroc. Faire venir un élève pour placer des étiquettes dans chaque cercle."
+      },
+      {
+        "erreur": "L'élève pense qu'un réseau a toujours besoin de câbles",
+        "remediation_ciblee": "Montrer le Wi-Fi du dar chabab comme contre-exemple : 'Est-ce que ton téléphone est relié par un câble au dar chabab ? Non, c'est du sans-fil !' Différencier : réseau avec fil (Ethernet, comme les tuyaux d'eau) et réseau sans fil (Wi-Fi, comme les ondes radio)."
+      }
+    ],
+    "strategie_correction": "Correction collective au tableau après chaque exercice : un élève volontaire vient écrire sa réponse, l'enseignant valide ou corrige en expliquant pourquoi. Les erreurs fréquentes sont traitées immédiatement avec une reformulation et une analogie concrète (dar chabab, collège, ville de Fès). Pour les erreurs persistantes, l'élève reçoit une fiche de remédiation avec le schéma des trois cercles à compléter à la maison."
+  }
+}

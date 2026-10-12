@@ -1,0 +1,106 @@
+{
+  "titre_seance": "Découverte du système informatique : matériel, logiciel et connectivité",
+  "timing_consistency_check": "La séance dure 60 minutes au total. Répartition : Mise_en_situation (12 min : rappel 4 min + situation-problème 8 min), Analyse (30 min : Analyse_SP 7 min + Investigation 6 min + Généralisation 11 min + Entraînement 6 min), Synthèse (12 min : Quiz 6 min + marge 6 min), transitions et gestion (6 min). La somme des durées est 12 + 30 + 12 + 6 = 60 min, conforme à la durée totale de la séance.",
+  "variantes_pedagogiques": "Si les élèves peinent à distinguer matériel et logiciel, utiliser l'analogie du corps humain : le matériel est comme le corps (les os, la peau : on peut toucher), le logiciel est comme l'esprit ou la pensée (on ne peut pas la toucher mais elle commande les actions). Si la notion de connectivité bloque, remplacer par l'image du téléphone portable qui capte le réseau : l'ordinateur capte Internet comme le téléphone capte le réseau Wi-Fi du dar chabab. Pour les élèves très lents, simplifier en ne retenant que les 3 notions-clés (matériel, logiciel, périphérique) sans aborder la connectivité en détail.",
+  "gestion_erreurs_frequentes": "Erreur 1 : L'élève pense que l'écran EST l'ordinateur. Relance : « L'écran affiche ce que l'ordinateur calcule, mais tout le travail se fait dans l'unité centrale, la grande boîte. » Erreur 2 : L'élève classe Windows comme un matériel. Relance : « Peux-tu toucher Windows ? Non. Windows est un programme qui lance l'ordinateur, c'est un logiciel. » Erreur 3 : L'élève ne voit pas la différence entre une souris et un logiciel. Relance : « La souris, tu la tiens dans ta main. Un logiciel, tu ne peux pas le toucher, c'est une liste d'instructions. » Erreur 4 : L'élève croit que clé USB et Wi-Fi sont la même chose. Relance : « La clé USB est un petit matériel que tu branches. Le Wi-Fi est une connexion sans fil, comme les ondes radio. »",
+  "conseils_surlignage": "Mots-clés à surligner en rouge dans le cahier : Matériel (hardware), Logiciel (software), Système informatique, Connectivité, Périphérique, Port USB. Insister sur la paire 'Matériel = ce qu'on touche' vs 'Logiciel = programme invisible'. Souligner en vert les exemples marocains : cybercafé du quartier, dar chabab, Wi-Fi, clé USB.",
+  "script_enseignant": {
+    "Mise_en_situation": {
+      "rappel": "« Bonjour à tous ! Aujourd'hui, nous allons parler de quelque chose que vous utilisez peut-être déjà. »\nLever la main : « Qui a déjà utilisé un ordinateur ? Où ? Au cybercafé du quartier ? À dar chabab ? Chez vous ? »\nLaisser répondre 3-4 élèves.\n« Très bien. Et à votre avis, à quoi sert un ordinateur ? »\nNoter les réponses au tableau : jouer, devoirs, vidéos, Internet.\n« Regardez bien cet ordinateur devant vous. Quelles parties voyez-vous ? »\nMontrer du doigt chaque élément : écran, clavier, souris, unité centrale.\n« Aujourd'hui, nous allons comprendre comment tout cela fonctionne ensemble. »",
+      "situation_probleme": "« Écoutez bien cette histoire. Sofia est une élève de 1AC, comme vous. Elle doit imprimer une photo pour le projet d'école sur son quartier. Elle va au cybercafé du quartier, allume l'ordinateur... mais elle ne comprend rien à ce qu'elle voit à l'écran ! Elle ne sait pas quel programme utiliser pour ouvrir sa photo, ni comment brancher sa clé USB. Le gérant du cybercafé lui parle de « matériel » et de « logiciel ». Sofia est complètement perdue. »\nPause. Regarder la classe.\n« Alors, je vous pose la question : comment pouvons-nous aider Sofia à comprendre ce qu'est un système informatique et comment il fonctionne ? C'est ce que nous allons découvrir ensemble aujourd'hui. »"
+    },
+    "Analyse": {
+      "Analyse_SP": "« Reprenons l'histoire de Sofia. »\nQ1 : « De quoi Sofia a-t-elle besoin pour imprimer sa photo ? » (Laisser les élèves proposer : ordinateur, imprimante, clé USB)\nQ2 : « Quels éléments Sofia utilise-t-elle au cybercafé ? » (Montrer chaque vrai composant en le nommant)\nQ3 : « Une fois la photo sur l'écran, quel programme pourrait-elle utiliser pour l'ouvrir ? Est-ce que la souris suffit toute seule ? »\nQ4 : « Où brancher la clé USB sur l'ordinateur ? Quelqu'un peut venir me montrer ? »\nNoter les hypothèses des élèves au tableau dans la zone prévue.",
+      "Investigation": "« Maintenant, vérifions vos hypothèses. »\nPrendre chaque composant un par un :\n« Regardez : l'écran, la souris, le clavier, l'imprimante, l'unité centrale. Qu'ont-ils en commun ? On peut tous les toucher ! En informatique, on appelle tout cela le MATÉRIEL. En anglais, on dit hardware. »\nBrancher une clé USB sur un port de l'unité centrale : « Voilà comment on branche une clé USB. Ça s'appelle un port USB. »\n« Maintenant, je veux ouvrir la photo de Sofia. Est-ce que la souris suffit ? Non ! Il faut aussi un programme, un LOGICIEL — en anglais software. Le logiciel donne des ordres à l'ordinateur pour qu'il sache quoi faire. »\nOuvrir un dossier de photos : « Voilà, j'utilise un logiciel pour ouvrir la photo. »\nConclure : « Donc un ordinateur, c'est matériel + logiciel qui travaillent ensemble. »",
+      "Generalisation": "« Très bien, maintenant notons tout cela dans le cahier. Écrivez le titre : Système informatique. »\nDicter chaque définition lentement, en faisant des phrases courtes :\n\n« 1. Système informatique : C'est un ensemble d'éléments matériels et logiciels qui travaillent ensemble pour traiter des informations. »\nDessiner un cercle au tableau avec deux moitiés : matériel et logiciel.\n« 2. Matériel (hardware) : C'est la partie physique de l'ordinateur, ce que l'on peut toucher. Exemples : l'écran (il affiche les images), le clavier (pour écrire), la souris (pour pointer et cliquer), l'unité centrale (c'est le cerveau qui contient toutes les pièces importantes), l'imprimante (pour imprimer sur papier). »\n« 3. Logiciel (software) : C'est un programme qui donne des instructions à l'ordinateur. On ne peut pas le toucher. Exemples : Windows (le programme qui lance l'ordinateur), un navigateur Internet (pour aller sur le Web), un traitement de texte (pour écrire des lettres). »\n« 4. Connectivité : C'est la capacité de l'ordinateur à communiquer avec d'autres appareils ou à se connecter à Internet. Comme le Wi-Fi du dar chabab ou un câble Ethernet. »\n« 5. Périphérique : C'est un élément matériel qui se branche à l'unité centrale. Exemples : le clavier, la souris, l'imprimante, la clé USB. »\n« 6. Port USB : C'est une prise sur l'ordinateur qui permet de brancher des périphériques comme une clé USB. »\nLaisser le temps aux élèves de noter. Faire répéter les définitions par 2-3 élèves oralement.",
+      "ENTRAINEMENT": "« Maintenant, on applique tout de suite. Sortez votre cahier d'exercices. »\n\nExercice 1 — Classement : « Je vais vous donner des mots. Vous devez les classer en deux colonnes : MATÉRIEL et LOGICIEL. Les mots sont : écran, Windows, souris, Word, clavier, imprimante, navigateur Internet, unité centrale. »\nDonner 3 minutes. Puis correction collective : un élève par mot vient écrire au tableau.\n\nExercice 2 — Vrai ou Faux : « Je lis les phrases, vous répondez Vrai ou Faux sur l'ardoise. »\na) « Un logiciel est une partie physique que l'on peut toucher. » (Faux)\nb) « La souris permet de pointer et cliquer à l'écran. » (Vrai)\nc) « Le Wi-Fi permet de se connecter à Internet sans fil. » (Vrai)\nd) « L'unité centrale est un logiciel. » (Faux)\ne) « Un périphérique se branche à l'unité centrale. » (Vrai)\n\nExercice 3 — Relier : Distribuer la fiche. « Reliez chaque mot à sa définition : Matériel → Ce que l'on peut toucher / Logiciel → Programme qui donne des instructions / Connectivité → Capacité à se connecter / Périphérique → Élément qui se branche à l'unité centrale. »\n\n« Maintenant, recopiez la trace écrite au propre dans votre cahier de cours : les 6 définitions que nous avons vues. »"
+    },
+    "Synthese": {
+      "Quiz": "« C'est l'heure du quiz ! Je pose une question, vous levez la main ou vous écrivez la réponse sur l'ardoise. »\n\nQ1 : « Qu'est-ce qu'un système informatique ? » (Réponse : Un ensemble d'éléments matériels et logiciels qui travaillent ensemble.)\nQ2 : « Citez deux exemples de matériel. » (Écran, clavier, souris, unité centrale, imprimante.)\nQ3 : « Citez deux exemples de logiciel. » (Windows, Word, navigateur Internet, jeu éducatif.)\nQ4 : « Comment s'appelle la capacité d'un ordinateur à se connecter à Internet ? » (La connectivité.)\nQ5 : « Vrai ou Faux : la souris est un logiciel. » (Faux, c'est un matériel.)\nQ6 : « Que devez-vous faire avant d'éteindre l'ordinateur ? » (Menu Démarrer → Arrêter.)\nQ7 : « Pourquoi ne faut-il jamais partager son mot de passe ? » (Pour protéger ses informations personnelles.)\nQ8 : « Où branche-t-on une clé USB ? » (Sur un port USB de l'unité centrale.)\n\n« Bravo à tous ! Vous avez bien compris la leçon d'aujourd'hui. »\nAnnoncer : « La prochaine fois, nous verrons comment naviguer sur Internet pour rechercher des informations. »"
+    }
+  },
+  "savoir": {
+    "definitions": [
+      {
+        "terme": "Système informatique",
+        "definition": "Ensemble d'éléments matériels (ce qu'on touche) et logiciels (les programmes) qui travaillent ensemble pour traiter des informations. Comme une équipe de foot : chaque joueur a son rôle."
+      },
+      {
+        "terme": "Matériel (hardware)",
+        "definition": "Partie physique de l'ordinateur que l'on peut toucher. Exemples : l'écran (affiche les images), le clavier (permet d'écrire), la souris (permet de pointer et cliquer), l'unité centrale (le cerveau qui contient les pièces importantes), l'imprimante (imprime sur papier)."
+      },
+      {
+        "terme": "Logiciel (software)",
+        "definition": "Programme qui donne des instructions à l'ordinateur. On ne peut pas le toucher. Exemples : Windows (lance l'ordinateur), un navigateur Internet (va sur le Web), un traitement de texte (pour écrire des lettres)."
+      },
+      {
+        "terme": "Connectivité",
+        "definition": "Capacité de l'ordinateur à communiquer avec d'autres appareils ou à se connecter à Internet. Cela peut se faire par câble ou sans fil (Wi-Fi du dar chabab)."
+      },
+      {
+        "terme": "Périphérique",
+        "definition": "Élément matériel qui se branche à l'unité centrale pour ajouter une fonction. Exemples : clavier (pour écrire), souris (pour cliquer), imprimante (pour imprimer), clé USB (pour stocker des fichiers)."
+      },
+      {
+        "terme": "Port USB",
+        "definition": "Prise rectangulaire sur l'ordinateur qui permet de brancher des périphériques comme une clé USB, une souris ou une imprimante."
+      }
+    ],
+    "schema_reseau": "Au tableau, dessiner un cercle central intitulé « SYSTÈME INFORMATIQUE ». Le diviser en deux parties : à gauche « MATÉRIEL » avec des dessins simplifiés (écran, clavier, souris, unité centrale, imprimante, clé USB), à droite « LOGICIEL » avec des noms de programmes (Windows, Word, navigateur). En dessous, ajouter une flèche « CONNECTIVITÉ » pointant vers un symbole Wi-Fi (ondes) et un câble Ethernet. Relier le tout par des traits partant de l'unité centrale vers chaque périphérique.",
+    "exemples_concrets": [
+      "Sofia imprime une photo pour le projet d'école au cybercafé du quartier — elle utilise un logiciel de visualisation de photos (logiciel) et une imprimante (matériel) branchée à l'unité centrale.",
+      "Au dar chabab, les élèves se connectent au Wi-Fi pour faire leurs recherches sur Internet — c'est la connectivité sans fil.",
+      "À la maison, papa branche la clé USB sur le port de l'unité centrale pour récupérer les factures d'eau de la REDAL.",
+      "Au cybercafé, le gérant utilise un logiciel de caisse (logiciel) et un ordinateur (matériel) pour gérer les impressions et les connexions."
+    ]
+  },
+  "plan_tableau": {
+    "zone_titre": "Système informatique : Matériel, Logiciel et Connectivité | 3AC | Unité 4",
+    "zone_probleme": "SITUATION-PROBLÈME : Sofia au cybercafé doit imprimer une photo pour le projet d'école. Elle ne comprend pas comment fonctionne l'ordinateur. → Hypothèses des élèves notées ici.",
+    "zone_cours": "I. DÉFINITIONS\n1. Système informatique = Matériel + Logiciel qui travaillent ensemble\n2. Matériel (hardware) = partie physique qu'on touche (écran, clavier, souris, UC, imprimante)\n3. Logiciel (software) = programme qu'on ne peut pas toucher (Windows, Word, navigateur)\n4. Connectivité = capacité à se connecter à Internet (Wi-Fi, câble)\n5. Périphérique = élément branché à l'UC (clavier, souris, imprimante, clé USB)\n6. Port USB = prise pour brancher les périphériques\n\nSCHÉMA : [Cercle SYSTÈME INFORMATIQUE divisé en MATÉRIEL | LOGICIEL] + flèche CONNECTIVITÉ",
+    "zone_exercices": "Exercice 1 — Classement (Matériel / Logiciel)\nExercice 2 — Vrai ou Faux\nExercice 3 — Relier mot → définition"
+  },
+  "activites_eleves": [
+    {
+      "etape": "Rappel — Questions orales",
+      "consigne": "Répondre aux questions de l'enseignant sur l'utilisation quotidienne de l'ordinateur.",
+      "production_attendue": "Participation orale : 5-6 élèves partagent leurs expériences (cybercafé, dar chabab, maison)."
+    },
+    {
+      "etape": "Situation-problème — Écoute et analyse",
+      "consigne": "Écouter l'histoire de Sofia et se préparer à proposer des solutions.",
+      "production_attendue": "Les élèves reformulent le problème avec leurs mots et proposent 2-3 hypothèses."
+    },
+    {
+      "etape": "Analyse de la SP — Hypothèses",
+      "consigne": "Répondre aux questions de l'enseignant sur les besoins de Sofia.",
+      "production_attendue": "4 hypothèses formulées collectivement et notées au tableau."
+    },
+    {
+      "etape": "Investigation — Observation",
+      "consigne": "Observer les composants présentés par l'enseignant et écouter les explications.",
+      "production_attendue": "Les élèves identifient chaque composant et répètent les termes (matériel/logiciel)."
+    },
+    {
+      "etape": "Généralisation — Prise de notes",
+      "consigne": "Recopier les définitions dictées par l'enseignant dans le cahier de cours.",
+      "production_attendue": "Cahier de cours avec les 6 définitions complètes et le schéma."
+    },
+    {
+      "etape": "Entraînement — Exercices",
+      "consigne": "Réaliser les 3 exercices (classement, vrai/faux, relier) sur le cahier d'exercices.",
+      "production_attendue": "Exercices complétés et corrigés collectivement au tableau."
+    },
+    {
+      "etape": "Quiz — Évaluation formative",
+      "consigne": "Répondre aux 8 questions du quiz oral à l'aide d'ardoises ou à main levée.",
+      "production_attendue": "80% de réponses correctes au quiz oral."
+    },
+    {
+      "etape": "Trace écrite finale",
+      "consigne": "Recopier proprement la trace écrite au propre dans le cahier de cours.",
+      "production_attendue": "Cahier de cours complet et rangé."
+    }
+  ],
+  "annotations": "L'enseignant doit veiller à rythmer la séance : ne pas passer plus de 2 minutes par définition pendant la généralisation. Anticiper les manipulations : avoir la clé USB prête, les images des composants visibles de loin. Pour les élèves en difficulté (differ: soutien), prévoir une fiche simplifiée avec seulement les 3 notions principales (matériel, logiciel, périphérique) et des images à colorier/légender. Pour les élèves rapides, proposer une question bonus : « Donne 3 exemples de connectivité dans la vie de tous les jours au Maroc (ex : Wi-Fi du dar chabab, partage de connexion 4G, cybercafé) ». Ne pas oublier de rappeler les deux règles de sécurité numérique : ne pas partager son mot de passe et éteindre correctement l'ordinateur via le menu Démarrer. La gestion du temps est cruciale : utiliser un minuteur visible pour chaque phase. Si le temps manque, réduire l'exercice 3 (relier) en exercice oral collectif."
+}

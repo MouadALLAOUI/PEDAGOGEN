@@ -15,5 +15,5 @@ export const DEFAULT_PROVIDER_SETTINGS: ProviderSettings = {
   huggingfaceToken: "",
   lmstudioUrl: "http://localhost:1234/v1/chat/completions",
   lmstudioModel: "local-model",
-  opencodeModel: "opencode/kimi-k2.5-free",
+  opencodeModel: "opencode/big-pickle",
 };

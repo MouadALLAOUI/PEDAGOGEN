@@ -54,21 +54,29 @@ export default function AuthPage() {
 
   return (
     <div className="bg-white rounded-2xl shadow-2xl shadow-navy/10 overflow-hidden">
-      <Tabs tabs={tabs} activeTab={activeTab} onChange={(v) => setActiveTab(v as 'login' | 'register')} />
+      <Tabs
+        tabs={tabs}
+        activeTab={activeTab}
+        onChange={(v) => {
+          setError('');
+          setActiveTab(v as 'login' | 'register');
+        }}
+      />
 
       <form onSubmit={activeTab === 'login' ? handleLogin : handleRegister} className="p-8 space-y-5">
         {error && (
-          <div className="bg-red/10 border border-red/20 text-red text-sm rounded-lg px-4 py-3">
+          <div role="alert" className="bg-red/10 border border-red/20 text-red text-sm rounded-lg px-4 py-3">
             {error}
           </div>
         )}
 
         {activeTab === 'register' && (
           <div>
-            <label className="block text-sm font-medium text-navy mb-1.5">Nom complet</label>
+            <label htmlFor="register-fullName" className="block text-sm font-medium text-navy mb-1.5">Nom complet</label>
             <div className="relative">
               <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
               <input
+                id="register-fullName"
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
@@ -81,10 +89,11 @@ export default function AuthPage() {
         )}
 
         <div>
-          <label className="block text-sm font-medium text-navy mb-1.5">Email</label>
+          <label htmlFor={`${activeTab}-email`} className="block text-sm font-medium text-navy mb-1.5">Email</label>
           <div className="relative">
             <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
             <input
+              id={`${activeTab}-email`}
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -96,10 +105,11 @@ export default function AuthPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-navy mb-1.5">Mot de passe</label>
+          <label htmlFor={`${activeTab}-password`} className="block text-sm font-medium text-navy mb-1.5">Mot de passe</label>
           <div className="relative">
             <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
             <input
+              id={`${activeTab}-password`}
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -113,10 +123,11 @@ export default function AuthPage() {
 
         {activeTab === 'register' && (
           <div>
-            <label className="block text-sm font-medium text-navy mb-1.5">Confirmer</label>
+            <label htmlFor="register-confirmPassword" className="block text-sm font-medium text-navy mb-1.5">Confirmer</label>
             <div className="relative">
               <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
               <input
+                id="register-confirmPassword"
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}

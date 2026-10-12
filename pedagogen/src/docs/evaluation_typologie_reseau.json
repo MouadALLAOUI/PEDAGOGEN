@@ -1,0 +1,191 @@
+{
+  "titre": "Évaluation sommative — Typologie des réseaux (LAN, MAN, WAN)",
+  "niveau": "1AC",
+  "duree": "30 min",
+  "evaluation_automatique": true,
+  "consigne_generale": "Lis attentivement chaque question. Pour les QCM, une seule réponse est correcte. Pour les vrai/faux, réponds par Vrai ou Faux. Pour les questions ouvertes, rédige une phrase complète. La note finale est sur 20 points. Bon courage !",
+  "questions": [
+    {
+      "numero": 1,
+      "type": "qcm",
+      "competence_evaluee": "Identifier les caractéristiques d'un réseau local",
+      "niveau_bloom": "Mémoriser",
+      "enonce": "Qu'est-ce qu'un réseau LAN (Local Area Network / Réseau Local) ?",
+      "options": [
+        "Un réseau qui couvre tout le Maroc",
+        "Un réseau qui relie des ordinateurs dans un même bâtiment comme une salle informatique ou un dar chabab",
+        "Un réseau qui connecte des ordinateurs dans le monde entier",
+        "Un réseau sans fil uniquement"
+      ],
+      "points": 2,
+      "correction": "B",
+      "feedback_personnalise": "Bravo ! Un réseau LAN (Réseau Local) relie des ordinateurs dans un espace proche : une salle de classe, un dar chabab, une maison. Les autres réponses décrivent un MAN (tout le Maroc) ou un WAN (monde entier). Le LAN peut être avec ou sans fil."
+    },
+    {
+      "numero": 2,
+      "type": "qcm",
+      "competence_evaluee": "Distinguer MAN et WAN",
+      "niveau_bloom": "Comprendre",
+      "enonce": "Le réseau qui relie les agences de REDAL (Casablanca) et LYDEC (Marrakech) est un exemple de :",
+      "options": [
+        "LAN — car ce sont deux villes proches",
+        "MAN — car il relie deux points dans la même région (le Maroc)",
+        "WAN — car il relie deux villes dans le même pays mais le MAN suffit",
+        "PAN — réseau personnel"
+      ],
+      "points": 2,
+      "correction": "B",
+      "feedback_personnalise": "Exact ! Un MAN (Metropolitan Area Network / Réseau Métropolitain) relie des ordinateurs entre deux ou plusieurs sites dans une même ville ou région, comme Casablanca et Marrakech. Un LAN serait trop petit (un seul bâtiment), un WAN serait pour relier le Maroc à l'étranger."
+    },
+    {
+      "numero": 3,
+      "type": "vrai_faux",
+      "competence_evaluee": "Caractériser un réseau WAN",
+      "niveau_bloom": "Mémoriser",
+      "enonce": "Le réseau WAN (Wide Area Network / Réseau Étendu) peut relier des ordinateurs d'un pays à un autre continent. Exemple : un cybercafé à Fès connecté à un serveur en France.",
+      "options": ["Vrai", "Faux"],
+      "points": 2,
+      "correction": "Vrai",
+      "feedback_personnalise": "C'est juste ! Un WAN (Réseau Étendu) connecte des ordinateurs sur de très longues distances, d'un pays à un autre, voire d'un continent à l'autre. Internet lui-même est le plus grand exemple de WAN."
+    },
+    {
+      "numero": 4,
+      "type": "vrai_faux",
+      "competence_evaluee": "Appliquer les règles de sécurité numérique dans un contexte réseau",
+      "niveau_bloom": "Appliquer",
+      "enonce": "Quand tu utilises le Wi-Fi du dar chabab, tu peux partager ton mot de passe avec ton camarade pour qu'il se connecte aussi.",
+      "options": ["Vrai", "Faux"],
+      "points": 2,
+      "correction": "Faux",
+      "feedback_personnalise": "Attention ! Ne jamais partager son mot de passe, même avec un ami ou un camarade. Chaque personne doit avoir son propre accès. C'est une règle importante de sécurité numérique pour protéger tes données personnelles."
+    },
+    {
+      "numero": 5,
+      "type": "qcm",
+      "competence_evaluee": "Associer un type de réseau à son échelle géographique",
+      "niveau_bloom": "Comprendre",
+      "enonce": "Associe chaque type de réseau à sa bonne définition :",
+      "options": [
+        "LAN = plusieurs pays / MAN = une ville / WAN = un bâtiment",
+        "LAN = un bâtiment / MAN = une ville / WAN = plusieurs pays",
+        "LAN = une ville / MAN = un bâtiment / WAN = une région",
+        "LAN = un pays / MAN = plusieurs pays / WAN = un bâtiment"
+      ],
+      "points": 3,
+      "correction": "B",
+      "feedback_personnalise": "Parfait ! LAN (Local) est dans un bâtiment (ex: salle informatique), MAN (Metropolitan) couvre une ville ou région (ex: les agences d'une même ville), WAN (Wide) relie très loin, plusieurs pays (ex: Fès ↔ France)."
+    },
+    {
+      "numero": 6,
+      "type": "vrai_faux",
+      "competence_evaluee": "Identifier les équipements d'un réseau informatique",
+      "niveau_bloom": "Mémoriser",
+      "enonce": "Un modem (appareil qui connecte l'ordinateur à Internet) est un équipement nécessaire pour se connecter au réseau Wi-Fi du cybercafé du quartier.",
+      "options": ["Vrai", "Faux"],
+      "points": 2,
+      "correction": "Vrai",
+      "feedback_personnalise": "Exact ! Le modem est l'appareil qui reçoit Internet depuis la ligne téléphonique et le transforme en signal que l'ordinateur peut comprendre. Dans un cybercafé, c'est le modem qui permet à tous les postes d'accéder à Internet."
+    },
+    {
+      "numero": 7,
+      "type": "ouvert",
+      "competence_evaluee": "Appliquer les règles de sécurité numérique (éteindre correctement)",
+      "niveau_bloom": "Appliquer",
+      "enonce": "Ton camarade veut éteindre l'ordinateur du cybercafé. Il arrache le câble d'alimentation. Explique pourquoi c'est une mauvaise idée et décris la bonne méthode pour éteindre correctement.",
+      "points": 3,
+      "correction": "Arracher le câble peut abîmer l'ordinateur et faire perdre les fichiers non sauvegardés. La bonne méthode est : cliquer sur le menu Démarrer → cliquer sur Arrêter → attendre que l'ordinateur s'éteigne complètement. Ne jamais débrancher la prise.",
+      "feedback_personnalise": "Très bien ! Arracher le câble, c'est comme arracher une plante du sol : ça l'abîme. La méthode correcte est toujours : Menu Démarrer → Arrêter. L'ordinateur a besoin de s'éteindre correctement pour préserver ses fichiers et son système."
+    },
+    {
+      "numero": 8,
+      "type": "qcm",
+      "competence_evaluee": "Comprendre les avantages des différents types de réseaux",
+      "niveau_bloom": "Comprendre",
+      "enonce": "Pourquoi un groupe d'élèves dans la même salle informatique utilise-t-il un réseau LAN pour partager un fichier au lieu d'utiliser Internet (WAN) ?",
+      "options": [
+        "Parce que le LAN est plus lent que le WAN",
+        "Parce que le LAN est plus rapide, plus simple et ne nécessite pas de connexion Internet",
+        "Parce que le LAN coûte plus cher",
+        "Parce que le LAN ne fonctionne que la nuit"
+      ],
+      "points": 2,
+      "correction": "B",
+      "feedback_personalise": "Bonne réponse ! Le LAN (Réseau Local) est parfait pour partager des fichiers entre ordinateurs proches : il est rapide, simple à configurer et ne dépend pas d'Internet. C'est idéal dans une salle de classe, un dar chabab ou un cybercafé de quartier."
+    },
+    {
+      "numero": 9,
+      "type": "ouvert",
+      "competence_evaluee": "Distinguer les trois types de réseaux avec des exemples concrets marocains",
+      "niveau_bloom": "Appliquer",
+      "enonce": "Donne un exemple marocain pour chaque type de réseau :\n1. LAN : un endroit proche où les ordinateurs sont reliés\n2. MAN : des ordinateurs dans une même ville\n3. WAN : des ordinateurs dans des pays différents",
+      "points": 2,
+      "correction": "Exemples acceptables : LAN : la salle informatique du collège, le cybercafé du quartier, le dar chabab ; MAN : les agences de REDAL à Casablanca, les écoles d'une même ville ; WAN : un ordinateur à Casablanca qui communique avec un serveur en France.",
+      "feedback_personnalise": "Regarde autour de toi : la salle informatique de ton collège est un LAN. Les agences bancaires d'une même ville connectées entre elles forment un MAN. Et quand tu envoies un message à un cousin à l'étranger, ton réseau devient un WAN !"
+    }
+  ],
+  "bareme": {
+    "total_points": 20,
+    "repartition_par_competence": [
+      {
+        "competence": "Identifier les caractéristiques d'un réseau local (LAN)",
+        "points": 4
+      },
+      {
+        "competence": "Distinguer les types de réseaux (LAN, MAN, WAN)",
+        "points": 5
+      },
+      {
+        "competence": "Comprendre les avantages des réseaux selon leur échelle",
+        "points": 4
+      },
+      {
+        "competence": "Appliquer les règles de sécurité numérique",
+        "points": 5
+      },
+      {
+        "competence": "Donner des exemples concrets adaptés au contexte marocain",
+        "points": 2
+      }
+    ],
+    "criteres": [
+      "Chaque QCM et vrai/faux compte 2 points (sauf question 5 : 3 points)",
+      "Questions ouvertes (7 et 9) : la réponse doit être complète et justifiée pour obtenir tous les points",
+      "Aucun point négatif en cas de réponse fausse",
+      "La note finale est ramenée sur 20"
+    ]
+  },
+  "grille_evaluation": [
+    {
+      "critere": "Connaître les définitions des trois types de réseaux",
+      "indicateurs": [
+        "L'élève définit correctement LAN, MAN et WAN",
+        "L'élève associe chaque réseau à sa bonne échelle géographique"
+      ],
+      "points_max": 6
+    },
+    {
+      "critere": "Comprendre et appliquer les différences entre les réseaux",
+      "indicateurs": [
+        "L'élève distingue les situations où utiliser un LAN plutôt qu'un WAN",
+        "L'élève donne des exemples adaptés pour chaque type de réseau"
+      ],
+      "points_max": 6
+    },
+    {
+      "critere": "Appliquer les règles de sécurité numérique",
+      "indicateurs": [
+        "L'élève sait qu'il ne faut pas partager son mot de passe",
+        "L'élève connaît la procédure correcte pour éteindre un ordinateur (Démarrer → Arrêter)"
+      ],
+      "points_max": 5
+    },
+    {
+      "critere": "Utiliser un vocabulaire précis et adapté",
+      "indicateurs": [
+        "L'élève utilise correctement les termes LAN, MAN, WAN",
+        "L'élève utilise les mots français (matériel, logiciel, réseau) sans anglicismes"
+      ],
+      "points_max": 3
+    }
+  ]
+}

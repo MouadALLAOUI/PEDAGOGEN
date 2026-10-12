@@ -1,12 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { Download, RotateCcw, FileText, Check, Copy, Archive, Eye, Code, Loader2, Monitor, Globe } from 'lucide-react';
+import { Download, RotateCcw, FileText, Check, Copy, Archive, Eye, Code, Loader2, Monitor, Globe, Edit3 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { MarkdownRenderer } from '@/components/ui/MarkdownRenderer';
 import { FilePreviewModal } from '@/components/ui/FilePreviewModal';
 import { FullscreenBoard } from '@/components/generate/FullscreenBoard';
+import { SplitMarkdownEditor } from '@/components/editor/SplitMarkdownEditor';
 import { generateStandaloneHtml, downloadHtmlFile } from '@/lib/utils/pwaExport';
 import type { GenerationResult, GeneratedFile } from '@/types/generation';
 import toast from 'react-hot-toast';
@@ -16,6 +17,11 @@ interface OutputPreviewProps {
   onReset: () => void;
 }
 
+function formatDate(d: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getDate()}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+
 export function OutputPreview({ result, onReset }: OutputPreviewProps) {
   const [copied, setCopied] = useState(false);
   const [showRaw, setShowRaw] = useState(false);
@@ -23,6 +29,46 @@ export function OutputPreview({ result, onReset }: OutputPreviewProps) {
   const [zipUrl, setZipUrl] = useState<string | undefined>(result.zipUrl);
   const [zipping, setZipping] = useState(false);
   const [showBoard, setShowBoard] = useState(false);
+  const [editingDoc, setEditingDoc] = useState<{ id?: string; name: string; content: string } | null>(null);
+  const [loadingEditId, setLoadingEditId] = useState<string | null>(null);
+
+  const handleOpenEditor = async (file?: GeneratedFile) => {
+    if (!file && result.markdown) {
+      setEditingDoc({
+        name: result.metadata?.lecon || 'Cours Rapide',
+        content: result.markdown,
+      });
+      return;
+    }
+
+    if (file) {
+      if (file.format === 'md' && file.id) {
+        setLoadingEditId(file.id);
+        try {
+          const res = await fetch(`/api/generated/preview?id=${file.id}`);
+          const data = await res.json();
+          if (data.type === 'text') {
+            setEditingDoc({
+              id: file.id,
+              name: file.name,
+              content: data.content,
+            });
+          } else {
+            toast.error('Ce format ne supporte pas l\'édition textuelle');
+          }
+        } catch {
+          toast.error('Impossible de charger le fichier pour modification');
+        } finally {
+          setLoadingEditId(null);
+        }
+      } else if (result.markdown) {
+        setEditingDoc({
+          name: file.name,
+          content: result.markdown,
+        });
+      }
+    }
+  };
 
   const handleGenerateZip = async () => {
     setZipping(true);
@@ -95,8 +141,16 @@ export function OutputPreview({ result, onReset }: OutputPreviewProps) {
                     {showRaw ? 'Rendu' : 'Brut'}
                   </button>
                   <button
+                    onClick={() => handleOpenEditor()}
+                    className="flex items-center gap-1.5 text-xs text-navy hover:text-teal font-medium transition-colors px-2 py-1 rounded-lg hover:bg-teal/10"
+                    title="Modifier dans l'éditeur interactif avant export"
+                  >
+                    <Edit3 size={12} className="text-teal" />
+                    Modifier
+                  </button>
+                  <button
                     onClick={handleCopyMarkdown}
-                    className="flex items-center gap-1.5 text-xs text-teal hover:text-teal/80 transition-colors"
+                    className="flex items-center gap-1.5 text-xs text-teal hover:text-teal/80 transition-colors px-2 py-1 rounded-lg hover:bg-teal/10"
                   >
                     <Copy size={12} />
                     {copied ? 'Copié !' : 'Copier'}
@@ -168,8 +222,22 @@ export function OutputPreview({ result, onReset }: OutputPreviewProps) {
                   <FileText size={16} className="text-teal flex-shrink-0" />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-navy truncate">{file.name}</p>
-                    <p className="text-xs text-muted uppercase">{file.format} • {file.sizeKb} KB</p>
+                    <p className="text-xs text-muted uppercase">{file.format} • {file.sizeKb} KB • {formatDate(new Date(result.createdAt))}</p>
                   </div>
+                  {(file.format === 'md' || result.markdown) && (
+                    <button
+                      onClick={() => handleOpenEditor(file)}
+                      disabled={loadingEditId === file.id}
+                      className="p-2 rounded-lg hover:bg-teal/10 text-muted hover:text-teal transition-colors disabled:opacity-50"
+                      title="Modifier dans l'éditeur interactif"
+                    >
+                      {loadingEditId === file.id ? (
+                        <Loader2 size={16} className="animate-spin text-teal" />
+                      ) : (
+                        <Edit3 size={16} />
+                      )}
+                    </button>
+                  )}
                   <button
                     onClick={() => setPreviewFile(file)}
                     className="p-2 rounded-lg hover:bg-navy-light/5 text-muted hover:text-navy transition-colors"
@@ -229,8 +297,22 @@ export function OutputPreview({ result, onReset }: OutputPreviewProps) {
         />
       )}
 
+      {editingDoc && (
+        <SplitMarkdownEditor
+          initialContent={editingDoc.content}
+          title={editingDoc.name}
+          fileId={editingDoc.id}
+          onSave={(newContent) => {
+            if (result && 'markdown' in result) {
+              result.markdown = newContent;
+            }
+          }}
+          onClose={() => setEditingDoc(null)}
+        />
+      )}
+
       {showBoard && (
-        <FullscreenBoard onClose={() => setShowBoard(false)} />
+        <FullscreenBoard result={result} onClose={() => setShowBoard(false)} />
       )}
     </>
   );

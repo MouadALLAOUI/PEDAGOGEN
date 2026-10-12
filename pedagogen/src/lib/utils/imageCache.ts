@@ -79,22 +79,51 @@ export function listCachedImages(): Array<{
   }));
 }
 
-export async function generateFluxImage(prompt: string): Promise<Buffer> {
-  const response = await fetch('https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${process.env.HF_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ inputs: prompt }),
-  });
+export async function generateFluxImage(
+  prompt: string,
+  options?: { apiKey?: string; baseUrl?: string; providerId?: string }
+): Promise<Buffer | null> {
+  const { apiKey, baseUrl } = options || {};
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`FLUX generation failed: ${response.status} ${errorText}`);
+  if (baseUrl) {
+    try {
+      const url = `${baseUrl.replace(/\/+$/, '')}/v1/images/generations`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${apiKey || ''}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ model: 'FLUX.1-schnell', prompt, n: 1, size: '1024x1024' }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        if (data.data?.[0]?.b64_json) {
+          return Buffer.from(data.data[0].b64_json, 'base64');
+        }
+      }
+    } catch {
+      // fall through to HF
+    }
   }
 
-  const arrayBuffer = await response.arrayBuffer();
-  return Buffer.from(arrayBuffer);
+  try {
+    const token = apiKey || process.env.HF_TOKEN || '';
+    const response = await fetch('https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ inputs: prompt }),
+    });
+
+    if (!response.ok) return null;
+
+    const arrayBuffer = await response.arrayBuffer();
+    return Buffer.from(arrayBuffer);
+  } catch {
+    return null;
+  }
 }
 

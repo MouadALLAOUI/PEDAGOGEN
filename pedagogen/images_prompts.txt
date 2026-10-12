@@ -1,0 +1,53 @@
+{
+  "prompt_format": [
+    {
+      "id": 1,
+      "filename": "ordinateur_bureau.png",
+      "description": "Image d'ordinateur de bureau pour la mise en situation : un élève découvre un poste informatique au dar chabab",
+      "purpose": "mise_en_situation",
+      "prompt": "SVG vectoriel, style dessin animé moderne, fond blanc. Un ordinateur de bureau complet vu de face (écran, clavier, souris, unité centrale) posé sur un bureau d'école marocain. À côté, un cartable et un cahier. Couleurs vives et attrayantes pour élèves de 12-13 ans. Aucun texte long. Police 20px minimum pour les rares étiquettes 'Écran', 'Clavier', 'Souris'. Style ludique et moderne."
+    },
+    {
+      "id": 2,
+      "filename": "wifi_dar_chabab.png",
+      "description": "Schéma de connectivité : élève se connectant au Wi-Fi du dar chabab pour illustrer la notion de réseau",
+      "purpose": "cours",
+      "prompt": "PNG vectoriel, dessin animé moderne, fond blanc. Un élève souriant (12-13 ans, portant un tablier scolaire marocain) devant un ordinateur portable qui affiche l'icône Wi-Fi connectée. À l'arrière-plan, une petite icône de routeur avec des ondes Wi-Fi. Bulles indiquant 'Wi-Fi connecté !' en français. Style clair, lisible à distance. Police 22px. Ambiance positive et moderne du dar chabab (espace jeunesse marocain)."
+    },
+    {
+      "id": 3,
+      "filename": "materiel_logiciel.png",
+      "description": "Comparaison matériel vs logiciel : illustration pour la généralisation en cours",
+      "purpose": "cours",
+      "prompt": "SVG vectoriel, bande dessinée deux colonnes, fond blanc. Colonne gauche 'MATÉRIEL' : dessins d'un écran, d'une souris, d'un clavier, d'une imprimante. Colonne droite 'LOGICIEL' : dessins d'une icône de jeu, d'un traitement de texte (Word), d'un navigateur Internet (globe). Flèche de liaison entre les deux avec le texte 'Ensemble ils forment l'ordinateur'. Style dessin animé moderne, couleurs vives, police 22px minimum. Adapté 1AC."
+    },
+    {
+      "id": 4,
+      "filename": "imprimante_ecole.png",
+      "description": "Exemple d'utilisation d'un système informatique : imprimer une photo pour un projet scolaire",
+      "purpose": "exercice",
+      "prompt": "PNG vectoriel, dessin animé moderne, fond blanc. Un élève devant un ordinateur qui clique sur 'Imprimer'. À côté, une imprimante qui sort une photo d'un paysage marocain (montagnes de l'Atlas ou plage). L'élève tient la photo dans sa main avec un sourire. Texte 'Imprimer une photo pour le projet de classe' en français. Police 20px. Style coloré et motivant pour collégiens 1AC."
+    },
+    {
+      "id": 5,
+      "filename": "connexion_internet.png",
+      "description": "Illustration de la connexion Internet pour la synthèse : notions de base du réseau",
+      "purpose": "synthese",
+      "prompt": "SVG vectoriel, dessin animé moderne, fond blanc. Schéma simple d'un ordinateur à gauche qui envoie un message (enveloppe) vers un deuxième ordinateur à droite, passant par un petit nuage étiqueté 'Internet'. Les deux ordinateurs ont des visages souriants. Pas de termes techniques (pas de serveur, pas de protocole). Texte simple 'Un ordinateur peut envoyer un message à un autre ordinateur'. Police 24px. Couleurs primaires vives."
+    },
+    {
+      "id": 6,
+      "filename": "facture_redal.png",
+      "description": "Exemple concret marocain : facture REDAL/LYDEC pour illustrer l'utilité pratique de l'informatique",
+      "purpose": "resume_eleve",
+      "prompt": "PNG vectoriel, dessin animé moderne, fond blanc. Un parent et son enfant (collégien) devant un ordinateur, regardant une facture d'eau REDAL affichée à l'écran. L'enfant montre l'écran du doigt. Texte 'Consulter sa facture d'eau en ligne' en français. Ambiance cosy d'un foyer marocain (théière, décor sobre). Police 22px. Style rassurant et éducatif pour comprendre l'utilité de l'informatique au quotidien."
+    },
+    {
+      "id": 7,
+      "filename": "quiz_informatique.png",
+      "description": "Quiz de synthèse sur le système informatique pour la présentation PPTX",
+      "purpose": "pptx",
+      "prompt": "SVG vectoriel, style diapositive de quiz moderne, fond blanc. Écran de quiz avec 3 questions à choix multiples illustrées par des icônes : 1) 'Qu'est-ce qu'un logiciel ?' avec icône de CD/logiciel, 2) 'À quoi sert une souris ?' avec icône de souris, 3) 'Que veut dire Wi-Fi ?' avec icône Wi-Fi. Chaque question a 3 petites cases de réponse. Police 24px pour les questions, 20px pour les réponses. Design gamifié, étoiles de récompense. Adapté 1AC."
+    }
+  ]
+}

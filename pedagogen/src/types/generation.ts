@@ -12,7 +12,7 @@ export type DocumentType =
   | "presentation_pptx"
   | "images_illustratives";
 
-export type OutputFormat = "docx" | "pptx" | "pdf" | "md" | "zip" | "png" | "html";
+export type OutputFormat = "docx" | "pptx" | "pdf" | "md" | "zip" | "png" | "html" | "txt";
 
 export interface CourseMetadata {
   niveau: "1AC" | "2AC" | "3AC";
@@ -45,6 +45,8 @@ export interface GenerationRequest {
   customPrompts?: Record<string, string>;
   debugMode?: boolean;
   provider?: ProviderId;
+  reviewMode?: boolean;
+  activeSkillIds?: string[];
 }
 
 export interface GenerationResult {
@@ -124,5 +126,5 @@ export const BEST_FORMATS: Record<DocumentType, OutputFormat> = {
   cours_complet: "pdf",
   resume_eleve: "md",
   presentation_pptx: "pptx",
-  images_illustratives: "md",
+  images_illustratives: "txt",
 };

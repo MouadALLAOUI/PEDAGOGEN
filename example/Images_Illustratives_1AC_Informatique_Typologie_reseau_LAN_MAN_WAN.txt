@@ -1,0 +1,131 @@
+========================================================================
+DIRECTIVES GÉNÉRALES DE PRODUCTION VISUELLE :
+- Style de consigne : SVG ou PNG vectoriel, style dessin animé moderne, fond blanc, pas de texte long, lisible à distance, adapté à 1AC (12-13 ans)
+- Taille minimale du texte : police 20px ou plus
+- Règles de texte : uniquement du français (sauf termes techniques comme WiFi)
+- Format : "16:9"
+- Resolution : "1920x1080"
+- Style : "flat design, cartoon, friendly"
+- Contraintes : "no_watermark, no_english_text, no_3D_realistic"
+- Contraintes de Contenu : "Ne jamais générer de cartes géographiques, de frontières, d'éléments politiques (comme des drapeaux) ou de symboles religieux. Les illustrations doivent être neutres et se concentrer sur les aspects techniques de l'informatique."
+- Identité Culturelle Marocaine : "Malgré l'absence de cartes ou de symboles politiques/religieux, l'environnement doit refléter le quotidien marocain. Utilisez obligatoirement des noms et concepts familiers de la culture marocaine dans les scénarios et les étiquettes (ex: 'Ahmed', 'Yasmine', 'Dar Chabab', 'Cyber-café du quartier')."
+- Style des Personnages : "Générer exclusivement des illustrations et dessins animés flat design (aucun rendu réaliste ou photo-réaliste d'humains)."
+- Règles Vestimentaires (Modestie) : "Tous les personnages humains doivent porter des vêtements décents et couvrants adaptés au contexte scolaire marocain. Les représentations de femmes ou de filles doivent systématiquement arborer un hijab traditionnel. Interdiction stricte de générer des personnages avec des tenues légères ou dénudées."
+- Rendu des Visages : "Flouter, styliser à l'extrême ou simplifier les traits du visage des personnages (pas de détails réalistes sur les yeux, le nez ou la bouche) afin de maintenir un aspect purement conceptuel, pédagogique et neutre."
+- Palette de couleurs : "blue, green, orange, white background"
+========================================================================
+
+IMAGE 1 — mise_en_situation_reseau.png
+Usage : Image d'accroche pour la situation problème : deux amis veulent partager un fichier entre deux maisons différentes
+Purpose : mise_en_situation
+Format : 16:9
+Resolution : 1920x1080
+Style : flat design, cartoon, friendly
+Constraints : no_watermark, no_english_text, no_3D_realistic
+Color Palette : blue, green, orange, white background
+Text Labels : Textes explicatifs clairs en français uniquement. Utiliser des prénoms marocains (Ahmed, Yasmine, Fatima, Karim) et des lieux familiers (Dar Chabab, école, cyber-café).
+
+Modern cartoon style, white background, full color. A Moroccan street scene with two houses. In front of house A, a child with a laptop. In front of house B (far away), another child with a laptop. Between them, a confused question mark and a speech bubble saying "Comment partager ce fichier ?" Style dessin animé moderne, couleurs vives, fond blanc. Text in French only. Police 24px minimum. No English text except WiFi.
+
+---
+
+IMAGE 2 — lan_schema.png
+Usage : Schéma simple d'un réseau local (LAN) - plusieurs ordinateurs dans une même pièce ou école connectés à un switch
+Purpose : cours
+Format : 16:9
+Resolution : 1920x1080
+Style : flat design, cartoon, friendly
+Constraints : no_watermark, no_english_text, no_3D_realistic
+Color Palette : blue, green, orange, white background
+Personnages : "Style flat design cartoon uniquement. Vêtements décents et couvrants adaptés au contexte scolaire marocain. Les femmes et filles doivent porter un hijab. Visages stylisés et simplifiés sans détails réalistes (yeux, nez, bouche épurés)."
+Text Labels : Textes explicatifs clairs en français uniquement. Utiliser des prénoms marocains (Ahmed, Yasmine, Fatima, Karim) et des lieux familiers (Dar Chabab, école, cyber-café).
+
+Vector illustration, modern cartoon style, white background, clean and simple. A classroom in a Moroccan school (dar chabab). Four computers connected by lines to a central switch device. Each computer has a small label: PC1, PC2, PC3, PC4. A text label says "RÉSEAU LOCAL (LAN)" at the top. The switch is in the middle. The drawing must show they are in the SAME building. Colorful, friendly style for children aged 12-13. Police 24px. No English except the word switch in small text. French only for main text.
+
+---
+
+IMAGE 3 — man_schema.png
+Usage : Schéma simple d'un réseau métropolitain (MAN) - plusieurs bâtiments dans une même ville connectés entre eux
+Purpose : cours
+Format : 16:9
+Resolution : 1920x1080
+Style : flat design, cartoon, friendly
+Constraints : no_watermark, no_english_text, no_3D_realistic
+Color Palette : blue, green, orange, white background
+Text Labels : Textes explicatifs clairs en français uniquement. Utiliser des prénoms marocains (Ahmed, Yasmine, Fatima, Karim) et des lieux familiers (Dar Chabab, école, cyber-café).
+
+Vector illustration, modern cartoon style, white background, clean and simple. A city skyline of a Moroccan city (Casablanca or Rabat) with 3 buildings: one labeled "ÉCOLE", one labeled "DAR CHABAB", one labeled "BIBLIOTHÈQUE". Arrows and lines connect them in a network. A text label says "RÉSEAU MÉTROPOLITAIN (MAN)" at the top. The buildings are in the SAME CITY. Colorful, friendly cartoon style for children 12-13. Police 24px. No English text except WiFi if needed.
+
+---
+
+IMAGE 4 — wan_schema.png
+Usage : Schéma simple d'un réseau étendu (WAN) - plusieurs villes marocaines connectées entre elles
+Purpose : cours
+Format : 16:9
+Resolution : 1920x1080
+Style : flat design, cartoon, friendly
+Constraints : no_watermark, no_english_text, no_3D_realistic
+Color Palette : blue, green, orange, white background
+Substitution visuelle : "Ne pas utiliser de carte géographique. Représenter le réseau avec un diagramme conceptuel neutre : des icônes d'ordinateurs, de serveurs, de nuages (cloud) et des flèches de connexion. Utiliser des étiquettes comme 'Ahmed', 'Yasmine', 'Dar Chabab', 'Cyber-café du quartier'."
+Text Labels : Textes explicatifs clairs en français uniquement. Utiliser des prénoms marocains (Ahmed, Yasmine, Fatima, Karim) et des lieux familiers (Dar Chabab, école, cyber-café).
+
+Vector illustration, modern cartoon style, white background. A simplified map of Morocco showing 3 cities: Casablanca, Marrakech, and Fès with small landmark icons. Lines connecting the cities through a cloud symbol (Internet cloud). Text label says "RÉSEAU ÉTENDU (WAN)" at the top. The cloud icon in the middle represents Internet. Colorful, friendly cartoon style for children 12-13. Police 24px. French only. No English text.
+
+---
+
+IMAGE 5 — comparaison_reseaux.png
+Usage : Image de synthèse comparant LAN, MAN et WAN avec des exemples marocains concrets pour chaque type
+Purpose : synthese
+Format : 16:9
+Resolution : 1920x1080
+Style : flat design, cartoon, friendly
+Constraints : no_watermark, no_english_text, no_3D_realistic
+Color Palette : blue, green, orange, white background
+Substitution visuelle : "Ne pas utiliser de carte géographique. Représenter le réseau avec un diagramme conceptuel neutre : des icônes d'ordinateurs, de serveurs, de nuages (cloud) et des flèches de connexion. Utiliser des étiquettes comme 'Ahmed', 'Yasmine', 'Dar Chabab', 'Cyber-café du quartier'."
+Text Labels : Textes explicatifs clairs en français uniquement. Utiliser des prénoms marocains (Ahmed, Yasmine, Fatima, Karim) et des lieux familiers (Dar Chabab, école, cyber-café).
+
+Vector illustration, modern cartoon style, white background. Three columns side by side with simple icons. Column 1: "LAN" with a school building icon and text "ÉCOLE" (ex: petit réseau local). Column 2: "MAN" with city buildings icon and text "VILLE" (ex: réseau entre écoles de la ville). Column 3: "WAN" with world/map icon and text "MONDE" (ex: Internet mondial). Each has a colored bar: green for LAN, orange for MAN, blue for WAN. No long text, just labels. Police 24px. French only.
+
+---
+
+IMAGE 6 — internet_wan_maison.png
+Usage : Illustration simple pour le résumé élève : un ordinateur à la maison connecté à Internet (WAN)
+Purpose : resume_eleve
+Format : 16:9
+Resolution : 1920x1080
+Style : flat design, cartoon, friendly
+Constraints : no_watermark, no_english_text, no_3D_realistic
+Color Palette : blue, green, orange, white background
+Substitution visuelle : "Ne pas utiliser de carte géographique. Représenter le réseau avec un diagramme conceptuel neutre : des icônes d'ordinateurs, de serveurs, de nuages (cloud) et des flèches de connexion. Utiliser des étiquettes comme 'Ahmed', 'Yasmine', 'Dar Chabab', 'Cyber-café du quartier'."
+Text Labels : Textes explicatifs clairs en français uniquement. Utiliser des prénoms marocains (Ahmed, Yasmine, Fatima, Karim) et des lieux familiers (Dar Chabab, école, cyber-café).
+
+Vector illustration, modern cartoon style, white background. A simple drawing of a house in a Moroccan neighborhood. Inside the house, a laptop on a desk with a WiFi icon above it. An arrow goes from the laptop to a cloud labeled "INTERNET". Below the house, a small router with antenna. Text label: "Mon ordinateur connecté à Internet = WAN". Clean, simple, friendly. Police 22px. No English except WiFi. French only.
+
+---
+
+IMAGE 7 — quiz_reseaux.png
+Usage : Image de quiz pour la présentation PPTX : question sur les types de réseaux avec des exemples
+Purpose : pptx
+Format : 16:9
+Resolution : 1920x1080
+Style : flat design, cartoon, friendly
+Constraints : no_watermark, no_english_text, no_3D_realistic
+Color Palette : blue, green, orange, white background
+Text Labels : Textes explicatifs clairs en français uniquement. Utiliser des prénoms marocains (Ahmed, Yasmine, Fatima, Karim) et des lieux familiers (Dar Chabab, école, cyber-café).
+
+Vector illustration, modern cartoon style, white background. A quiz-style layout with a question mark at the top center. Below, three icons representing network types with labels: LAN (school icon), MAN (city icon), WAN (globe icon). A speech bubble at bottom says: "Quel réseau pour connecter deux écoles dans la même ville ?" Colorful, clean, interactive look. Police 24px. French only.
+
+---
+
+IMAGE 8 — conseil_extinction_ordinateur.png
+Usage : Conseil d'utilisation en classe - Éteindre l'ordinateur correctement
+Purpose : Sensibiliser les élèves aux consignes de sécurité matériel et économie d'énergie.
+Format : 16:9
+Resolution : 1920x1080
+Style : flat design, cartoon, friendly
+Constraints : no_watermark, no_english_text, no_3D_realistic
+Color Palette : blue, green, orange, white background
+Text Labels : "1. Enregistrer son travail (Yasmine)", "2. Menu Démarrer -> Arrêter", "3. Éteindre l'écran (Ahmed)", en français, police lisible
+Personnages : "Style flat design cartoon uniquement. Vêtements décents et couvrants adaptés au contexte scolaire marocain. Les femmes/filles doivent porter un hijab. Visages stylisés et simplifiés sans détails réalistes."
+
+Prompt : Infographie éducative montrant les 3 étapes pour éteindre correctement un ordinateur, dans un cadre de cyber-café au Maroc. Étape 1 : icône de sauvegarde de fichier avec l'étiquette "Yasmine enregistre son travail". Étape 2 : un curseur de souris cliquant sur le bouton "Arrêter" du menu Windows en français. Étape 3 : une main appuyant sur le bouton d'alimentation physique de l'écran, avec l'étiquette "Ahmed éteint l'écran". Arrière-plan évoquant un cyber-café de quartier marocain. Style flat design vectoriel et convivial, couleurs bleue et orange prédominantes, fond blanc épuré, adapté pour affichage en classe.

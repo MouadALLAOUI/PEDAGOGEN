@@ -18,12 +18,19 @@ import {
   Files,
   Settings,
   Activity,
+  Users,
+  ClipboardCheck,
+  NotebookPen,
 } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { useAuth } from '@/components/auth/AuthProvider';
 
 const NAV_ITEMS = [
   { href: '/', label: 'Tableau de Bord', icon: LayoutDashboard },
+  { href: '/classes', label: 'Classes & Élèves', icon: Users },
+  { href: '/examens', label: 'Évaluations', icon: ClipboardCheck },
+  { href: '/notebook', label: 'Carnet de Bord', icon: NotebookPen },
+  { href: '/students', label: 'Suivi Élèves & Classes', icon: GraduationCap },
   { href: '/generate', label: 'Générer', icon: Wand2 },
   { href: '/generate/status', label: 'Suivi Génération', icon: Activity },
   { href: '/files', label: 'Mes Fichiers', icon: Files },
@@ -56,12 +63,12 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        'hidden lg:flex flex-col bg-white text-navy min-h-screen border-r border-border transition-all duration-300',
+        'hidden lg:flex flex-col bg-white text-navy h-full shrink-0 border-r border-border transition-all duration-300',
         collapsed ? 'w-[68px]' : 'w-64'
       )}
     >
       {/* Header */}
-      <div className="flex items-center gap-3 px-4 py-5 border-b border-border">
+      <div className="flex items-center gap-3 px-4 py-5 border-b border-border shrink-0">
         <div className="w-10 h-10 rounded-xl bg-teal flex items-center justify-center flex-shrink-0">
           <BookOpen size={20} className="text-white" />
         </div>
@@ -76,7 +83,7 @@ export function Sidebar() {
       {/* Toggle button */}
       <button
         onClick={toggle}
-        className="mx-3 mt-3 flex items-center justify-center gap-2 px-2 py-1.5 rounded-lg text-muted hover:text-navy hover:bg-parchment-dark transition-colors"
+        className="mx-3 mt-3 flex items-center justify-center gap-2 px-2 py-1.5 rounded-lg text-muted hover:text-navy hover:bg-parchment-dark transition-colors shrink-0"
         title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
       >
         {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
@@ -84,7 +91,7 @@ export function Sidebar() {
       </button>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-4 space-y-1">
+      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto min-h-0">
         {NAV_ITEMS.map((item) => {
           const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
           return (
@@ -108,7 +115,7 @@ export function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="px-4 py-4 border-t border-border">
+      <div className="px-4 py-4 border-t border-border shrink-0 mt-auto">
         {user ? (
           <div className="space-y-2">
             <Link

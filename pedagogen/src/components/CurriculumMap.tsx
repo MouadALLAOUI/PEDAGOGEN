@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { animate, stagger } from 'animejs';
 import { X, BookOpen } from 'lucide-react';
 
@@ -46,8 +47,28 @@ const LESSON_MAP: Record<string, CurriculumNode[]> = {
 };
 
 export function CurriculumMap({ niveau, matiere, lecon, onClose }: CurriculumMapProps) {
+  const [mounted, setMounted] = useState(false);
   const nodesRef = useRef<HTMLDivElement>(null);
   const [selectedNode, setSelectedNode] = useState<CurriculumNode | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose]);
 
   const nodes: CurriculumNode[] = LESSON_MAP[niveau] || LESSON_MAP['1AC'] || [];
 
@@ -78,10 +99,15 @@ export function CurriculumMap({ niveau, matiere, lecon, onClose }: CurriculumMap
     related: { bg: 'bg-navy/5', border: 'border-border', text: 'text-muted', label: 'Lié' },
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy/40 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-4xl rounded-2xl bg-white shadow-2xl animate-slide-up overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+  if (!mounted) return null;
+
+  return createPortal(
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto bg-navy/60 backdrop-blur-sm animate-fade-in transition-all"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div className="relative w-full max-w-4xl max-h-[90vh] flex flex-col rounded-2xl bg-white shadow-2xl animate-slide-up overflow-hidden my-auto">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg bg-teal/10 flex items-center justify-center">
               <BookOpen size={18} className="text-teal" />
@@ -96,7 +122,7 @@ export function CurriculumMap({ niveau, matiere, lecon, onClose }: CurriculumMap
           </button>
         </div>
 
-        <div className="p-8">
+        <div className="p-6 sm:p-8 overflow-y-auto flex-1">
           <div ref={nodesRef} className="grid grid-cols-3 gap-6 max-w-3xl mx-auto">
             {/* Prérequis - left column */}
             <div className="space-y-4">
@@ -195,10 +221,11 @@ export function CurriculumMap({ niveau, matiere, lecon, onClose }: CurriculumMap
           )}
         </div>
 
-        <div className="px-6 py-3 bg-parchment-dark/30 border-t border-border text-center text-[10px] text-muted">
+        <div className="px-6 py-3 bg-parchment-dark/30 border-t border-border text-center text-[10px] text-muted shrink-0">
           Carte conceptuelle interactive — cliquez sur un nœud pour voir les détails
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

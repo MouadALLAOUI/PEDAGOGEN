@@ -28,6 +28,10 @@ export default function ChatbotPage() {
   const [localApiType, setLocalApiType] = useState<'openai' | 'custom'>('openai');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
+
+  // Abort any in-flight chat stream when leaving the page
+  useEffect(() => () => abortRef.current?.abort(), []);
 
   useEffect(() => {
     setUseLocalModel(localStorage.getItem('pedagogen_use_local_model') === 'true');
@@ -57,9 +61,12 @@ export default function ChatbotPage() {
     }));
 
     try {
+      const controller = new AbortController();
+      abortRef.current = controller;
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
         body: JSON.stringify({
           messages: apiMessages,
           systemPrompt,
@@ -88,7 +95,7 @@ export default function ChatbotPage() {
           const { done, value } = await reader.read();
           if (done) break;
 
-          buffer += decoder.decode(value, { stream: true });
+          buffer += decoder.decode(value, { stream: false });
           const lines = buffer.split('\n');
           buffer = lines.pop() || '';
 
@@ -128,7 +135,7 @@ export default function ChatbotPage() {
             } catch {
               // ignore JSON parse errors
             }
-            
+
             if (streamError) {
               throw new Error(streamError);
             }
@@ -136,13 +143,16 @@ export default function ChatbotPage() {
         }
       }
     } catch (err) {
+      if (err instanceof DOMException && err.name === 'AbortError') return;
+      const errText = `Erreur: ${err instanceof Error ? err.message : 'Échec de la génération'}`;
       setMessages((prev) => {
-        const updated = [...prev];
-        updated[updated.length - 1] = {
-          role: 'assistant',
-          content: `Erreur: ${err instanceof Error ? err.message : 'Échec de la génération'}`,
-        };
-        return updated;
+        if (prev.length > 0 && prev[prev.length - 1]?.role === 'assistant') {
+          const updated = [...prev];
+          updated[updated.length - 1] = { role: 'assistant', content: errText };
+          return updated;
+        } else {
+          return [...prev, { role: 'assistant', content: errText }];
+        }
       });
     } finally {
       setGenerating(false);
@@ -232,7 +242,7 @@ export default function ChatbotPage() {
                     <p className="text-xs text-muted">Exécuter la conversation sur http://localhost:1234/api/v1/chat</p>
                   </div>
                 </label>
-                
+
                 {useLocalModel && (
                   <div className="mt-2">
                     <label className="text-xs font-medium text-navy mb-1 block">Nom du modèle local</label>
@@ -273,11 +283,10 @@ export default function ChatbotPage() {
                 </div>
               )}
               <div
-                className={`max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
-                  msg.role === 'user'
+                className={`max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${msg.role === 'user'
                     ? 'bg-navy text-parchment rounded-br-md'
                     : 'bg-parchment-dark text-navy border border-border rounded-bl-md'
-                }`}
+                  }`}
               >
                 {msg.content || msg.reasoning ? (
                   <>

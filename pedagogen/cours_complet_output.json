@@ -1,0 +1,99 @@
+{
+  "titre_seance": "Les bases de l'informatique : Information, système informatique et logiciels",
+  "timing_consistency_check": "La séance totale dure 50 minutes : Mise en situation (10 min : rappel 4 min + SP 6 min), Analyse (30 min : Analyse SP 6 min + Investigation 6 min + Généralisation 10 min + Entraînement 8 min), Synthèse (10 min : Quiz 5 min + Bilan et annonces 5 min). Total 10+30+10 = 50 min. Cette répartition équilibrée permet de respecter le rythme des élèves de 1AC en alternant phases d'écoute, de recherche et de pratique.",
+  "variantes_pedagogiques": "Si les élèves bloquent sur la différence entre Information et Informatique : utiliser l'image d'un livre (information) et d'un ordinateur (informatique) pour mieux visualiser. Si la notion de système informatique est trop abstraite : comparer avec le corps humain (squelette = matériel, cerveau = logiciel). Si la connectivité n'est pas comprise : faire un jeu de rôle où une élève passe un mot à travers la classe = réseau.",
+  "gestion_erreurs_frequentes": "Erreur 1 : L'élève confond 'information' et 'informatique'. Relance : « L'information, c'est le message (ex: 'Le cours est annulé'). L'informatique, c'est l'outil qui permet de le créer et l'envoyer. » Erreur 2 : L'élève pense que l'écran est le système informatique complet. Relance : « L'écran seul ne fait rien. Il a besoin d'un boîtier (unité centrale) qui calcule. » Erreur 3 : L'élève ne distingue pas logiciel et application. Relance : « Un logiciel est un programme. Word, Paint, le navigateur Internet sont tous des logiciels. »",
+  "conseils_surlignage": "Mots-clés à surligner au tableau en couleur : INFORMATION (bleu), INFORMATIQUE (rouge), SYSTÈME INFORMATIQUE (vert), MATÉRIEL (orange), LOGICIEL (violet), CONNECTIVITÉ (rose). Ces mots doivent être écrits en majuscules et entourés pour créer des repères visuels forts.",
+  "script_enseignant": {
+    "Mise_en_situation": {
+      "rappel": "Q1 : « Qui peut me dire ce qu'on a vu la dernière fois en informatique ? » R1 attendue : « On a vu comment allumer/éteindre l'ordinateur » ou « On a parlé de l'ordinateur ». Q2 : « Quels sont les appareils que vous utilisez chez vous qui ressemblent à un ordinateur ? » R2 attendue : « La tablette », « Le téléphone », « La PlayStation ». Q3 : « Est-ce que quelqu'un sait ce que veut dire le mot 'information' ? » R3 attendue : « Un message », « Une nouvelle », « Un texte ». Transition : « Très bien ! Aujourd'hui, on va découvrir ensemble ce qu'est un système informatique et comment il fonctionne. »",
+      "situation_problème": "« Je vous annonce une grande nouvelle : Le dar chabab de votre quartier organise un concours de dessin numérique ! Le gagnant verra son dessin imprimé et affiché dans tout le quartier. Mais pour participer, il faut envoyer un fichier numérique par Wi-Fi depuis l'ordinateur du dar chabab. Le problème c'est que l'ordinateur ne s'allume pas, et même quand il s'allume, on ne sait pas quel logiciel utiliser pour dessiner. Comment allumer l'ordinateur ? Quel logiciel utiliser pour dessiner ? Comment envoyer le fichier par Wi-Fi ? C'est ce qu'on va apprendre aujourd'hui ! »"
+    },
+    "Analyse": {
+      "Analyse_SP": "Q1 : « Qu'est-ce qu'on doit faire en premier pour pouvoir dessiner sur l'ordinateur ? » H1 attendue : « L'allumer ». Q2 : « Une fois allumé, qu'est-ce qu'il faut ouvrir pour dessiner ? » H2 attendue : « Un logiciel de dessin », « Paint ». Q3 : « Après avoir dessiné, comment envoyer le fichier au concours ? » H3 attendue : « Par Wi-Fi », « Par Internet ». Q4 : « Qu'est-ce qui est nécessaire pour que l'ordinateur fonctionne ? » H4 attendue : « L'électricité », « Le courant ». Q5 : « Est-ce qu'un ordinateur peut fonctionner si on lui enlève l'écran ? » H5 attendue : « Oui », « Non » (laisser débattre).",
+      "Investigation": "« Regardons vos hypothèses une par une. » H1 : « Pour allumer, on appuie sur le bouton marche. C'est vrai. Mais qu'est-ce qui se passe à l'intérieur ? » H2 : « Logiciel de dessin : oui, Paint par exemple. Mais Paint est un logiciel, pas un appareil. Quelle est la différence ? » H3 : « Pour envoyer par Wi-Fi, il faut que l'ordinateur soit connecté à Internet. Comment vérifier la connexion ? » H4 : « L'électricité est nécessaire, oui. L'ordinateur a besoin de courant pour fonctionner. » H5 : « L'écran n'est qu'une partie. L'ordinateur a plusieurs parties qui travaillent ensemble. » Laisser les élèves manipuler des images d'appareils (ordinateur, tablette, clé USB) pour les trier en deux catégories : avec système informatique / sans système informatique.",
+      "Generalisation": "« Maintenant, je vais vous expliquer les notions importantes. Notez bien dans vos cahiers. » Définition 1 : « L'information, c'est un message ou une donnée. Exemple : 'Le bus arrive à 8h' est une information. » Définition 2 : « L'informatique, c'est la science qui utilise des machines (ordinateurs) pour traiter les informations. » Définition 3 : « Un système informatique, c'est l'ensemble des éléments matériels (ce qu'on touche : écran, clavier, souris) et logiciels (les programmes : Word, Paint, navigateur) qui travaillent ensemble. » Schéma au tableau : Système informatique = Matériel (parties physiques) + Logiciel (programmes). Définition 4 : « La connectivité, c'est la capacité d'un appareil à se connecter à d'autres appareils ou à Internet, par câble (USB, Ethernet) ou sans fil (Wi-Fi, Bluetooth). »",
+      "ENTRAINEMENT": "« Prenez vos cahiers, on va faire quelques exercices. » Exercice 1 : Relier chaque mot à sa définition. Écrire au tableau : Information - Informatique - Système informatique - Connectivité. Exercice 2 : Classer les éléments suivants en deux colonnes : MATÉRIEL / LOGICIEL. Éléments : Écran, Paint, Clavier, Souris, Word, Google Chrome, Imprimante, Casque. Correction orale en collectif : « Levez la main pour me dire où vous avez classé l'écran. » Exercice 3 : « Cochez vrai ou faux : Un ordinateur peut fonctionner sans logiciel (Faux). Le Wi-Fi permet de se connecter sans fil (Vrai). Un système informatique, c'est seulement l'écran (Faux). » Trace écrite : « Recopiez le schéma du système informatique et les définitions dans votre cahier. »"
+    },
+    "Synthese": {
+      "Quiz": "Mettez vos stylos, c'est l'heure du quiz ! Cinq questions rapides : Q1 : « Qu'est-ce qu'un système informatique ? » Réponse : « C'est l'ensemble des éléments matériels et logiciels qui travaillent ensemble. » Q2 : « Donnez un exemple de logiciel. » Réponse : « Paint, Word, Google Chrome... » Q3 : « Qu'est-ce que la connectivité ? » Réponse : « La capacité à se connecter à d'autres appareils ou à Internet. » Q4 : « Quel appareil permet d'imprimer un document ? » Réponse : « L'imprimante. » Q5 : « Pourquoi faut-il éteindre correctement l'ordinateur ? » Réponse : « Pour ne pas abîmer les fichiers et économiser l'électricité. » (consigne de sécurité numérique)."
+    }
+  },
+  "savoir": {
+    "definitions": [
+      {
+        "terme": "Information",
+        "definition": "C'est un message, une donnée ou une nouvelle. Exemple : 'La récréation commence à 10h' est une information. Tout ce qui peut être dit, écrit ou montré peut être une information."
+      },
+      {
+        "terme": "Informatique",
+        "definition": "C'est la science qui utilise des ordinateurs et des logiciels pour créer, stocker, traiter et échanger des informations. Le mot vient de 'information' et 'automatique'."
+      },
+      {
+        "terme": "Système informatique",
+        "definition": "C'est l'ensemble des éléments qui travaillent ensemble pour traiter des informations. Il est composé de deux parties : le matériel (ce qu'on peut toucher : écran, clavier, souris, unité centrale) et le logiciel (les programmes : Paint, Word, le navigateur Internet)."
+      },
+      {
+        "terme": "Connectivité",
+        "definition": "C'est la capacité d'un appareil à communiquer avec d'autres appareils ou à se connecter à Internet. Cela peut être avec un câble (USB, Ethernet) ou sans fil (Wi-Fi, Bluetooth)."
+      },
+      {
+        "terme": "Logiciel",
+        "definition": "C'est un programme qui donne des instructions à l'ordinateur pour qu'il fasse quelque chose. Exemples : Paint pour dessiner, Word pour écrire des textes, Google Chrome pour naviguer sur Internet."
+      }
+    ],
+    "schema_reseau": "Schéma au tableau à recopier :\n\n┌──────────────────────────────────────────────────┐\n│            SYSTÈME INFORMATIQUE                   │\n├───────────────────────┬──────────────────────────┤\n│    MATÉRIEL          │       LOGICIEL           │\n│  (ce qu'on touche)   │   (programmes)           │\n│                       │                          │\n│  ┌───┐ ┌───┐ ┌───┐  │  ┌──────┐ ┌──────┐       │\n│  │Écr│ │Cla│ │Sou│  │  │Paint │ │Word  │       │\n│  └───┘ └───┘ └───┘  │  └──────┘ └──────┘       │\n│  ┌─────┐ ┌───┐      │  ┌────────────┐          │\n│  │U.C. │ │Imp│      │  │Google Chrome│          │\n│  └─────┘ └───┘      │  └────────────┘          │\n└───────────────────────┴──────────────────────────┘\nFlèche entre les deux : ← COMMUNICATION →\nEn dessous : CONNECTIVITÉ = connexion avec ou sans fil (Wi-Fi, câble)",
+    "exemples_concrets": [
+      "Imprimer une photo pour le projet de l'école : on utilise l'ordinateur (système informatique), un logiciel de photo (logiciel) et l'imprimante (matériel).",
+      "Le Wi-Fi du dar chabab permet de connecter plusieurs ordinateurs à Internet sans utiliser de câble (connectivité).",
+      "Consulter sa facture d'eau de la REDAL/LYDEC en ligne : on utilise un navigateur Internet (logiciel) sur un ordinateur ou un téléphone (matériel).",
+      "Un élève utilise Paint (logiciel) sur l'ordinateur du collège (matériel) pour dessiner une affiche pour la fête de l'école.",
+      "Connecter une clé USB (matériel) à l'ordinateur pour copier un exercice : la clé se branche sur le port USB de l'unité centrale.",
+      "Utiliser WhatsApp sur son téléphone pour envoyer un message vocal à sa mère : c'est de l'information qui voyage par Internet (connectivité)."
+    ]
+  },
+  "plan_tableau": {
+    "zone_titre": "SÉANCE : Les bases de l'informatique — 1AC | Date : ____ / ____ / ______",
+    "zone_problème": "PROBLÈME DU JOUR : Concours de dessin au dar chabab — Comment allumer l'ordinateur, utiliser un logiciel de dessin et envoyer le fichier par Wi-Fi ?",
+    "zone_cours": "I. INFORMATION & INFORMATIQUE\n   Info = message (ex: 'Le bus arrive à 8h')\n   Informatique = science qui traite les infos avec des machines\n\nII. SYSTÈME INFORMATIQUE = MATÉRIEL + LOGICIEL\n   Matériel = écran, clavier, souris, unité centrale, imprimante\n   Logiciel = Paint, Word, Google Chrome, jeux\n   Schéma de l'ordinateur avec flèches\n\nIII. CONNECTIVITÉ : connexion avec ou sans fil\n   Avec fil = câble USB, Ethernet\n   Sans fil = Wi-Fi, Bluetooth",
+    "zone_exercices": "EXERCICES :\n1. Relier chaque mot à sa définition (7 définitions)\n2. Trier en 2 colonnes : MATÉRIEL / LOGICIEL\n3. Vrai ou Faux (5 phrases)\nDEVOIR : Apporter une image d'un appareil électronique pour la prochaine séance"
+  },
+  "activites_eleves": [
+    {
+      "etape": "1. Rappel (4 min)",
+      "consigne": "« Répondez aux questions à l'oral : Qu'est-ce qu'on a vu la dernière fois ? Quels appareils ressemblent à un ordinateur chez vous ? »",
+      "production_attendue": "Participation orale : les élèves citent des appareils (téléphone, tablette, console) et se souviennent des règles d'allumage/extinction."
+    },
+    {
+      "etape": "2. Situation problème (6 min)",
+      "consigne": "« Écoutez l'histoire du concours de dessin au dar chabab. Ensuite, dites-moi quel est le problème à résoudre. »",
+      "production_attendue": "Les élèves reformulent le problème avec leurs mots : il faut allumer l'ordinateur, choisir un logiciel de dessin, et envoyer le fichier par Wi-Fi."
+    },
+    {
+      "etape": "3. Analyse de la SP et hypothèses (6 min)",
+      "consigne": "« Par groupes de 2, écrivez sur votre ardoise ce qu'il faut faire pour résoudre le problème. Donnez au moins 3 idées. »",
+      "production_attendue": "Ardoise avec des propositions : allumer l'ordinateur, ouvrir Paint, dessiner, connecter le Wi-Fi, envoyer le fichier."
+    },
+    {
+      "etape": "4. Investigation et discussion (6 min)",
+      "consigne": "« Regardez les images sur la table. Classez les appareils en deux catégories : ceux qui sont des systèmes informatiques et ceux qui n'en sont pas. Justifiez. »",
+      "production_attendue": "Classification orale avec justification : un ordinateur est un système informatique (matériel + logiciel), une chaise non."
+    },
+    {
+      "etape": "5. Généralisation et cours (10 min)",
+      "consigne": "« Écoutez et recopiez les définitions et le schéma dans votre cahier. Posez la main si vous ne comprenez pas un mot. »",
+      "production_attendue": "Cahier avec les 5 définitions (Information, Informatique, Système informatique, Connectivité, Logiciel) et le schéma du système informatique."
+    },
+    {
+      "etape": "6. Entraînement (8 min)",
+      "consigne": "« Faites les trois exercices au cahier : reliez les mots aux définitions, classez les éléments en matériel/logiciel, et répondez par vrai ou faux. »",
+      "production_attendue": "Cahier avec les trois exercices réalisés et corrigés. Les élèves qui finissent aident leur voisin."
+    },
+    {
+      "etape": "7. Quiz de synthèse (5 min)",
+      "consigne": "« Répondez aux 5 questions du quiz sur votre ardoise. Montrez votre réponse quand je dis 'Montrez !' »",
+      "production_attendue": "Ardoise avec les réponses : 1. Matériel + Logiciel, 2. Paint/Word/Chrome, 3. Se connecter à Internet, 4. L'imprimante, 5. Pour protéger les fichiers."
+    }
+  ],
+  "annotations": "Points de vigilance : Les élèves de 1AC ont tendance à confondre Internet avec le navigateur Web. Insister sur le fait que Google Chrome est un LOGICIEL qui permet d'accéder à Internet. Attention : pour le dessin sur ordinateur, privilégier Paint (préinstallé) ou un logiciel gratuit. Si le Wi-Fi du collège est indisponible, utiliser le partage de connexion du téléphone de l'enseignant pour montrer la connectivité. Toujours rappeler les consignes de sécurité numérique : ne pas partager ses mots de passe, bien éteindre l'ordinateur à la fin, ne pas installer de logiciels sans permission. Pour les élèves en difficulté : préparer une fiche avec les définitions déjà imprimées à coller dans le cahier. Pour les élèves rapides : leur demander de dessiner le schéma d'un réseau simple (ordinateur → imprimante → Wi-Fi)."
+}

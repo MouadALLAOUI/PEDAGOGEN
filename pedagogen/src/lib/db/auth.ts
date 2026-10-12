@@ -2,6 +2,10 @@ import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
 import bcrypt from 'bcryptjs';
 import { getDb } from './index';
 
+if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
+  throw new Error('FATAL: JWT_SECRET environment variable is required in production.');
+}
+
 const JWT_SECRET = new TextEncoder().encode(
   process.env.JWT_SECRET || 'pedagogen-dev-secret-key-change-in-production-2024'
 );
@@ -15,6 +19,8 @@ export interface AuthUser {
   matiere: string;
   etablissement: string;
   telephone: string;
+  aref: string;
+  direction_provinciale: string;
   avatar_url: string | null;
   created_at: string;
   updated_at: string;
@@ -48,7 +54,7 @@ export async function verifyToken(token: string): Promise<JWTPayload | null> {
 export function getUserFromDb(userId: string): AuthUser | null {
   const db = getDb();
   const row = db.prepare(`
-    SELECT id, email, full_name, matiere, etablissement, telephone, avatar_url, created_at, updated_at
+    SELECT id, email, full_name, matiere, etablissement, telephone, aref, direction_provinciale, avatar_url, created_at, updated_at
     FROM users WHERE id = ?
   `).get(userId) as any;
   if (!row) return null;
@@ -59,6 +65,8 @@ export function getUserFromDb(userId: string): AuthUser | null {
     matiere: row.matiere,
     etablissement: row.etablissement,
     telephone: row.telephone,
+    aref: row.aref || '',
+    direction_provinciale: row.direction_provinciale || '',
     avatar_url: row.avatar_url,
     created_at: row.created_at,
     updated_at: row.updated_at,
@@ -91,7 +99,14 @@ export function authenticateUser(email: string, password: string): AuthUser | nu
 
 export function updateUserProfile(
   userId: string,
-  data: { full_name?: string; matiere?: string; etablissement?: string; telephone?: string }
+  data: {
+    full_name?: string;
+    matiere?: string;
+    etablissement?: string;
+    telephone?: string;
+    aref?: string;
+    direction_provinciale?: string;
+  }
 ): void {
   const db = getDb();
   const sets: string[] = [];

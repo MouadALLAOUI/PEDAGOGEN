@@ -1,9 +1,9 @@
-import { runMigrations } from "./schema";
+import { getDb } from "./index";
 
 let initialized = false;
 
 export function initDb(): void {
   if (initialized) return;
-  runMigrations();
+  getDb();
   initialized = true;
 }

@@ -1,0 +1,287 @@
+{
+  "titre": "Évaluation formative — Le Web, le navigateur et le moteur de recherche (3AC)",
+  "niveau": "3AC",
+  "duree": "30 min",
+  "evaluation_automatique": true,
+  "consigne_generale": "Lis chaque question avec attention. Pour les QCM, entoure la ou les bonnes réponses. Pour les Vrai/Faux, écris V (Vrai) ou F (Faux) dans la case. Pour les questions ouvertes, réponds en une ou deux phrases. Pour l'appariement, relie chaque terme à sa définition par un trait. Tu as 30 minutes. Relis-toi avant de rendre la copie.",
+  "questions": [
+    {
+      "numero": 1,
+      "type": "qcm",
+      "competence_evaluee": "Distinguer Internet du Web",
+      "niveau_bloom": "Comprendre",
+      "enonce": "Quelle est la différence entre Internet et le Web (WWW) ?",
+      "options": [
+        "Internet et le Web sont exactement la même chose",
+        "Internet est le réseau mondial, le Web est l'ensemble des pages qu'on y consulte",
+        "Le Web est le réseau, Internet est l'ensemble des pages",
+        "Internet ne fonctionne que par câble, le Web par Wi-Fi"
+      ],
+      "points": 2,
+      "correction": "B",
+      "feedback_personnalise": "Exact ! Internet, c'est comme le réseau routier du Maroc qui relie toutes les villes entre elles. Le Web (WWW), c'est comme les maisons, les écoles et les magasins que tu visites en empruntant ces routes. Le Web est l'application la plus connue d'Internet."
+    },
+    {
+      "numero": 2,
+      "type": "qcm",
+      "competence_evaluee": "Identifier le rôle d'un navigateur Web",
+      "niveau_bloom": "Mémoriser",
+      "enonce": "Parmi ces logiciels, lequel est un NAVIGATEUR Web ?",
+      "options": [
+        "Microsoft Word",
+        "Google Chrome",
+        "Google",
+        "Windows 11"
+      ],
+      "points": 2,
+      "correction": "B",
+      "feedback_personnalise": "Bravo ! Google Chrome est un navigateur Web. C'est le logiciel qui permet d'afficher les pages du Web. Microsoft Word est un traitement de texte, Google est un moteur de recherche (un service, pas un logiciel), et Windows 11 est un système d'exploitation."
+    },
+    {
+      "numero": 3,
+      "type": "qcm",
+      "competence_evaluee": "Distinguer navigateur et moteur de recherche",
+      "niveau_bloom": "Comprendre",
+      "enonce": "Quelle affirmation est CORRECTE ?",
+      "options": [
+        "Le navigateur et le moteur de recherche sont la même chose",
+        "Le moteur de recherche est un logiciel qu'on installe sur l'ordinateur",
+        "Le navigateur est un logiciel, le moteur de recherche est un service Web",
+        "On utilise un moteur de recherche pour taper une URL"
+      ],
+      "points": 2,
+      "correction": "C",
+      "feedback_personnalise": "Très bien ! Le navigateur (Chrome, Firefox) est un LOGICIEL installé sur l'ordinateur, comme une voiture. Le moteur de recherche (Google, Bing) est un SERVICE en ligne qu'on visite avec le navigateur, comme une carte routière. Tu ne peux pas utiliser Google sans ouvrir un navigateur d'abord."
+    },
+    {
+      "numero": 4,
+      "type": "qcm",
+      "competence_evaluee": "Comprendre le fonctionnement d'un moteur de recherche",
+      "niveau_bloom": "Appliquer",
+      "enonce": "Amine veut trouver des informations sur les monuments de Meknès pour son exposé. Que doit-il taper dans Google ?",
+      "options": [
+        "www.monuments-meknes.com",
+        "\"monuments historiques de Meknès\"",
+        "Je cherche des monuments à Meknès s'il vous plaît",
+        "Meknès"
+      ],
+      "points": 2,
+      "correction": "B",
+      "feedback_personnalise": "Exact ! Pour une recherche efficace, il faut utiliser des mots-clés précis et entre guillemets si possible. 'Monuments historiques de Meknès' donnera des résultats beaucoup plus précis que 'Meknès' tout seul. C'est comme demander précisément ce qu'on veut au lieu de dire un seul mot."
+    },
+    {
+      "numero": 5,
+      "type": "vrai_faux",
+      "competence_evaluee": "Comprendre ce qu'est une URL",
+      "niveau_bloom": "Comprendre",
+      "enonce": "L'URL (Uniform Resource Locator) est l'adresse unique d'une page Web. On la tape dans la barre d'adresse du navigateur.",
+      "options": ["Vrai", "Faux"],
+      "points": 1,
+      "correction": "Vrai",
+      "feedback_personnalise": "Oui ! L'URL, c'est comme l'adresse de ta maison : elle est unique et permet de trouver exactement la page qu'on cherche. Par exemple, 'https://www.men.gov.ma' est l'URL du site du ministère de l'Éducation nationale du Maroc."
+    },
+    {
+      "numero": 6,
+      "type": "vrai_faux",
+      "competence_evaluee": "Comprendre le rôle des liens hypertextes",
+      "niveau_bloom": "Comprendre",
+      "enonce": "Un lien hypertexte (hyperlien) est un mot ou une image cliquable qui permet de passer d'une page Web à une autre sans retaper l'adresse.",
+      "options": ["Vrai", "Faux"],
+      "points": 1,
+      "correction": "Vrai",
+      "feedback_personnalise": "C'est vrai ! Les liens hypertextes sont souvent en bleu et soulignés. Quand tu cliques dessus, ils t'emmènent vers une autre page. C'est comme une porte qui relie deux pièces : tu n'as pas besoin de sortir du bâtiment et de rentrer par une autre entrée."
+    },
+    {
+      "numero": 7,
+      "type": "vrai_faux",
+      "competence_evaluee": "Comprendre l'utilité des onglets dans un navigateur",
+      "niveau_bloom": "Comprendre",
+      "enonce": "Les onglets dans un navigateur permettent d'ouvrir plusieurs pages Web en même temps dans la même fenêtre.",
+      "options": ["Vrai", "Faux"],
+      "points": 1,
+      "correction": "Vrai",
+      "feedback_personnalise": "Oui ! Les onglets sont très pratiques. Tu peux avoir ta page de recherche Google dans un onglet, la page des monuments de Meknès dans un autre, et la page des images dans un troisième, le tout dans la même fenêtre du navigateur."
+    },
+    {
+      "numero": 8,
+      "type": "vrai_faux",
+      "competence_evaluee": "Appliquer les consignes de sécurité numérique",
+      "niveau_bloom": "Appliquer",
+      "enonce": "Quand on voit un cadenas vert dans la barre d'adresse du navigateur, cela signifie que le site n'est pas sécurisé et qu'on ne doit pas l'utiliser.",
+      "options": ["Vrai", "Faux"],
+      "points": 1,
+      "correction": "Faux",
+      "feedback_personnalise": "Attention ! Le cadenas VERT signifie au contraire que le site est SÉCURISÉ. Les informations que tu envoies (comme ton nom ou ton mot de passe) sont cryptées et protégées. Le cadenas ROUGE ou l'absence de cadenas signifient que le site n'est pas sécurisé. Au cybercafé, vérifie toujours ce cadenas avant de taper tes informations personnelles."
+    },
+    {
+      "numero": 9,
+      "type": "vrai_faux",
+      "competence_evaluee": "Appliquer les consignes de sécurité numérique",
+      "niveau_bloom": "Appliquer",
+      "enonce": "Pour éteindre l'ordinateur après avoir navigué sur Internet au cybercafé, il faut utiliser le menu Démarrer → Arrêter.",
+      "options": ["Vrai", "Faux"],
+      "points": 1,
+      "correction": "Vrai",
+      "feedback_personnalise": "Exact ! Il faut toujours éteindre l'ordinateur correctement avec le menu Démarrer → Arrêter. Si tu débranches la prise directement, tu risques de perdre ton travail et d'abîmer la machine. Au cybercafé du quartier, c'est la même règle qu'au collège."
+    },
+    {
+      "numero": 10,
+      "type": "vrai_faux",
+      "competence_evaluee": "Appliquer les consignes de sécurité numérique",
+      "niveau_bloom": "Appliquer",
+      "enonce": "Il est dangereux de partager son mot de passe, même avec son meilleur ami, car quelqu'un d'autre pourrait l'utiliser pour accéder à tes informations personnelles.",
+      "options": ["Vrai", "Faux"],
+      "points": 1,
+      "correction": "Vrai",
+      "feedback_personnalise": "C'est vrai ! Ton mot de passe est personnel et secret, comme la clé de ta maison. Même avec ton meilleur ami, il ne faut jamais le partager. Une personne malintentionnée pourrait l'utiliser pour lire tes messages, modifier ton travail ou se faire passer pour toi sur Internet."
+    },
+    {
+      "numero": 11,
+      "type": "ouvert",
+      "competence_evaluee": "Distinguer navigateur et moteur de recherche avec un exemple concret",
+      "niveau_bloom": "Appliquer",
+      "enonce": "Explique en une ou deux phrases la différence entre un NAVIGATEUR Web et un MOTEUR DE RECHERCHE. Donne un exemple de chaque.",
+      "options": [],
+      "points": 3,
+      "correction": "Le navigateur (ex: Google Chrome, Mozilla Firefox) est un logiciel installé sur l'ordinateur qui permet d'afficher les pages Web. Le moteur de recherche (ex: Google, Bing) est un service en ligne qui permet de trouver des pages Web à partir de mots-clés. On utilise le navigateur pour aller sur le site du moteur de recherche.",
+      "feedback_personnalise": "Tu dois bien distinguer les deux. Le navigateur, c'est comme la voiture (le logiciel). Le moteur de recherche, c'est comme la carte routière que tu consultes (le service en ligne). Google Chrome = navigateur. Google.com = moteur de recherche. On utilise Chrome pour aller sur Google.com."
+    },
+    {
+      "numero": 12,
+      "type": "appariement",
+      "competence_evaluee": "Associer chaque terme du Web à sa définition",
+      "niveau_bloom": "Comprendre",
+      "enonce": "Relie chaque terme de la colonne de gauche à sa définition dans la colonne de droite :",
+      "options": [
+        "A. Navigateur → 1. Adresse unique d'une page Web",
+        "B. Moteur de recherche → 2. Logiciel pour afficher les pages du Web",
+        "C. URL → 3. Texte ou image cliquable qui mène à une autre page",
+        "D. Lien hypertexte → 4. Service qui trouve des pages à partir de mots-clés",
+        "E. Onglet → 5. Fonction qui permet d'ouvrir plusieurs pages dans la même fenêtre"
+      ],
+      "points": 5,
+      "correction": "A-2, B-4, C-1, D-3, E-5",
+      "feedback_personnalise": "Vérifie chaque paire : Navigateur (A) = logiciel pour afficher le Web → 2. Moteur de recherche (B) = service qui trouve des pages → 4. URL (C) = adresse d'une page → 1. Lien hypertexte (D) = élément cliquable pour naviguer → 3. Onglet (E) = plusieurs pages dans une fenêtre → 5. Chaque terme a un rôle différent mais complémentaire pour naviguer sur le Web."
+    },
+    {
+      "numero": 13,
+      "type": "exercice",
+      "competence_evaluee": "Classer les éléments de navigation Web",
+      "niveau_bloom": "Appliquer",
+      "enonce": "Classe les éléments suivants dans le tableau : ils peuvent être soit un NAVIGATEUR, soit un MOTEUR DE RECHERCHE, soit les DEUX.\n\nÉléments : Google Chrome — Google — Bing — Mozilla Firefox — Microsoft Edge — Yahoo — Safari",
+      "options": [
+        "NAVIGATEUR (logiciel) :",
+        "MOTEUR DE RECHERCHE (service en ligne) :"
+      ],
+      "points": 7,
+      "correction": "NAVIGATEUR : Google Chrome, Mozilla Firefox, Microsoft Edge, Safari. MOTEUR DE RECHERCHE : Google, Bing, Yahoo.",
+      "feedback_personnalise": "Vérifie ton tableau : les NAVIGATEURS sont des logiciels installés sur l'ordinateur (Chrome, Firefox, Edge, Safari). Les MOTEURS DE RECHERCHE sont des services en ligne (Google, Bing, Yahoo). Attention : 'Google' est à la fois le nom du moteur de recherche ET le nom du navigateur Chrome. Ne les confonds pas !"
+    },
+    {
+      "numero": 14,
+      "type": "exercice",
+      "competence_evaluee": "Appliquer la recherche d'information sur le Web",
+      "niveau_bloom": "Appliquer",
+      "enonce": "Tu dois faire une recherche sur les fêtes traditionnelles marocaines pour un projet de classe. Écris trois ensembles de mots-clés différents que tu pourrais taper dans un moteur de recherche pour trouver des informations.",
+      "options": [],
+      "points": 3,
+      "correction": "Exemples de mots-clés valides : 'fêtes traditionnelles Maroc', 'célébrations culturelles marocaines', 'Aïd Maroc traditions', 'Moussem Tan-Tan', 'festivals traditionnels Maroc', 'Mawlid Maroc coutumes'. L'élève doit proposer au moins 3 ensembles de mots-clés pertinents et précis.",
+      "feedback_personnalise": "Tes mots-clés doivent être précis pour obtenir de bons résultats. Par exemple : 'fêtes traditionnelles Maroc' est mieux que 'fêtes' tout seul. 'Moussem Tan-Tan' est un bon exemple de mot-clé précis. Plus tes mots sont précis, plus le moteur de recherche trouvera des pages utiles pour ton projet."
+    }
+  ],
+  "bareme": {
+    "total_points": 31,
+    "repartition_par_competence": [
+      {
+        "competence": "Distinguer Internet du Web",
+        "points": 2
+      },
+      {
+        "competence": "Identifier le rôle d'un navigateur Web",
+        "points": 2
+      },
+      {
+        "competence": "Distinguer navigateur et moteur de recherche",
+        "points": 7
+      },
+      {
+        "competence": "Comprendre le fonctionnement d'un moteur de recherche",
+        "points": 2
+      },
+      {
+        "competence": "Comprendre ce qu'est une URL",
+        "points": 1
+      },
+      {
+        "competence": "Comprendre le rôle des liens hypertextes et des onglets",
+        "points": 2
+      },
+      {
+        "competence": "Appliquer les consignes de sécurité numérique",
+        "points": 3
+      },
+      {
+        "competence": "Associer chaque terme du Web à sa définition",
+        "points": 5
+      },
+      {
+        "competence": "Appliquer la recherche d'information sur le Web",
+        "points": 3
+      }
+    ],
+    "criteres": [
+      "Les réponses aux QCM et Vrai/Faux sont correctes (exactitude)",
+      "La distinction navigateur/moteur de recherche est claire et correcte (pertinence)",
+      "Les mots-clés proposés pour la recherche sont pertinents et précis (recherche efficace)",
+      "Les consignes de sécurité numérique sont correctement appliquées (sécurité)",
+      "Les définitions sont correctement associées (compréhension)"
+    ]
+  },
+  "grille_evaluation": [
+    {
+      "critere": "Compréhension des notions de base (Internet, Web, navigateur, moteur de recherche)",
+      "indicateurs": [
+        "L'élève distingue Internet du Web",
+        "L'élève identifie correctement un navigateur Web",
+        "L'élève distingue le navigateur (logiciel) du moteur de recherche (service Web)"
+      ],
+      "points_max": 8
+    },
+    {
+      "critere": "Maîtrise des outils de navigation (URL, liens hypertextes, onglets)",
+      "indicateurs": [
+        "L'élève sait ce qu'est une URL et où la taper",
+        "L'élève comprend le rôle des liens hypertextes",
+        "L'élève sait utiliser les onglets du navigateur"
+      ],
+      "points_max": 4
+    },
+    {
+      "critere": "Capacité à rechercher efficacement sur le Web",
+      "indicateurs": [
+        "L'élève utilise des mots-clés précis pour ses recherches",
+        "L'élève propose des ensembles de mots-clés pertinents",
+        "L'élève comprend comment un moteur de recherche fonctionne"
+      ],
+      "points_max": 5
+    },
+    {
+      "critere": "Application des consignes de sécurité numérique",
+      "indicateurs": [
+        "L'élève reconnaît l'importance du cadenas vert pour un site sécurisé",
+        "L'élève connaît la procédure correcte pour éteindre l'ordinateur",
+        "L'élève sait qu'il ne faut jamais partager son mot de passe"
+      ],
+      "points_max": 3
+    },
+    {
+      "critere": "Qualité rédactionnelle et exemples personnels (questions ouvertes)",
+      "indicateurs": [
+        "L'élève formule des phrases claires et compréhensibles",
+        "L'élève utilise le vocabulaire approprié (navigateur, moteur de recherche, URL, mots-clés)",
+        "L'élève propose des exemples personnels issus de la vie quotidienne marocaine"
+      ],
+      "points_max": 11
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readFile } from 'fs/promises';
 import { join } from 'path';
+import path from 'path';
 import { existsSync } from 'fs';
 import { getDb } from '@/lib/db';
 
@@ -9,6 +10,7 @@ const MIME_TYPES: Record<string, string> = {
   pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
   pdf: 'application/pdf',
   md: 'text/markdown',
+  txt: 'text/plain',
   html: 'text/html',
   zip: 'application/zip',
 };
@@ -31,14 +33,21 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'File not found' }, { status: 404 });
   }
 
-  const filePath = join(process.cwd(), 'data', 'generated', file.storage_path);
+  const GENERATED_DIR = join(process.cwd(), 'data', 'generated');
+  const filePath = join(GENERATED_DIR, file.storage_path);
+  const resolvedPath = path.resolve(filePath);
+  const resolvedBase = path.resolve(GENERATED_DIR);
 
-  if (!existsSync(filePath)) {
+  if (!resolvedPath.startsWith(resolvedBase + path.sep)) {
+    return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+  }
+
+  if (!existsSync(resolvedPath)) {
     return NextResponse.json({ error: 'File not found on disk' }, { status: 404 });
   }
 
   try {
-    const buffer = await readFile(filePath);
+    const buffer = await readFile(resolvedPath);
 
     // Raw mode: serve file directly (for iframe/embed)
     if (raw === '1') {
@@ -52,8 +61,8 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // For markdown files, return text content
-    if (file.format === 'md') {
+    // For text-based files (markdown, txt), return text content
+    if (file.format === 'md' || file.format === 'txt') {
       return NextResponse.json({
         type: 'text',
         content: buffer.toString('utf-8'),

@@ -1,11 +1,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Clock, Download, Filter, CalendarDays, LayoutList, Star, ArrowLeft, ArrowRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Clock, Download, Filter, CalendarDays, LayoutList, Star, ArrowLeft, ArrowRight, ClipboardCheck, BookOpen, Loader2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { Badge } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/Button';
+import { Modal } from '@/components/ui/Modal';
+import { Select } from '@/components/ui/Select';
 import { PageTransition } from '@/components/layout/PageTransition';
 import { MODE_DESCRIPTIONS } from '@/lib/validators/generation';
 import { useFavorites } from '@/components/layout/FavoritesProvider';
+import type { CollegeClass } from '@/types/student';
 
 interface HistoryEntry {
   id: string;
@@ -36,10 +42,63 @@ const FILTER_ACTIVE: Record<string, string> = {
 const MONTHS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
 
 export default function HistoryPage() {
+  const router = useRouter();
   const [filter, setFilter] = useState<'all' | 'heavy' | 'medium' | 'light'>('all');
   const [view, setView] = useState<'list' | 'calendar'>('list');
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const { isFavorite, toggleFavorite } = useFavorites();
+  // Boucle fiche → évaluation / carnet
+  const [nbModal, setNbModal] = useState<{ entry: HistoryEntry; classeId: string; date: string } | null>(null);
+  const [nbClasses, setNbClasses] = useState<CollegeClass[]>([]);
+  const [nbSaving, setNbSaving] = useState(false);
+
+  const createExamFromLesson = (entry: HistoryEntry) => {
+    try {
+      localStorage.setItem('pedagogen_exam_prefill', JSON.stringify({
+        titre: `Évaluation — ${entry.lecon || entry.matiere}`,
+        niveau: entry.niveau || undefined,
+      }));
+      router.push('/examens/new');
+    } catch { router.push('/examens/new'); }
+  };
+
+  const openNotebookModal = async (entry: HistoryEntry) => {
+    setNbModal({ entry, classeId: '', date: new Date().toISOString().slice(0, 10) });
+    try {
+      const res = await fetch('/api/classes');
+      const data = await res.json();
+      const list: CollegeClass[] = data.classes || [];
+      setNbClasses(list);
+      setNbModal((m) => (m ? { ...m, classeId: list[0]?.id || '' } : m));
+    } catch { /* modal shows empty */ }
+  };
+
+  const saveNotebookEntry = async () => {
+    if (!nbModal?.classeId) { toast.error('Choisissez une classe'); return; }
+    setNbSaving(true);
+    try {
+      const res = await fetch('/api/notebook', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          classe_id: nbModal.classeId,
+          date: nbModal.date,
+          titre: nbModal.entry.lecon || 'Séance',
+          resume: '',
+          statut: 'realisee',
+          tags: [nbModal.entry.matiere].filter(Boolean),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Échec');
+      toast.success('Entrée créée dans le carnet');
+      setNbModal(null);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Échec');
+    } finally {
+      setNbSaving(false);
+    }
+  };
 
   const [calMonth, setCalMonth] = useState(new Date().getMonth());
   const [calYear, setCalYear] = useState(new Date().getFullYear());
@@ -192,13 +251,29 @@ export default function HistoryPage() {
                   </Badge>
                   <span className="text-xs text-muted">{entry.filesCount} file(s)</span>
                   <div className="flex items-center justify-end gap-1">
+                    <button
+                      onClick={() => createExamFromLesson(entry)}
+                      className="p-1.5 rounded-md hover:bg-teal-50 text-muted hover:text-teal transition-colors"
+                      title="Créer l'évaluation de cette leçon"
+                      aria-label="Créer l'évaluation de cette leçon"
+                    >
+                      <ClipboardCheck size={13} />
+                    </button>
+                    <button
+                      onClick={() => openNotebookModal(entry)}
+                      className="p-1.5 rounded-md hover:bg-teal-50 text-muted hover:text-teal transition-colors"
+                      title="Ajouter au carnet de bord"
+                      aria-label="Ajouter au carnet de bord"
+                    >
+                      <BookOpen size={13} />
+                    </button>
                     {entry.files?.slice(0, 2).map((file) => (
-                      <a key={file.name} href={file.url} download={file.name} className="p-1.5 rounded-md hover:bg-teal-50 text-muted hover:text-teal transition-colors">
+                      <a key={file.name} href={file.url} download={file.name} className="p-1.5 rounded-md hover:bg-teal-50 text-muted hover:text-teal transition-colors" title={`Télécharger ${file.name}`} aria-label={`Télécharger ${file.name}`}>
                         <Download size={13} />
                       </a>
                     ))}
                   </div>
-                  <button onClick={() => toggleFav(entry)} className={`p-1.5 rounded-md transition-colors ${fav ? 'text-amber' : 'text-muted/30 hover:text-amber'}`}>
+                  <button onClick={() => toggleFav(entry)} className={`p-1.5 rounded-md transition-colors ${fav ? 'text-amber' : 'text-muted/30 hover:text-amber'}`} aria-label="Favori">
                     <Star size={12} fill={fav ? 'currentColor' : 'none'} />
                   </button>
                 </div>
@@ -206,6 +281,36 @@ export default function HistoryPage() {
             })}
           </div>
         )}
+
+        {/* Modal : ajouter au carnet de bord */}
+        <Modal open={!!nbModal} onClose={() => setNbModal(null)} title="Ajouter au Carnet de Bord">
+          {nbModal && (
+            <div className="space-y-4">
+              <p className="text-sm text-navy font-medium">{nbModal.entry.lecon || 'Séance'}</p>
+              <Select
+                label="Classe"
+                value={nbModal.classeId}
+                onChange={(e) => setNbModal({ ...nbModal, classeId: e.target.value })}
+                placeholder="Choisir une classe"
+                options={nbClasses.map((c) => ({ value: c.id, label: `${c.name} (${c.niveau})` }))}
+              />
+              <input
+                type="date"
+                value={nbModal.date}
+                onChange={(e) => setNbModal({ ...nbModal, date: e.target.value })}
+                className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-navy focus:outline-none focus:ring-2 focus:ring-teal/30 focus:border-teal"
+                aria-label="Date de la séance"
+              />
+              <div className="flex justify-end gap-2 pt-1">
+                <Button variant="secondary" size="sm" onClick={() => setNbModal(null)}>Annuler</Button>
+                <Button size="sm" onClick={saveNotebookEntry} disabled={nbSaving || !nbModal.classeId}>
+                  {nbSaving ? <Loader2 size={13} className="animate-spin" /> : <BookOpen size={13} />}
+                  Créer l'entrée
+                </Button>
+              </div>
+            </div>
+          )}
+        </Modal>
       </div>
     </PageTransition>
   );

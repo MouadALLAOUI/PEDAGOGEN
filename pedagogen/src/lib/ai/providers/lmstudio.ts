@@ -9,8 +9,8 @@ const MODELS: Model[] = [
 ];
 
 async function* generate(request: GenerateRequest): AsyncIterable<GenerateEvent> {
-  const baseUrl = request.baseUrl || request.model || DEFAULT_URL;
-  const modelName = request.modelName || DEFAULT_MODEL;
+  const baseUrl = request.baseUrl || DEFAULT_URL;
+  const modelName = request.modelName || request.model || DEFAULT_MODEL;
 
   try {
     const response = await fetch(baseUrl, {
@@ -48,7 +48,7 @@ async function* generate(request: GenerateRequest): AsyncIterable<GenerateEvent>
       const { done, value } = await reader.read();
       if (done) break;
 
-      buffer += decoder.decode(value, { stream: true });
+      buffer += decoder.decode(value, { stream: false });
       const lines = buffer.split("\n");
       buffer = lines.pop() || "";
 
